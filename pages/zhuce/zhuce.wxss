@@ -1,0 +1,70 @@
+/* 注册：收集账号、姓名与密码，提交给后端创建用户：本文件控制页面外观，不发请求、不改数据库。 */
+.register-page {
+  min-height: 100vh; /* 最小高度，内容多时可以增高：100vh */
+  box-sizing: border-box; /* 设置的宽高包含内边距和边框 */
+  padding: 72rpx 44rpx; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 72rpx 44rpx。 */
+  background: #f7f7fb; /* 背景：#f7f7fb */
+}
+
+.heading {
+  font-size: 42rpx; /* 字号：42rpx */
+  font-weight: 700; /* 文字加粗，字重为 700 */
+  color: #25243a; /* 文字颜色：#25243a */
+  margin-bottom: 56rpx; /* 下外边距：56rpx */
+  text-align: center; /* 文字水平居中 */
+}
+
+.field {
+  height: 94rpx; /* 高度：94rpx */
+  box-sizing: border-box; /* 设置的宽高包含内边距和边框 */
+  padding: 0 28rpx; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 0 28rpx。 */
+  margin-bottom: 24rpx; /* 下外边距：24rpx */
+  background: #fff; /* 背景：#fff */
+  border: 1rpx solid #e6e4ed; /* 设置 border 为 1rpx solid #e6e4ed；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+  border-radius: 12rpx; /* 设置圆角为 12rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  font-size: 29rpx; /* 字号：29rpx */
+}
+
+.password-field {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  margin-bottom: 24rpx; /* 下外边距：24rpx */
+  background: #fff; /* 背景：#fff */
+  border: 1rpx solid #e6e4ed; /* 设置 border 为 1rpx solid #e6e4ed；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+  border-radius: 12rpx; /* 设置圆角为 12rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+}
+
+.password-field .field {
+  flex: 1; /* 按权重 1 分配剩余空间，并允许压缩 */
+  min-width: 0; /* 允许子元素缩小，避免长内容撑宽布局 */
+  margin-bottom: 0; /* 下外边距：0 */
+  border: 0; /* 设置 border 为 0；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+}
+
+.agreement {
+  margin: 30rpx 0; /* 外边距：元素外侧的间距；此处按 上下、左右 设置为 30rpx 0。 */
+  color: #555; /* 文字颜色：#555 */
+  font-size: 25rpx; /* 字号：25rpx */
+}
+
+.agreement text {
+  color: #655cba; /* 文字颜色：#655cba */
+  margin-right: 12rpx; /* 右外边距：12rpx */
+}
+
+.agreement .policy-link {
+  text-decoration: underline;
+}
+
+.submit {
+  background: #655cba; /* 背景：#655cba */
+  color: white; /* 文字颜色：white */
+  border-radius: 12rpx; /* 设置圆角为 12rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+}
+
+.hint {
+  margin-top: 28rpx; /* 上外边距：28rpx */
+  color: #888; /* 文字颜色：#888 */
+  font-size: 24rpx; /* 字号：24rpx */
+  text-align: center; /* 文字水平居中 */
+}

@@ -1,0 +1,29 @@
+<!-- 信用分：展示后端依据订单记录计算的分数与变动原因；WXML 描述页面结构，不是浏览器 HTML。 -->
+<!-- 界面区块 credit-summary：信用分 / 统计摘要，外观由同页 WXSS 的同名类控制。 -->
+<view class="credit-summary">
+  <!-- 界面区块 credit-label：信用分 / 字段标签，外观由同页 WXSS 的同名类控制。 -->
+  <view class="credit-label">当前信用分</view>
+  <!-- 界面区块 credit-score：信用分 / 分数，外观由同页 WXSS 的同名类控制。 -->
+  <view class="credit-score">{{score}}</view>
+  <!-- 界面区块 credit-total：信用分 / total，外观由同页 WXSS 的同名类控制。 -->
+  <view class="credit-total">满分100分</view>
+</view>
+<!-- 界面区块 credit-records：信用分 / records，外观由同页 WXSS 的同名类控制。 -->
+<view class="credit-records">
+  <!-- 界面区块 credit-records-title：信用分 / records / 标题，外观由同页 WXSS 的同名类控制。 -->
+  <view class="credit-records-title">变更记录</view>
+
+  <!-- 界面区块 credit-record-card：信用分 / 记录 / 卡片，外观由同页 WXSS 的同名类控制。 -->
+  <!-- wx:for 遍历 records，每项生成一份标签；默认 item 为当前项、index 为下标，wx:key 帮助定位更新。 -->
+  <view class="credit-record-card" wx:for="{{records}}" wx:key="id">
+    <view class="credit-record-icon {{item.change < 0 ? 'negative' : ''}}">{{item.change < 0 ? '↓' : '↑'}}</view>
+        <view class="credit-record-info">
+          <view class="credit-record-reason">{{item.reason}}</view>
+          <view class="credit-record-time">{{item.timeText}}</view>
+        </view>
+        <view class="credit-record-change {{item.change < 0 ? 'negative' : ''}}">{{item.changeText}}</view>
+      </view>
+
+      <!-- 界面区块 credit-record-end：信用分 / 记录 / end，外观由同页 WXSS 的同名类控制。 -->
+      <view class="credit-record-end">{{records.length ? '没有更多了' : '暂无变更记录'}}</view>
+    </view>

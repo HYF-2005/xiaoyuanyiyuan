@@ -1,0 +1,90 @@
+/* 全局样式；为所有页面的按钮居中，并提供共享的小眼睛图标。：本文件控制页面外观，不发请求、不改数据库。 */
+/* rpx 会按屏幕宽度适配；padding 是内间距，margin 是外间距；后出现的同优先级规则可覆盖前面的同名属性。 */
+/**app.wxss**/
+/* 按钮内的文字统一在水平和垂直方向居中；宽度由各页面定义。 */
+button {
+  box-sizing: border-box; /* 设置的宽高包含内边距和边框 */
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  justify-content: center; /* 子元素沿主轴居中 */
+  text-align: center; /* 文字水平居中 */
+}
+
+/* 单按钮操作栏铺满可用宽度，多按钮操作栏等宽并居中排列。 */
+.meal-footer button,
+.confirm-footer button,
+.password-footer button,
+.phone-footer button,
+.detail-footer button {
+  width: 100%; /* 宽度：100% */
+  margin-left: auto; /* 左外边距：auto */
+  margin-right: auto; /* 右外边距：auto */
+}
+
+.action-footer,
+.photo-actions,
+.cancel-actions,
+.feedback-actions {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  justify-content: center; /* 子元素沿主轴居中 */
+}
+
+.action-footer button,
+.photo-actions button,
+.cancel-actions button,
+.feedback-actions button {
+  flex: 1; /* 按权重 1 分配剩余空间，并允许压缩 */
+  min-width: 0; /* 允许子元素缩小，避免长内容撑宽布局 */
+}
+
+.container {
+  height: 100%; /* 高度：100% */
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  flex-direction: column; /* 主轴改为竖直方向，子元素上下排列 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  justify-content: space-between; /* 两端贴边，中间空隙均分 */
+  padding: 200rpx 0; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 200rpx 0。 */
+  box-sizing: border-box; /* 设置的宽高包含内边距和边框 */
+}
+
+/* 密码框共用的可见性按钮。斜线表示密码当前隐藏。 */
+.visibility-toggle {
+  flex-shrink: 0; /* 空间不足时不压缩 */
+  width: 76rpx; /* 宽度：76rpx */
+  height: 76rpx; /* 高度：76rpx */
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  justify-content: center; /* 子元素沿主轴居中 */
+}
+
+.visibility-eye {
+  position: relative; /* 保留布局占位，作为绝对定位的参照 */
+  width: 30rpx; /* 宽度：30rpx */
+  height: 18rpx; /* 高度：18rpx */
+  border: 2rpx solid #666; /* 设置 border 为 2rpx solid #666；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+  border-radius: 50%; /* 设置圆角为 50%；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+}
+
+.visibility-eye::before {
+  content: ""; /* 生成空伪元素，用于绘制装饰 */
+  position: absolute; /* 脱离普通布局，相对定位祖先摆放 */
+  top: 50%; /* 设置定位元素的 top 偏移为 50%；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  left: 50%; /* 设置定位元素的 left 偏移为 50%；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  width: 8rpx; /* 宽度：8rpx */
+  height: 8rpx; /* 高度：8rpx */
+  border-radius: 50%; /* 设置圆角为 50%；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  background: #666; /* 背景：#666 */
+  transform: translate(-50%, -50%); /* 变换元素：translate(-50%, -50%)；rotate 用 deg 表示旋转角度，translate 的百分比通常按自身尺寸计算；translateY(-50%) 向上移动自身高度的一半。 */
+}
+
+.visibility-eye.closed::after {
+  content: ""; /* 生成空伪元素，用于绘制装饰 */
+  position: absolute; /* 脱离普通布局，相对定位祖先摆放 */
+  top: 50%; /* 设置定位元素的 top 偏移为 50%；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  left: -5rpx; /* 设置定位元素的 left 偏移为 -5rpx；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  width: 40rpx; /* 宽度：40rpx */
+  height: 2rpx; /* 高度：2rpx */
+  background: #666; /* 背景：#666 */
+  transform: rotate(35deg); /* 变换元素：rotate(35deg)；rotate 用 deg 表示旋转角度，translate 的百分比通常按自身尺寸计算；translateY(-50%) 向上移动自身高度的一半。 */
+}

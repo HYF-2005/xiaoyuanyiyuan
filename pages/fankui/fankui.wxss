@@ -1,0 +1,70 @@
+/* 问题反馈：提交文字意见并防止重复提交：本文件控制页面外观，不发请求、不改数据库。 */
+page {
+  background: #f5f5f5; /* 背景：#f5f5f5 */
+}
+
+.feedback-page {
+  padding: 24rpx; /* 内边距：内容到边框之间的间距；此处按 四边 设置为 24rpx。 */
+}
+
+.feedback-card {
+  padding: 28rpx; /* 内边距：内容到边框之间的间距；此处按 四边 设置为 28rpx。 */
+  border-radius: 14rpx; /* 设置圆角为 14rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  background: #fff; /* 背景：#fff */
+}
+
+.feedback-input {
+  width: 100%; /* 宽度：100% */
+  height: 400rpx; /* 高度：400rpx */
+  color: #333; /* 文字颜色：#333 */
+  font-size: 28rpx; /* 字号：28rpx */
+  line-height: 1.5; /* 设置行盒高度；无单位值乘以字号，rpx 值是明确行高，normal 由字体决定；相同高度和行高常用于单行文字居中；本行值为 1.5。 */
+}
+
+.feedback-count {
+  margin-top: 20rpx; /* 上外边距：20rpx */
+  color: #bbb; /* 文字颜色：#bbb */
+  font-size: 24rpx; /* 字号：24rpx */
+  text-align: right; /* 文字右对齐 */
+}
+
+.feedback-count-short {
+  color: #ff6571; /* 文字颜色：#ff6571 */
+}
+
+.feedback-actions {
+  position: fixed; /* 固定定位，常用于底栏或弹窗 */
+  left: 0; /* 设置定位元素的 left 偏移为 0；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  right: 0; /* 设置定位元素的 right 偏移为 0；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  bottom: 0; /* 设置定位元素的 bottom 偏移为 0；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  gap: 20rpx; /* 子元素之间的间隔：20rpx */
+  padding: 16rpx 24rpx calc(16rpx + env(safe-area-inset-bottom)); /* 内边距：内容到边框之间的间距；此处按 上、左右、下 设置为 16rpx 24rpx calc(16rpx + env(safe-area-inset-bottom))。 calc() 用于计算长度，例如整体宽度减边距，或基础内边距加安全区。 env(safe-area-inset-*) 读取设备对应边的安全区，避免内容贴住底部手势条等区域。 */
+  background: #fff; /* 背景：#fff */
+}
+
+.feedback-actions button {
+  flex: 1; /* 按权重 1 分配剩余空间，并允许压缩 */
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  justify-content: center; /* 子元素沿主轴居中 */
+  height: 76rpx; /* 高度：76rpx */
+  margin: 0; /* 外边距：元素外侧的间距；此处按 四边 设置为 0。 */
+  border-radius: 8rpx; /* 设置圆角为 8rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  font-size: 27rpx; /* 字号：27rpx */
+  line-height: normal; /* 设置行盒高度；无单位值乘以字号，rpx 值是明确行高，normal 由字体决定；相同高度和行高常用于单行文字居中；本行值为 normal。 */
+}
+
+.feedback-actions button::after {
+  border: none; /* 设置 border 为 none；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+}
+
+.feedback-cancel {
+  background: #e5e5e5; /* 背景：#e5e5e5 */
+  color: #222; /* 文字颜色：#222 */
+}
+
+.feedback-submit {
+  background: #0bd565; /* 背景：#0bd565 */
+  color: #fff; /* 文字颜色：#fff */
+}

@@ -1,0 +1,120 @@
+/* 修改密码：旧密码校验、新密码强度提示与修改后重新登录：本文件控制页面外观，不发请求、不改数据库。 */
+page {
+  background: #f5f5f5; /* 背景：#f5f5f5 */
+}
+
+.password-page {
+  padding: 24rpx 16rpx 150rpx; /* 内边距：内容到边框之间的间距；此处按 上、左右、下 设置为 24rpx 16rpx 150rpx。 */
+}
+
+.password-card {
+  padding: 24rpx; /* 内边距：内容到边框之间的间距；此处按 四边 设置为 24rpx。 */
+  border-radius: 14rpx; /* 设置圆角为 14rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  background: #fff; /* 背景：#fff */
+}
+
+.password-field + .password-field {
+  margin-top: 34rpx; /* 上外边距：34rpx */
+}
+
+.password-label {
+  display: block; /* 设置为块级显示 */
+  margin-bottom: 12rpx; /* 下外边距：12rpx */
+  color: #333; /* 文字颜色：#333 */
+  font-size: 26rpx; /* 字号：26rpx */
+}
+
+.password-input {
+  height: 76rpx; /* 高度：76rpx */
+  padding: 0 20rpx; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 0 20rpx。 */
+  border-radius: 8rpx; /* 设置圆角为 8rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  background: #f5f5f5; /* 背景：#f5f5f5 */
+  font-size: 26rpx; /* 字号：26rpx */
+}
+
+.password-footer {
+  position: fixed; /* 固定定位，常用于底栏或弹窗 */
+  right: 0; /* 设置定位元素的 right 偏移为 0；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  bottom: 0; /* 设置定位元素的 bottom 偏移为 0；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  left: 0; /* 设置定位元素的 left 偏移为 0；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  padding: 14rpx 0 calc(14rpx + env(safe-area-inset-bottom)); /* 内边距：内容到边框之间的间距；此处按 上、左右、下 设置为 14rpx 0 calc(14rpx + env(safe-area-inset-bottom))。 calc() 用于计算长度，例如整体宽度减边距，或基础内边距加安全区。 env(safe-area-inset-*) 读取设备对应边的安全区，避免内容贴住底部手势条等区域。 */
+  background: #fff; /* 背景：#fff */
+}
+
+.password-submit {
+  width: 340rpx; /* 宽度：340rpx */
+  margin: 0 auto; /* 外边距：元素外侧的间距；此处按 上下、左右 设置为 0 auto。 auto 为自动分配；常见的 0 auto 可让有确定宽度的块水平居中，也受布局环境影响。 */
+  background: #0bd565; /* 背景：#0bd565 */
+  color: #fff; /* 文字颜色：#fff */
+  font-size: 27rpx; /* 字号：27rpx */
+}
+
+.password-input-wrap {
+  position: relative; /* 保留布局占位，作为绝对定位的参照 */
+}
+
+.password-input-wrap .password-input {
+  box-sizing: border-box; /* 设置的宽高包含内边距和边框 */
+  width: 100%; /* 宽度：100% */
+  padding-right: 96rpx; /* 右内边距：96rpx */
+}
+
+.password-toggle {
+  position: absolute; /* 脱离普通布局，相对定位祖先摆放 */
+  top: 0; /* 设置定位元素的 top 偏移为 0；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  right: 0; /* 设置定位元素的 right 偏移为 0；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  justify-content: center; /* 子元素沿主轴居中 */
+  width: 90rpx; /* 宽度：90rpx */
+  height: 76rpx; /* 高度：76rpx */
+  color: #666; /* 文字颜色：#666 */
+  font-size: 23rpx; /* 字号：23rpx */
+}
+
+.password-strength {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  gap: 12rpx; /* 子元素之间的间隔：12rpx */
+  margin-top: 12rpx; /* 上外边距：12rpx */
+  color: #999; /* 文字颜色：#999 */
+  font-size: 20rpx; /* 字号：20rpx */
+}
+
+.password-strength-bars {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  flex: 1; /* 按权重 1 分配剩余空间，并允许压缩 */
+  gap: 5rpx; /* 子元素之间的间隔：5rpx */
+}
+
+.password-strength-bar {
+  flex: 1; /* 按权重 1 分配剩余空间，并允许压缩 */
+  height: 4rpx; /* 高度：4rpx */
+  background: #e5e5e5; /* 背景：#e5e5e5 */
+}
+
+.password-strength-bar.filled {
+  background: #ff9b20; /* 背景：#ff9b20 */
+}
+
+.password-strength-text {
+  width: 28rpx; /* 宽度：28rpx */
+  color: #ff9b20; /* 文字颜色：#ff9b20 */
+  text-align: right; /* 文字右对齐 */
+}
+
+.password-strength.level-1 .password-strength-bar.filled {
+  background: #ef476f; /* 背景：#ef476f */
+}
+
+.password-strength.level-1 .password-strength-text {
+  color: #ef476f; /* 文字颜色：#ef476f */
+}
+
+.password-strength.level-3 .password-strength-bar.filled {
+  background: #0bd565; /* 背景：#0bd565 */
+}
+
+.password-strength.level-3 .password-strength-text {
+  color: #0bd565; /* 文字颜色：#0bd565 */
+}

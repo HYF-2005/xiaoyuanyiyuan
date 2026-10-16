@@ -1,0 +1,21 @@
+<!-- 账单详情：展示选中账单的金额、时间和订单编号；WXML 描述页面结构，不是浏览器 HTML。 -->
+<!-- 界面区块 bill-page：账单 / 页面，外观由同页 WXSS 的同名类控制。 -->
+<!-- wx:if 条件 transaction 成立才创建此区块；隐藏按钮不等于后端授权。 -->
+<view class="bill-page" wx:if="{{transaction}}">
+  <!-- 界面区块 bill-banner：账单 / banner，外观由同页 WXSS 的同名类控制。 -->
+  <view class="bill-banner">
+    <view class="bill-icon">{{transaction.icon}}</view>
+    <view class="bill-amount">{{transaction.amount}}</view>
+    <view class="bill-title">{{transaction.title}}</view>
+  </view>
+  <!-- 界面区块 bill-card：账单 / 卡片，外观由同页 WXSS 的同名类控制。 -->
+  <view class="bill-card">
+    <view class="bill-heading">账单信息</view>
+    <!-- 点击调用 copyOrderNumber()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+    <view class="bill-row"><text class="bill-label">订单号</text><view class="bill-order"><text class="bill-number" selectable>{{transaction.orderNumber}}</text><button class="copy-button" bindtap="copyOrderNumber">复制</button></view></view>
+    <view class="bill-row"><text class="bill-label">交易类型</text><text>{{transaction.transactionType}}</text></view>
+    <view class="bill-row"><text class="bill-label">交易时间</text><text>{{transaction.fullTime}}</text></view>
+    <view class="bill-row"><text class="bill-label">交易状态</text><text class="bill-success">{{transaction.status}}</text></view>
+  </view>
+</view>
+<view class="bill-empty" wx:else>暂无账单详情</view>

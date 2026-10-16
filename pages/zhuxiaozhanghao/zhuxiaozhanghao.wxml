@@ -1,0 +1,82 @@
+<!-- 注销账户：确认协议和密码；后端停用账号并保留历史记录；WXML 描述页面结构，不是浏览器 HTML。 -->
+<!-- 界面区块 cancel-page：取消/注销 / 页面，外观由同页 WXSS 的同名类控制。 -->
+<view class="cancel-page">
+  <!-- 界面区块 cancel-card：取消/注销 / 卡片，外观由同页 WXSS 的同名类控制。 -->
+  <view class="cancel-card">
+    <view class="cancel-title">重要提示</view>
+    <view class="cancel-intro">
+      注销账号后将无法登录，请仔细阅读以下条款
+    </view>
+
+    <view class="cancel-terms">
+      <view class="cancel-terms-title">注销条件说明</view>
+
+      <view>1. 账号状态要求</view>
+      <view class="cancel-term">
+        <text class="cancel-dot">• </text>账号无未完成的订单或交易
+      </view>
+
+      <view>2. 注销后影响</view>
+      <view class="cancel-term">
+        <text class="cancel-dot">• </text>账号将无法登录
+      </view>
+      <view class="cancel-term">
+        <text class="cancel-dot">• </text>个人信息将被保留（用于审计）
+      </view>
+      <view class="cancel-term">
+        <text class="cancel-dot">• </text>历史订单记录仍可查询（管理员）
+      </view>
+
+      <view>3. 法律责任</view>
+      <view class="cancel-term">
+        <text class="cancel-dot">• </text>注销不免除此前的法律责任
+      </view>
+      <view class="cancel-term">
+        <text class="cancel-dot">• </text>若存在违规行为，平台保留追究权利
+      </view>
+    </view>
+    <view class="cancel-contact">
+      <view>如有疑问或需要帮助，请通过以下方式联系我们：</view>
+      <!-- 界面区块 cancel-contact-email：取消/注销 / 联系 / 邮箱，外观由同页 WXSS 的同名类控制。 -->
+      <view class="cancel-contact-email">邮箱：993872@qq.com</view>
+    </view>
+  </view>
+  <!-- 界面区块 cancel-password-wrap：取消/注销 / 密码 / wrap，外观由同页 WXSS 的同名类控制。 -->
+  <!-- 输入变化调用 onPasswordInput()；点击调用 togglePassword()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <view class="cancel-password-wrap">
+    <input
+      class="cancel-password"
+      password="{{!showPassword}}"
+      placeholder="请输入当前密码以确认身份"
+      bindinput="onPasswordInput"
+    />
+    <view
+      class="visibility-toggle"
+      role="button"
+      aria-label="{{showPassword ? '隐藏密码' : '显示密码'}}"
+      bindtap="togglePassword"
+    >
+      <view class="visibility-eye {{showPassword ? '' : 'closed'}}"></view>
+    </view>
+  </view>
+  <!-- 界面区块 cancel-agreement：取消/注销 / 协议，外观由同页 WXSS 的同名类控制。 -->
+  <view class="cancel-agreement" bindtap="toggleAgreement">
+    <!-- 界面区块 cancel-checkbox {{agreed ? 'checked' : ''}}：取消/注销 / 复选标记 / agreed / 已勾选，外观由同页 WXSS 的同名类控制。 -->
+    <view class="cancel-checkbox {{agreed ? 'checked' : ''}}">
+      {{agreed ? '✓' : ''}}
+    </view>
+    <text>我已阅读并同意以上条款，确认注销账号</text>
+  </view>
+  <!-- 界面区块 cancel-submit：取消/注销 / 提交，外观由同页 WXSS 的同名类控制。 -->
+  <!-- 点击调用 submitCancel()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <button
+    class="cancel-submit"
+    disabled="{{!agreed || submitting}}"
+    loading="{{submitting}}"
+    bindtap="submitCancel"
+  >
+    同意注销
+  </button>
+  <!-- 界面区块 cancel-note：取消/注销 / 说明，外观由同页 WXSS 的同名类控制。 -->
+  <view class="cancel-note">账号停用后无法登录；历史订单会保留。</view>
+</view>

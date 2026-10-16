@@ -1,0 +1,142 @@
+<!-- 发布取餐需求：餐厅三级联动、取餐码、地址、时间与建议报酬；WXML 描述页面结构，不是浏览器 HTML。 -->
+<!-- view 是容器，text 是文字，{{ }} 是数据绑定；bindtap 绑定点击，wx:if 控制是否显示，wx:for 生成列表。 -->
+<!-- 界面区块 meal-page：取餐 / 页面，外观由同页 WXSS 的同名类控制。 -->
+<view class="meal-page">
+  <!-- 界面区块 meal-card：取餐 / 卡片，外观由同页 WXSS 的同名类控制。 -->
+  <view class="meal-card">
+    <view class="meal-card-title">取餐地点</view>
+    <view class="meal-label"><text class="required">*</text>取餐餐厅</view>
+    <!-- 点击调用 openRestaurantPicker()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+    <view class="meal-select" bindtap="openRestaurantPicker">{{restaurant || '请选择取餐地址'}} <text>›</text></view>
+
+    <view class="meal-label"><text class="required">*</text>取餐码</view>
+    <!-- wx:for 遍历 codes，每项生成一份标签；默认 item 为当前项、index 为下标，wx:key 帮助定位更新。 -->
+    <view class="meal-code-row" wx:for="{{codes}}" wx:key="id">
+      <!-- 输入变化调用 onCodeInput()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+      <!-- 用户输入组件；value 读取 data，bindinput 把输入交给 JS 保存，password 控制是否隐藏内容。 -->
+      <input
+        class="meal-input meal-code-input"
+        placeholder="请输入取餐码"
+        value="{{item.value}}"
+        data-id="{{item.id}}"
+        bindinput="onCodeInput"
+      />
+      <!-- 点击调用 removeCode()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+      <view class="meal-delete" wx:if="{{codes.length > 1}}" data-id="{{item.id}}" bindtap="removeCode">
+        <view class="trash-icon"></view>
+      </view>
+    </view>
+    <!-- 点击调用 addCode()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+    <view class="meal-add" bindtap="addCode">＋ 添加取餐码</view>
+    <!-- {{表达式}} 从同页 data 读取并显示；JS setData 后会更新这里的内容。 -->
+    <view class="meal-summary" wx:if="{{mealCount > 0}}"><text>共{{mealCount}}份餐品</text></view>
+  </view>
+
+  <view class="meal-card">
+    <view class="meal-card-title">收件地点</view>
+    <view class="meal-label"><text class="required">*</text>送达建筑</view>
+    <!-- 点击调用 openBuildingPicker()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+    <view class="meal-select" bindtap="openBuildingPicker">{{deliveryBuilding || '请选择送达建筑'}} <text>›</text></view>
+    <view class="meal-label"><text class="required">*</text>详细地址</view>
+    <!-- 输入变化调用 onAddressInput()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+    <input class="meal-input" placeholder="如：203" value="{{deliveryAddress}}" bindinput="onAddressInput" />
+  </view>
+
+  <view class="meal-card">
+    <view class="meal-card-title">时间和价格</view>
+    <view class="meal-label">截止时间（可选）</view>
+    <!-- 点击调用 openDeadlinePicker()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+    <view class="meal-select" bindtap="openDeadlinePicker">{{deadlineTime || '选择时间（可选）'}} <text>›</text></view>
+    <view class="meal-label"><text class="required">*</text>悬赏金额</view>
+    <!-- 输入变化调用 onRewardInput()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+    <view class="meal-money"><text>¥</text><input type="digit" placeholder="请输入金额" value="{{reward}}" bindinput="onRewardInput" /></view>
+    <view class="meal-suggestion" wx:if="{{mealCount > 0}}">建议价格：¥{{suggestedReward}}</view>
+  </view>
+
+  <!-- 界面区块 meal-footer：取餐 / 底部操作栏，外观由同页 WXSS 的同名类控制。 -->
+  <!-- 点击调用 nextStep()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <view class="meal-footer"><button bindtap="nextStep">下一步</button></view>
+
+  <!-- 界面区块 meal-mask：取餐 / 遮罩，外观由同页 WXSS 的同名类控制。 -->
+  <!-- wx:if 条件 restaurantPickerVisible 成立才创建此区块；隐藏按钮不等于后端授权。 -->
+  <!-- 点击调用 closeRestaurantPicker()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <view class="meal-mask" wx:if="{{restaurantPickerVisible}}" bindtap="closeRestaurantPicker"></view>
+  <!-- 界面区块 meal-restaurant-picker：取餐 / 餐厅 / 选择弹窗，外观由同页 WXSS 的同名类控制。 -->
+  <view class="meal-restaurant-picker" wx:if="{{restaurantPickerVisible}}">
+    <view class="picker-heading">选择器</view>
+    <!-- 选择变化调用 onRestaurantPickerChange()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+    <!-- 滚轮选择器；value 是各列下标数组，bindchange 返回新的下标数组。 -->
+    <picker-view class="restaurant-columns" value="{{restaurantIndexes}}" bindchange="onRestaurantPickerChange">
+      <!-- wx:for 遍历 restaurantNames，每项生成一份标签；默认 item 为当前项、index 为下标，wx:key 帮助定位更新。 -->
+      <picker-view-column><view class="restaurant-option" wx:for="{{restaurantNames}}" wx:key="*this">{{item}}</view></picker-view-column>
+      <!-- wx:for 遍历 floorNames，每项生成一份标签；默认 item 为当前项、index 为下标，wx:key 帮助定位更新。 -->
+      <picker-view-column><view class="restaurant-option" wx:for="{{floorNames}}" wx:key="*this">{{item}}</view></picker-view-column>
+      <!-- wx:for 遍历 vendorNames，每项生成一份标签；默认 item 为当前项、index 为下标，wx:key 帮助定位更新。 -->
+      <picker-view-column><view class="restaurant-option" wx:for="{{vendorNames}}" wx:key="*this">{{item}}</view></picker-view-column>
+    </picker-view>
+    <!-- 点击调用 closeRestaurantPicker()；点击调用 confirmRestaurant()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+    <view class="picker-actions"><button bindtap="closeRestaurantPicker">取消</button><button class="primary" bindtap="confirmRestaurant">确定</button></view>
+  </view>
+
+  <!-- wx:if 条件 buildingPickerVisible 成立才创建此区块；隐藏按钮不等于后端授权。 -->
+  <!-- 点击调用 closeBuildingPicker()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <view class="meal-mask" wx:if="{{buildingPickerVisible}}" bindtap="closeBuildingPicker"></view>
+  <!-- 界面区块 meal-building-picker：取餐 / 建筑 / 选择弹窗，外观由同页 WXSS 的同名类控制。 -->
+  <view class="meal-building-picker" wx:if="{{buildingPickerVisible}}">
+    <view class="picker-heading">请选择送达建筑 <text bindtap="closeBuildingPicker">×</text></view>
+    <!-- 输入变化调用 onBuildingSearch()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+    <view class="building-search">
+      <icon type="search" size="18" color="#999" />
+      <input placeholder="搜索建筑" value="{{buildingKeyword}}" bindinput="onBuildingSearch" />
+    </view>
+    <view class="building-steps">
+      <!-- 点击调用 showBuildingCategories()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+      <!-- class 内 {{条件 ? 类名 : 空字符串}} 是动态样式；条件由 JS data 的当前值决定。 -->
+      <view class="building-step" bindtap="showBuildingCategories"><view class="building-step-left"><view class="building-dot {{buildingCategory ? 'with-line' : ''}}"></view><text class="{{buildingCategoryMode ? 'selected' : ''}}">{{buildingCategory || '选择选项'}}</text></view><text>›</text></view>
+      <!-- wx:if 条件 buildingCategory 成立才创建此区块；隐藏按钮不等于后端授权。 -->
+      <!-- 点击调用 showBuildingOptions()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+      <view class="building-step" wx:if="{{buildingCategory}}" bindtap="showBuildingOptions"><view class="building-step-left"><view class="building-dot"></view><text class="{{!buildingCategoryMode ? 'selected' : ''}}">选择选项</text></view><text>›</text></view>
+    </view>
+    <scroll-view class="building-list" scroll-y>
+      <!-- wx:if 条件 buildingCategoryMode 成立才创建此区块；隐藏按钮不等于后端授权。 -->
+      <block wx:if="{{buildingCategoryMode}}">
+        <!-- wx:for 遍历 buildingCategories，每项生成一份标签；默认 item 为当前项、index 为下标，wx:key 帮助定位更新。 -->
+        <!-- 点击调用 chooseBuildingCategory()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+        <view wx:for="{{buildingCategories}}" wx:key="*this" data-category="{{item}}" bindtap="chooseBuildingCategory">{{item}} <text>›</text></view>
+      </block>
+      <block wx:else>
+        <!-- wx:for 遍历 buildingOptions，每项生成一份标签；默认 item 为当前项、index 为下标，wx:key 帮助定位更新。 -->
+        <!-- 点击调用 chooseBuilding()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+        <view wx:for="{{buildingOptions}}" wx:key="*this" data-name="{{item}}" bindtap="chooseBuilding">{{item}}</view>
+        <!-- wx:if 条件 buildingOptions.length === 0 成立才创建此区块；隐藏按钮不等于后端授权。 -->
+        <view class="building-empty" wx:if="{{buildingOptions.length === 0}}">没有找到建筑</view>
+      </block>
+    </scroll-view>
+  </view>
+
+  <!-- wx:if 条件 deadlinePickerVisible 成立才创建此区块；隐藏按钮不等于后端授权。 -->
+  <!-- 点击调用 closeDeadlinePicker()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <view class="meal-mask" wx:if="{{deadlinePickerVisible}}" bindtap="closeDeadlinePicker"></view>
+  <!-- 界面区块 meal-deadline-picker：取餐 / 截止时间 / 选择弹窗，外观由同页 WXSS 的同名类控制。 -->
+  <!-- 点击调用 noop()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <!-- catchtap 阻止点击继续向外层冒泡，弹窗内部点击不会触发遮罩关闭。 -->
+  <view class="meal-deadline-picker" wx:if="{{deadlinePickerVisible}}" catchtap="noop">
+    <view class="deadline-heading">选择器</view>
+    <view class="deadline-custom-time">
+      <!-- 选择变化调用 onCustomTimeChange()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+      <picker-view
+        class="deadline-wheel"
+        value="{{customTimeIndexes}}"
+        indicator-style="height: 70rpx;"
+        bindchange="onCustomTimeChange"
+      >
+        <!-- wx:for 遍历 customHours，每项生成一份标签；默认 item 为当前项、index 为下标，wx:key 帮助定位更新。 -->
+        <picker-view-column><view wx:for="{{customHours}}" wx:key="*this">{{item}}</view></picker-view-column>
+        <!-- wx:for 遍历 customMinutes，每项生成一份标签；默认 item 为当前项、index 为下标，wx:key 帮助定位更新。 -->
+        <picker-view-column><view wx:for="{{customMinutes}}" wx:key="*this">{{item}}</view></picker-view-column>
+      </picker-view>
+    </view>
+    <!-- 点击调用 closeDeadlinePicker()；点击调用 confirmDeadline()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+    <view class="deadline-actions"><button bindtap="closeDeadlinePicker">取消</button><button class="primary" bindtap="confirmDeadline">确定</button></view>
+  </view>
+</view>

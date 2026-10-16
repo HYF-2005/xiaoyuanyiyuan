@@ -1,0 +1,32 @@
+{
+  "pages": [
+    "pages/denglu/denglu",
+    "pages/zhuce/zhuce",
+    "pages/rizhi/rizhi",
+    "pages/wangjimima/wangjimima",
+    "pages/shouye/shouye",
+    "pages/fabu/fabu",
+    "pages/queren/queren",
+    "pages/xinyongfen/xinyongfen",
+    "pages/jiaoyi/jiaoyi",
+    "pages/jiaoyixiangqing/jiaoyixiangqing",
+    "pages/shezhi/shezhi",
+    "pages/fankui/fankui",
+    "pages/xiugaimima/xiugaimima",
+    "pages/xiugaishouji/xiugaishouji",
+    "pages/zhuxiaozhanghao/zhuxiaozhanghao",
+    "pages/dingdanxiangqing/dingdanxiangqing",
+    "pages/canfabu/canfabu",
+    "pages/canqueren/canqueren",
+    "pages/canxiangqing/canxiangqing"
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "Weixin",
+    "navigationBarBackgroundColor": "#ffffff"
+  },
+  "style": "v2",
+  "componentFramework": "glass-easel",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

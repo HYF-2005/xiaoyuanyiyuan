@@ -1,0 +1,123 @@
+/* 取餐发布确认：展示餐品草稿并调用后端创建订单：本文件控制页面外观，不发请求、不改数据库。 */
+page {
+  background: #f5f5f5; /* 背景：#f5f5f5 */
+}
+
+.meal-confirm {
+  padding: 20rpx 0 140rpx; /* 内边距：内容到边框之间的间距；此处按 上、左右、下 设置为 20rpx 0 140rpx。 */
+}
+
+.confirm-card {
+  padding: 0 24rpx; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 0 24rpx。 */
+  background: #fff; /* 背景：#fff */
+}
+
+.confirm-title {
+  padding: 24rpx 0; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 24rpx 0。 */
+  border-bottom: 1rpx solid #eee; /* 设置 border-bottom 为 1rpx solid #eee；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+  font-size: 29rpx; /* 字号：29rpx */
+  font-weight: bold; /* 文字加粗 */
+}
+
+.confirm-row {
+  box-sizing: border-box; /* 设置的宽高包含内边距和边框 */
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  justify-content: space-between; /* 两端贴边，中间空隙均分 */
+  gap: 18rpx; /* 子元素之间的间隔：18rpx */
+  min-height: 88rpx; /* 最小高度，内容多时可以增高：88rpx */
+  padding: 12rpx 0; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 12rpx 0。 */
+  border-bottom: 1rpx solid #f5f5f5; /* 设置 border-bottom 为 1rpx solid #f5f5f5；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+  color: #777; /* 文字颜色：#777 */
+  font-size: 25rpx; /* 字号：25rpx */
+}
+
+.confirm-row > text:first-child {
+  flex-shrink: 0; /* 空间不足时不压缩 */
+}
+
+.confirm-row > text:last-child, .codes {
+  text-align: right; /* 文字右对齐 */
+  color: #333; /* 文字颜色：#333 */
+}
+
+.codes {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  flex-direction: column; /* 主轴改为竖直方向，子元素上下排列 */
+  align-items: flex-end; /* 子元素沿交叉轴靠终点 */
+  gap: 5rpx; /* 子元素之间的间隔：5rpx */
+}
+
+.codes text {
+  padding: 3rpx 9rpx; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 3rpx 9rpx。 */
+  border: 1rpx solid #52c996; /* 设置 border 为 1rpx solid #52c996；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+  border-radius: 5rpx; /* 设置圆角为 5rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  color: #23b774; /* 文字颜色：#23b774 */
+}
+
+.confirm-row .reward {
+  color: #f26c7a !important; /* 文字颜色：#f26c7a !important，提高此声明的优先级 */
+  font-weight: bold; /* 文字加粗 */
+}
+
+.settlement {
+  margin-top: 14rpx; /* 上外边距：14rpx */
+  padding: 20rpx; /* 内边距：内容到边框之间的间距；此处按 四边 设置为 20rpx。 */
+  background: #e7f6ff; /* 背景：#e7f6ff */
+  color: #3d93c3; /* 文字颜色：#3d93c3 */
+  font-size: 22rpx; /* 字号：22rpx */
+  line-height: 1.5; /* 设置行盒高度；无单位值乘以字号，rpx 值是明确行高，normal 由字体决定；相同高度和行高常用于单行文字居中；本行值为 1.5。 */
+}
+
+.agreement {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  gap: 12rpx; /* 子元素之间的间隔：12rpx */
+  padding: 22rpx; /* 内边距：内容到边框之间的间距；此处按 四边 设置为 22rpx。 */
+  background: #fff; /* 背景：#fff */
+  color: #666; /* 文字颜色：#666 */
+  font-size: 23rpx; /* 字号：23rpx */
+}
+
+.checkbox {
+  width: 28rpx; /* 宽度：28rpx */
+  height: 28rpx; /* 高度：28rpx */
+  border: 1rpx solid #bbb; /* 设置 border 为 1rpx solid #bbb；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+  border-radius: 5rpx; /* 设置圆角为 5rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  text-align: center; /* 文字水平居中 */
+  line-height: 28rpx; /* 设置行盒高度；无单位值乘以字号，rpx 值是明确行高，normal 由字体决定；相同高度和行高常用于单行文字居中；本行值为 28rpx。 */
+}
+
+.checkbox {
+  flex-shrink: 0; /* 空间不足时不压缩 */
+}
+
+.checkbox.checked {
+  border-color: #0bd565; /* 边框颜色：#0bd565 */
+  color: #0bd565; /* 文字颜色：#0bd565 */
+}
+
+.confirm-footer {
+  position: fixed; /* 固定定位，常用于底栏或弹窗 */
+  right: 0; /* 设置定位元素的 right 偏移为 0；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  bottom: 0; /* 设置定位元素的 bottom 偏移为 0；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  left: 0; /* 设置定位元素的 left 偏移为 0；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  padding: 15rpx 18rpx calc(15rpx + env(safe-area-inset-bottom)); /* 内边距：内容到边框之间的间距；此处按 上、左右、下 设置为 15rpx 18rpx calc(15rpx + env(safe-area-inset-bottom))。 calc() 用于计算长度，例如整体宽度减边距，或基础内边距加安全区。 env(safe-area-inset-*) 读取设备对应边的安全区，避免内容贴住底部手势条等区域。 */
+  background: #fff; /* 背景：#fff */
+}
+
+.confirm-footer button {
+  margin: 0; /* 外边距：元素外侧的间距；此处按 四边 设置为 0。 */
+  background: #0bd565; /* 背景：#0bd565 */
+  color: #fff; /* 文字颜色：#fff */
+  font-size: 27rpx; /* 字号：27rpx */
+}
+
+.confirm-footer button {
+  height: 82rpx; /* 高度：82rpx */
+  line-height: 82rpx; /* 设置行盒高度；无单位值乘以字号，rpx 值是明确行高，normal 由字体决定；相同高度和行高常用于单行文字居中；本行值为 82rpx。 */
+}
+
+.confirm-footer button::after {
+  border: none; /* 设置 border 为 none；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+}

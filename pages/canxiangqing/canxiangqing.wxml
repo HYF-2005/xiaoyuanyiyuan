@@ -1,0 +1,103 @@
+<!-- 取餐订单详情：订单时间线、照片凭证与角色相关操作；WXML 描述页面结构，不是浏览器 HTML。 -->
+<!-- 界面区块 meal-detail：取餐 / 详情，外观由同页 WXSS 的同名类控制。 -->
+<!-- wx:if 条件 order 成立才创建此区块；隐藏按钮不等于后端授权。 -->
+<view class="meal-detail" wx:if="{{order}}">
+  <!-- 界面区块 detail-card：详情 / 卡片，外观由同页 WXSS 的同名类控制。 -->
+  <view class="detail-card">
+    <view class="detail-heading"><text>◉</text>订单进度</view>
+    <view class="order-number">{{displayId}}</view>
+    <view class="timeline">
+      <view class="timeline-step active">
+        <view class="dot"></view>
+        <view class="step-body">
+          <view class="step-title">订单已发布</view>
+          <view class="step-time">{{publishedAtText}}</view>
+          <view class="fact"><text>截止时间：</text><text>{{deadlineText}}</text></view>
+          <view class="fact"><text>取餐餐厅：</text><text>{{order.restaurant}}</text></view>
+          <view class="fact"><text>餐品数量：</text><text>{{order.codeCount}}份</text></view>
+          <!-- wx:for 遍历 order.codes，每项生成一份标签；默认 item 为当前项、index 为下标，wx:key 帮助定位更新。 -->
+          <view class="fact" wx:for="{{order.codes}}" wx:for-item="code" wx:key="index"><text>取餐码：</text><text>{{role === 'visitor' ? '接单后可见' : code}}</text></view>
+          <view class="fact"><text>收货地址：</text><text>{{order.deliveryBuilding}}　|　{{role === 'visitor' ? '接单后可见' : order.deliveryAddress}}</text></view>
+        </view>
+      </view>
+      <view
+        class="timeline-step {{order.status !== '待接单' ? 'active' : ''}} {{order.status === '已取消' ? 'last' : ''}}"
+      >
+        <view class="dot"></view>
+        <view class="step-body"><view class="step-title">{{order.status === '已取消' ? '订单已取消' : order.status === '待接单' ? '等待接单' : '已接单'}}</view><view class="step-time">{{order.status === '已取消' ? cancelledAtText : order.status === '待接单' ? '待接单' : acceptedAtText}}</view></view>
+      </view>
+      <!-- wx:if 条件 order.status !== '已取消' 成立才创建此区块；隐藏按钮不等于后端授权。 -->
+      <view
+        class="timeline-step {{order.status === '待确认' || order.status === '已完成' ? 'active' : ''}}"
+        wx:if="{{order.status !== '已取消'}}"
+      >
+        <!-- 点击调用 previewCompletionPhoto()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+        <view class="dot"></view><view class="step-body"><view class="step-title">{{order.status === '待确认' || order.status === '已完成' ? '服务已完成' : '等待完成'}}</view><view class="step-time">{{order.status === '待确认' || order.status === '已完成' ? submittedAtText : order.status === '已接单' ? '进行中' : '未开始'}}</view><button class="view-photo-button" wx:if="{{order.hasCompletionPhoto}}" bindtap="previewCompletionPhoto">查看图片</button></view>
+      </view>
+      <view
+        class="timeline-step last {{order.status === '已完成' ? 'active' : ''}}"
+        wx:if="{{order.status !== '已取消'}}"
+      >
+        <view class="dot"></view><view class="step-body"><view class="step-title">{{order.status === '已完成' ? '订单已完成' : '等待确认'}}</view><view class="step-time">{{order.status === '已完成' ? completedAtText : '待确认'}}</view></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 界面区块 detail-card info-card：详情 / 卡片 / 信息 / 卡片，外观由同页 WXSS 的同名类控制。 -->
+  <view class="detail-card info-card">
+    <view class="detail-heading"><text>◉</text>订单信息</view>
+    <view class="info-row"><text>标题</text><text>{{order.title}}</text></view>
+    <view class="info-row"><text>描述</text><text>取餐餐厅：{{order.restaurant}}</text></view>
+    <view class="info-row"><text>报酬</text><text>¥{{order.reward}}</text></view>
+  </view>
+
+  <!-- 界面区块 detail-footer：详情 / 底部操作栏，外观由同页 WXSS 的同名类控制。 -->
+  <!-- wx:if 条件 order.status === '待接单' && role === 'publisher' 成立才创建此区块；隐藏按钮不等于后端授权。 -->
+  <!-- 点击调用 openCancel()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <view class="detail-footer" wx:if="{{order.status === '待接单' && role === 'publisher'}}"><button bindtap="openCancel">取消订单</button></view>
+  <!-- wx:if 条件 order.status === '待接单' && role === 'visitor' 成立才创建此区块；隐藏按钮不等于后端授权。 -->
+  <!-- 点击调用 openAccept()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <view class="detail-footer" wx:if="{{order.status === '待接单' && role === 'visitor'}}"><button class="complete-button" bindtap="openAccept">接单</button></view>
+  <!-- 界面区块 detail-footer action-footer：详情 / 底部操作栏 / action / 底部操作栏，外观由同页 WXSS 的同名类控制。 -->
+  <!-- wx:if 条件 order.status === '已接单' && isRunner 成立才创建此区块；隐藏按钮不等于后端授权。 -->
+  <!-- 点击调用 contactOther()；点击调用 openCancel()；点击调用 takeCompletionPhoto()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <view class="detail-footer action-footer" wx:if="{{order.status === '已接单' && isRunner}}"><button class="secondary-button" bindtap="contactOther">联系对方</button><button class="danger-button" bindtap="openCancel">取消订单</button><button class="complete-button" bindtap="takeCompletionPhoto" loading="{{completionBusy}}" disabled="{{completionBusy}}">完成订单</button></view>
+  <!-- wx:if 条件 order.status === '待确认' && role === 'publisher' 成立才创建此区块；隐藏按钮不等于后端授权。 -->
+  <!-- 点击调用 contactOther()；点击调用 openConfirm()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <view class="detail-footer action-footer" wx:if="{{order.status === '待确认' && role === 'publisher'}}"><button class="secondary-button" bindtap="contactOther">联系接单者</button><button class="complete-button" bindtap="openConfirm">确认完成</button></view>
+  <!-- 界面区块 photo-mask：照片 / 遮罩，外观由同页 WXSS 的同名类控制。 -->
+  <!-- wx:if 条件 acceptVisible 成立才创建此区块；隐藏按钮不等于后端授权。 -->
+  <!-- 点击调用 closeAccept()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <view class="photo-mask" wx:if="{{acceptVisible}}" bindtap="closeAccept">
+    <view class="photo-dialog" catchtap="noop">
+      <view class="photo-title">确认接单</view>
+      <view class="confirm-message">报酬 ¥{{order.reward}}，截止时间 {{deadlineText}}。确认接单后请按时完成。</view>
+      <!-- 点击调用 closeAccept()；点击调用 confirmAccept()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+      <view class="photo-actions"><button bindtap="closeAccept">再看看</button><button class="complete-button" bindtap="confirmAccept">确认接单</button></view>
+    </view>
+  </view>
+  <!-- wx:if 条件 confirmVisible 成立才创建此区块；隐藏按钮不等于后端授权。 -->
+  <!-- 点击调用 closeConfirm()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <view class="photo-mask" wx:if="{{confirmVisible}}" bindtap="closeConfirm">
+    <view class="photo-dialog" catchtap="noop">
+      <view class="photo-title">确认完成</view>
+      <view class="confirm-message">确认订单已完成？</view>
+      <view class="photo-actions">
+        <button bindtap="closeConfirm">取消</button>
+        <!-- 点击调用 confirmOrder()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+        <button class="complete-button" bindtap="confirmOrder" loading="{{completionBusy}}" disabled="{{completionBusy}}">确定</button>
+      </view>
+    </view>
+  </view>
+  <!-- 界面区块 cancel-mask：取消/注销 / 遮罩，外观由同页 WXSS 的同名类控制。 -->
+  <!-- wx:if 条件 cancelVisible 成立才创建此区块；隐藏按钮不等于后端授权。 -->
+  <!-- 点击调用 closeCancel()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <view class="cancel-mask" wx:if="{{cancelVisible}}" bindtap="closeCancel">
+    <view class="cancel-dialog" catchtap="noop">
+      <view class="cancel-title">取消订单</view>
+      <view class="cancel-message">{{isRunner ? '确定取消已接订单吗？将扣除 4 信用分。' : '确定要取消这个订单吗？'}}</view>
+      <!-- 点击调用 closeCancel()；点击调用 confirmCancel()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+      <view class="cancel-actions"><button bindtap="closeCancel">再想想</button><button class="danger" bindtap="confirmCancel">确定取消</button></view>
+    </view>
+  </view>
+</view>

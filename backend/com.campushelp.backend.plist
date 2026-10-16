@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>DB_PASSWORD</key>
+		<string>123456</string>
+		<key>DB_USER</key>
+		<string>root</string>
+		<key>JAVA_HOME</key>
+		<string>/Users/feng/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home</string>
+	</dict>
+	<key>KeepAlive</key>
+	<true/>
+	<key>Label</key>
+	<string>com.campushelp.backend</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/usr/bin/java</string>
+		<string>-jar</string>
+		<string>/Users/feng/Downloads/xiaochengxu/backend/target/campus-help-backend-1.0.0-SNAPSHOT.jar</string>
+	</array>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>StandardErrorPath</key>
+	<string>/Users/feng/Downloads/xiaochengxu/backend/logs/backend-error.log</string>
+	<key>StandardOutPath</key>
+	<string>/Users/feng/Downloads/xiaochengxu/backend/logs/backend.log</string>
+	<key>ThrottleInterval</key>
+	<integer>10</integer>
+	<key>WorkingDirectory</key>
+	<string>/Users/feng/Downloads/xiaochengxu/backend</string>
+</dict>
+</plist>

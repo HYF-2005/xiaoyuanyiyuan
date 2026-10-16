@@ -1,0 +1,93 @@
+# ============================================
+# 校园易援（campus-help）— 微信小程序 + Spring Boot 后端
+# .gitignore
+# ============================================
+
+# ---------- 操作系统 ----------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+
+# ---------- 编辑器 / IDE ----------
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+*~
+
+# ---------- Java / Maven / Spring Boot ----------
+# 编译产物（.class / .jar），可由 mvn package 重新生成
+target/
+*.class
+*.jar
+*.war
+*.ear
+!.mvn/wrapper/maven-wrapper.jar
+
+# 项目内自带的 Maven 安装包（10MB，不应进仓库）
+.tools/
+
+# Maven 包装器配置
+.mvn/wrapper/maven-wrapper.properties
+
+# ---------- 本地依赖仓库 ----------
+# 项目内的 .m2 本地仓库（65MB）
+.m2-local/
+.m2/
+
+# ---------- 环境变量与密钥 ----------
+# 绝不能提交：数据库密码等敏感配置
+.env
+.env.*
+!.env.example
+application-local.yml
+application-local.properties
+
+# ---------- 日志 ----------
+*.log
+logs/
+backend/logs/
+backend/*.log
+backend/server-*.log
+backend/nohup.out
+
+# ---------- 运行时上传文件 ----------
+# 用户上传的证明照片属于运行时数据，不进仓库
+backend/uploads/
+uploads/
+
+# ---------- 临时文件 ----------
+tmp/
+temp/
+.cache/
+*.tmp
+*.temp
+*.bak
+
+# ---------- 微信小程序私有配置 ----------
+# 开发者工具的个人设置（含本地路径等），因人而异
+project.private.config.json
+
+# ---------- 个人信息（务必排除）----------
+# 简历、面试讲稿等含真实姓名与联系方式，不应公开
+面试资料/
+*简历*
+*讲稿*
+*.docx
+!docs/**/*.docx
+
+# ---------- 依赖目录（保险）----------
+node_modules/
+dist/
+build/
+
+# ---------- 其他 ----------
+*.pid
+*.seed
+*.orig
+npm-debug.log*
+yarn-error.log*

@@ -1,0 +1,82 @@
+<!-- 修改密码：旧密码校验、新密码强度提示与修改后重新登录；WXML 描述页面结构，不是浏览器 HTML。 -->
+<!-- 界面区块 password-page：密码 / 页面，外观由同页 WXSS 的同名类控制。 -->
+<view class="password-page">
+  <!-- 界面区块 password-card：密码 / 卡片，外观由同页 WXSS 的同名类控制。 -->
+  <view class="password-card">
+    <view class="password-field">
+      <text class="password-label">旧密码</text>
+      <view class="password-input-wrap">
+        <!-- 界面区块 password-input：密码 / 输入框，外观由同页 WXSS 的同名类控制。 -->
+        <input class="password-input" password="{{!showOldPassword}}"
+        placeholder="请输入旧密码" value="{{oldPassword}}"
+        data-field="oldPassword" bindinput="onPasswordInput" />
+        <view
+          class="password-toggle"
+          role="button"
+          aria-label="{{showOldPassword ? '隐藏旧密码' : '显示旧密码'}}"
+          data-field="showOldPassword"
+          bindtap="togglePassword"
+        >
+          <!-- 界面区块 visibility-eye {{showOldPassword ? '' : 'closed'}}：密码可见性 / 眼睛 / showOldPassword / 隐藏状态，外观由同页 WXSS 的同名类控制。 -->
+          <view class="visibility-eye {{showOldPassword ? '' : 'closed'}}"></view>
+        </view>
+      </view>
+    </view>
+
+    <view class="password-field">
+      <text class="password-label">新密码</text>
+      <view class="password-input-wrap">
+        <input class="password-input" password="{{!showNewPassword}}"
+        placeholder="请输入新密码(8-10位,包含字母和数字)" value="{{newPassword}}"
+        data-field="newPassword" bindinput="onPasswordInput" />
+        <view
+          class="password-toggle"
+          role="button"
+          aria-label="{{showNewPassword ? '隐藏新密码' : '显示新密码'}}"
+          data-field="showNewPassword"
+          bindtap="togglePassword"
+        >
+          <!-- 界面区块 visibility-eye {{showNewPassword ? '' : 'closed'}}：密码可见性 / 眼睛 / showNewPassword / 隐藏状态，外观由同页 WXSS 的同名类控制。 -->
+          <view class="visibility-eye {{showNewPassword ? '' : 'closed'}}"></view>
+        </view>
+      </view>
+      <!-- 界面区块 password-strength level-{{strengthLevel}}：密码 / 密码强度 / level / strengthLevel，外观由同页 WXSS 的同名类控制。 -->
+      <view class="password-strength level-{{strengthLevel}}" wx:if="{{newPassword}}">
+        <text>密码强度</text>
+        <!-- 界面区块 password-strength-bars：密码 / 密码强度 / bars，外观由同页 WXSS 的同名类控制。 -->
+        <view class="password-strength-bars">
+          <view class="password-strength-bar {{strengthLevel >= 1 ? 'filled' : ''}}"></view>
+          <view class="password-strength-bar {{strengthLevel >= 2 ? 'filled' : ''}}"></view>
+          <view class="password-strength-bar {{strengthLevel >= 3 ? 'filled' : ''}}"></view>
+        </view>
+        <!-- 界面区块 password-strength-text：密码 / 密码强度 / 文字，外观由同页 WXSS 的同名类控制。 -->
+        <text class="password-strength-text">{{strengthText}}</text>
+      </view>
+    </view>
+
+    <view class="password-field">
+      <text class="password-label">确认密码</text>
+      <view class="password-input-wrap">
+        <input class="password-input" password="{{!showConfirmPassword}}"
+        placeholder="请再次输入新密码" value="{{confirmPassword}}"
+        data-field="confirmPassword" bindinput="onPasswordInput" />
+        <view
+          class="password-toggle"
+          role="button"
+          aria-label="{{showConfirmPassword ? '隐藏确认密码' : '显示确认密码'}}"
+          data-field="showConfirmPassword"
+          bindtap="togglePassword"
+        >
+          <!-- 界面区块 visibility-eye {{showConfirmPassword ? '' : 'closed'}}：密码可见性 / 眼睛 / showConfirmPassword / 隐藏状态，外观由同页 WXSS 的同名类控制。 -->
+          <view class="visibility-eye {{showConfirmPassword ? '' : 'closed'}}"></view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 界面区块 password-footer：密码 / 底部操作栏，外观由同页 WXSS 的同名类控制。 -->
+  <view class="password-footer">
+    <!-- 点击调用 submitChange()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+    <button class="password-submit" bindtap="submitChange">确认修改</button>
+  </view>
+</view>

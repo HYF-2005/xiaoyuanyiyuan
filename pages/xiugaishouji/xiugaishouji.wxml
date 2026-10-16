@@ -1,0 +1,39 @@
+<!-- 绑定手机号：获取演示验证码、重发倒计时和后端绑定；WXML 描述页面结构，不是浏览器 HTML。 -->
+<!-- 界面区块 phone-page：手机号 / 页面，外观由同页 WXSS 的同名类控制。 -->
+<view class="phone-page">
+  <!-- 界面区块 phone-card：手机号 / 卡片，外观由同页 WXSS 的同名类控制。 -->
+  <view class="phone-card">
+    <view class="phone-field">
+      <view class="phone-label">手机号</view>
+      <input class="phone-input" type="number"
+      maxlength="11" placeholder="请输入手机号"
+      value="{{phone}}" bindinput="onPhoneInput" />
+    </view>
+
+    <view class="phone-field">
+      <view class="phone-label">验证码</view>
+      <view class="phone-code-row">
+        <input class="phone-input" type="number"
+        maxlength="6" placeholder="请输入验证码"
+        value="{{code}}" bindinput="onCodeInput" />
+        <!-- 点击调用 sendCode()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+        <button class="phone-send" bindtap="sendCode" disabled="{{countdown > 0}}">
+          {{countdown > 0 ? countdown + 's' : '发送验证码'}}
+        </button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 界面区块 phone-tips：手机号 / 提示，外观由同页 WXSS 的同名类控制。 -->
+  <view class="phone-tips">
+    <view>• 当前使用弹窗演示验证码，不发送短信</view>
+    <view>• 验证码有效期为5分钟</view>
+    <view>• 如未收到验证码，请检查手机号是否正确</view>
+  </view>
+
+  <!-- 界面区块 phone-footer：手机号 / 底部操作栏，外观由同页 WXSS 的同名类控制。 -->
+  <view class="phone-footer">
+    <!-- 点击调用 confirmBind()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+    <button class="phone-confirm" bindtap="confirmBind">确认绑定</button>
+  </view>
+</view>

@@ -1,0 +1,98 @@
+<!-- 取件订单详情：按身份和状态显示接单、拍照、确认与取消操作；WXML 描述页面结构，不是浏览器 HTML。 -->
+<!-- 界面区块 detail-page：详情 / 页面，外观由同页 WXSS 的同名类控制。 -->
+<view class="detail-page" wx:if="{{order}}">
+  <!-- 界面区块 progress-card：进度 / 卡片，外观由同页 WXSS 的同名类控制。 -->
+  <view class="progress-card">
+    <view class="progress-heading"><text class="progress-heading-icon">▤</text>订单进度</view>
+    <view class="order-number">{{displayId}}</view>
+
+    <view class="timeline">
+      <view class="timeline-step current">
+        <view class="timeline-dot"></view>
+        <view class="timeline-body">
+          <view class="step-title">订单已发布</view>
+          <view class="step-subtitle">{{publishedAtText}}</view>
+          <view class="order-facts">
+            <view class="fact-row"><text>{{actorLabel}}</text><text>{{actorName}}</text></view>
+            <view class="fact-row"><text>截止时间：</text><text>{{deadlineText}}</text></view>
+            <view class="fact-row"><text>报酬：</text><text>¥{{order.reward}}</text></view>
+            <view class="fact-row"><text>取件地点：</text><text>{{order.station}}</text></view>
+            <view class="fact-row"><text>取件码：</text><text>{{packageCount}}件</text></view>
+            <!-- wx:for 遍历 order.packages，每项生成一份标签；默认 item 为当前项、index 为下标，wx:key 帮助定位更新。 -->
+            <view class="fact-row" wx:for="{{order.packages}}" wx:for-item="pkg" wx:key="index"><text>{{pkg.size}}</text><text>{{role === 'visitor' ? '接单后可见' : pkg.code}}</text></view>
+            <view class="fact-row"><text>收货地址：</text><text>{{order.deliveryBuilding}}　|　{{role === 'visitor' ? '接单后可见' : order.deliveryAddress}}</text></view>
+          </view>
+        </view>
+      </view>
+
+      <view class="timeline-step {{order.status !== '待接单' ? 'cancelled' : ''}}">
+        <view class="timeline-dot"></view>
+        <view class="timeline-body">
+          <view class="step-title">{{order.status === '已取消' ? '订单已取消' : order.status === '待接单' ? '等待接单' : '已接单'}}</view>
+          <view class="step-subtitle">{{order.status === '已取消' ? '已取消' : order.status === '待接单' ? '待接单' : acceptedAtText}}</view>
+        </view>
+      </view>
+
+      <view
+        class="timeline-step {{order.status === '待确认' || order.status === '已完成' ? 'cancelled' : ''}}"
+        wx:if="{{order.status !== '已取消'}}"
+      >
+        <view class="timeline-dot"></view>
+        <view class="timeline-body">
+          <view class="step-title">{{order.status === '待确认' || order.status === '已完成' ? '服务已完成' : '等待完成'}}</view>
+          <view class="step-subtitle">{{order.status === '待确认' || order.status === '已完成' ? submittedAtText : order.status === '已接单' ? '进行中' : '未开始'}}</view>
+          <!-- wx:if 条件 order.hasCompletionPhoto 成立才创建此区块；隐藏按钮不等于后端授权。 -->
+          <button class="view-photo-button" wx:if="{{order.hasCompletionPhoto}}" bindtap="previewCompletionPhoto">查看图片</button>
+        </view>
+      </view>
+
+      <view
+        class="timeline-step last {{order.status === '已完成' ? 'cancelled' : ''}}"
+        wx:if="{{order.status !== '已取消'}}"
+      >
+        <view class="timeline-dot"></view>
+        <view class="timeline-body">
+          <view class="step-title">{{order.status === '已完成' ? '订单已完成' : '等待确认'}}</view>
+          <view class="step-subtitle">{{order.status === '已完成' ? completedAtText : '待确认'}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="detail-footer" wx:if="{{order.status === '待接单' && role === 'publisher'}}">
+    <!-- 点击调用 cancelOrder()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+    <button class="cancel-button" bindtap="cancelOrder">取消订单</button>
+  </view>
+  <view class="detail-footer" wx:if="{{order.status === '待接单' && role === 'visitor'}}">
+    <button class="complete-button" bindtap="openAccept">接单</button>
+  </view>
+  <view class="detail-footer action-footer" wx:if="{{order.status === '已接单' && isRunner}}">
+    <!-- 点击调用 contactOther()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+    <button class="secondary-button" bindtap="contactOther">联系对方</button>
+    <button class="cancel-button" bindtap="cancelOrder">取消订单</button>
+    <!-- 点击调用 takeCompletionPhoto()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+    <button class="complete-button" bindtap="takeCompletionPhoto" loading="{{completionBusy}}" disabled="{{completionBusy}}">完成订单</button>
+  </view>
+  <view class="detail-footer action-footer" wx:if="{{order.status === '待确认' && role === 'publisher'}}">
+    <button class="secondary-button" bindtap="contactOther">联系接单者</button>
+    <!-- 点击调用 openConfirm()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+    <button class="complete-button" bindtap="openConfirm">确认完成</button>
+  </view>
+  <view class="photo-mask" wx:if="{{acceptVisible}}" bindtap="closeAccept">
+    <view class="photo-dialog" catchtap="noop">
+      <view class="photo-title">确认接单</view>
+      <view class="confirm-message">报酬 ¥{{order.reward}}，截止时间 {{deadlineText}}。确认接单后请按时完成。</view>
+      <view class="photo-actions"><button bindtap="closeAccept">再看看</button><button class="complete-button" bindtap="confirmAccept">确认接单</button></view>
+    </view>
+  </view>
+  <view class="photo-mask" wx:if="{{confirmVisible}}" bindtap="closeConfirm">
+    <view class="photo-dialog" catchtap="noop">
+      <view class="photo-title">确认完成</view>
+      <view class="confirm-message">确认订单已完成？</view>
+      <view class="photo-actions">
+        <button bindtap="closeConfirm">取消</button>
+        <button class="complete-button" bindtap="confirmOrder" loading="{{completionBusy}}" disabled="{{completionBusy}}">确定</button>
+      </view>
+    </view>
+  </view>
+</view>

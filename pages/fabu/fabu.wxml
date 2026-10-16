@@ -1,0 +1,285 @@
+<!-- 发布取件需求：驿站、取件码、包裹大小、送达地址、期限和报酬；WXML 描述页面结构，不是浏览器 HTML。 -->
+<!-- 界面区块 publish-page：发布 / 页面，外观由同页 WXSS 的同名类控制。 -->
+<view class="publish-page">
+  <!-- 界面区块 form-card：表单 / 卡片，外观由同页 WXSS 的同名类控制。 -->
+  <view class="form-card">
+    <view class="card-title">取件地点</view>
+
+    <view class="field-label">
+      <text class="required">*</text>取件驿站
+    </view>
+    <!-- 点击调用 chooseStation()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+    <view class="field-box" bindtap="chooseStation">
+      {{station || '请选择取件驿站'}}
+    </view>
+
+    <view class="field-label">
+      <text class="required">*</text>取件码
+    </view>
+
+    <view
+    class="code-row"
+    wx:for="{{packageRows}}"
+    wx:key="id"
+    >
+    <input
+    class="code-input"
+    placeholder="请输入取件码"
+    value="{{item.code}}"
+    data-id="{{item.id}}"
+    bindinput="onCodeInput"
+    />
+
+    <view
+    class="size-select"
+    data-id="{{item.id}}"
+    bindtap="choosePackageSize"
+    >
+    {{item.size}} ▾
+  </view>
+
+  <view
+  class="code-delete"
+  wx:if="{{packageRows.length > 1}}"
+  data-id="{{item.id}}"
+  bindtap="removeCode"
+  >
+  删除
+</view>
+</view>
+
+<view class="add-code" bindtap="addCode">
+  ＋ 添加取件码
+</view>
+
+<view class="size-title">快递小中大图例参考</view>
+<view class="size-options">
+  <view><image src="/assets/parcel/small.png" mode="aspectFit" /><text>小件</text></view>
+  <view><image src="/assets/parcel/medium.png" mode="aspectFit" /><text>中件</text></view>
+  <view><image src="/assets/parcel/large.png" mode="aspectFit" /><text>大件</text></view>
+</view>
+
+<view class="package-summary" wx:if="{{summary.total > 0}}">
+  <view class="summary-pill">共{{summary.total}}个快递</view>
+  <view class="summary-pill" wx:if="{{summary.small > 0}}">小件×{{summary.small}}</view>
+  <view class="summary-pill" wx:if="{{summary.medium > 0}}">中件×{{summary.medium}}</view>
+  <view class="summary-pill" wx:if="{{summary.large > 0}}">大件×{{summary.large}}</view>
+</view>
+</view>
+
+<!-- 界面区块 form-card delivery-card：表单 / 卡片 / delivery / 卡片，外观由同页 WXSS 的同名类控制。 -->
+<view class="form-card delivery-card">
+  <!-- 界面区块 card-title：卡片 / 标题，外观由同页 WXSS 的同名类控制。 -->
+  <view class="card-title">收件地点</view>
+
+  <view class="field-label">
+    <text class="required">*</text>送达建筑
+  </view>
+  <!-- 界面区块 delivery-select：delivery / 选择框，外观由同页 WXSS 的同名类控制。 -->
+  <view class="delivery-select" bindtap="openBuildingPicker">
+    <text>{{deliveryBuilding || '请选择送达建筑'}}</text><text>›</text>
+  </view>
+
+  <view class="field-label">
+    <text class="required">*</text>详细地址
+  </view>
+  <input
+  class="address-input"
+  placeholder="如：203"
+  value="{{deliveryAddress}}"
+  bindinput="onAddressInput"
+  />
+</view>
+<!-- 界面区块 form-card time-price-card：表单 / 卡片 / 时间 / price / 卡片，外观由同页 WXSS 的同名类控制。 -->
+<view class="form-card time-price-card">
+  <view class="card-title">时间和价格</view>
+
+  <view class="field-label">
+    <text class="required">*</text>截止日期
+  </view>
+  <!-- 界面区块 time-price-field：时间 / price / 表单字段，外观由同页 WXSS 的同名类控制。 -->
+  <view class="time-price-field" bindtap="openDeadlinePicker">
+    {{confirmedDeadlineLabel || '选择截止时间'}} <text>›</text>
+  </view>
+
+  <view class="field-label">
+    <!-- 界面区块 required：必填标记，外观由同页 WXSS 的同名类控制。 -->
+    <text class="required">*</text>报酬
+  </view>
+  <view class="time-price-field">
+    <text>¥</text>
+    <input
+    class="reward-input"
+    type="digit"
+    placeholder="请输入金额"
+    value="{{rewardAmount}}"
+    bindinput="onRewardInput"
+    />
+  </view>
+  <!-- 界面区块 suggested-price：suggested / price，外观由同页 WXSS 的同名类控制。 -->
+  <!-- 填写至少一个取件码后显示推荐报酬；推荐值仅供参考，实际报酬仍由用户输入。 -->
+  <view wx:if="{{summary.total > 0}}" class="suggested-price">
+    ⚠ 建议价格：¥{{suggestedReward}}
+  </view>
+</view>
+<!-- 界面区块 publish-footer：发布 / 底部操作栏，外观由同页 WXSS 的同名类控制。 -->
+<!-- 点击调用 onNextStep()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+<view class="publish-footer"><view class="publish-next" bindtap="onNextStep">下一步</view></view>
+<!-- 界面区块 station-mask：station / 遮罩，外观由同页 WXSS 的同名类控制。 -->
+<!-- wx:if 条件 stationPickerVisible 成立才创建此区块；隐藏按钮不等于后端授权。 -->
+<!-- 点击调用 closeStationPicker()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+<view class="station-mask" wx:if="{{stationPickerVisible}}" bindtap="closeStationPicker"></view>
+<!-- 界面区块 station-menu：station / 功能菜单，外观由同页 WXSS 的同名类控制。 -->
+<view class="station-menu" wx:if="{{stationPickerVisible}}">
+  <!-- wx:for 遍历 stations，每项生成一份标签；默认 item 为当前项、index 为下标，wx:key 帮助定位更新。 -->
+  <!-- 点击调用 selectStation()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <view wx:for="{{stations}}" wx:key="*this" data-name="{{item}}" bindtap="selectStation">{{item}}</view>
+</view>
+<view wx:if="{{buildingPickerVisible}}">
+  <!-- 界面区块 picker-mask：选择弹窗 / 遮罩，外观由同页 WXSS 的同名类控制。 -->
+  <view class="picker-mask" bindtap="closeBuildingPicker"></view>
+
+  <!-- 界面区块 building-picker：建筑 / 选择弹窗，外观由同页 WXSS 的同名类控制。 -->
+  <view class="building-picker">
+    <view class="picker-title">
+      请选择送达建筑
+      <text class="picker-close" bindtap="closeBuildingPicker">×</text>
+    </view>
+    <view class="building-search">
+      <icon type="search" size="18" color="#999" />
+      <input
+      class="building-search-input"
+      placeholder="搜索建筑"
+      value="{{buildingKeyword}}"
+      bindinput="onBuildingSearch"
+      />
+    </view>
+    <view class="picker-steps">
+      <view class="picker-step" bindtap="showBuildingCategories">
+        <view class="step-left">
+          <view class="step-marker">
+            <view class="step-dot"></view>
+            <view class="step-connector"></view>
+          </view>
+          <text class="step-label {{buildingCategoryMode ? 'step-active' : ''}}">{{buildingCategory}}</text>
+        </view>
+        <text class="step-arrow">›</text>
+      </view>
+
+      <view class="picker-step" bindtap="showBuildingOptions">
+        <view class="step-left">
+          <view class="step-dot"></view>
+          <text class="step-label {{buildingCategoryMode ? '' : 'step-active'}}">选择选项</text>
+        </view>
+        <text class="step-arrow">›</text>
+      </view>
+    </view>
+
+    <scroll-view class="picker-list" scroll-y>
+      <block wx:if="{{buildingCategoryMode}}">
+        <view
+        class="picker-option"
+        wx:for="{{buildingCategories}}"
+        wx:key="*this"
+        data-category="{{item}}"
+        bindtap="chooseBuildingCategory"
+        >
+        <text>{{item}}</text>
+        <!-- wx:if 条件 buildingCategory === item 成立才创建此区块；隐藏按钮不等于后端授权。 -->
+        <text class="option-check" wx:if="{{buildingCategory === item}}">✓</text>
+      </view>
+    </block>
+
+    <block wx:else>
+      <view
+      class="picker-option"
+      wx:for="{{buildingOptions}}"
+      wx:key="*this"
+      data-name="{{item}}"
+      bindtap="chooseBuilding"
+      >{{item}}</view>
+  </block>
+</scroll-view>
+</view>
+</view>
+<view wx:if="{{deadlinePickerVisible}}">
+  <view class="picker-mask" bindtap="closeDeadlinePicker"></view>
+  <!-- 界面区块 deadline-picker：截止时间 / 选择弹窗，外观由同页 WXSS 的同名类控制。 -->
+  <view class="deadline-picker">
+    <view class="deadline-title">
+      <text>选择截止时间</text>
+      <text bindtap="closeDeadlinePicker">×</text>
+    </view>
+    <view class="deadline-section-title">截止日期（必选）</view>
+    <scroll-view class="deadline-date-scroll" scroll-x>
+      <!-- 界面区块 deadline-date-list：截止时间 / date / 列表，外观由同页 WXSS 的同名类控制。 -->
+      <view class="deadline-date-list">
+        <view
+        wx:for="{{deadlineDates}}"
+        wx:key="value"
+        class="deadline-date {{selectedDeadlineDate === item.value ? 'selected' : ''}}"
+        data-date="{{item.value}}"
+        bindtap="chooseDeadlineDate"
+        >
+        <text>{{item.label}}</text>
+        <text class="deadline-weekday">{{item.weekday}}</text>
+      </view>
+    </view>
+  </scroll-view>
+  <!-- 界面区块 deadline-mode-tabs：截止时间 / mode / 切换栏，外观由同页 WXSS 的同名类控制。 -->
+  <view class="deadline-mode-tabs">
+    <view
+    class="{{deadlineTimeMode === 'common' ? 'active' : ''}}"
+    data-mode="common"
+    bindtap="changeDeadlineTimeMode"
+    >常用时间</view>
+  <view
+  class="{{deadlineTimeMode === 'custom' ? 'active' : ''}}"
+  data-mode="custom"
+  bindtap="changeDeadlineTimeMode"
+  >自定义时间</view>
+</view>
+<!-- 界面区块 deadline-time-title：截止时间 / 时间 / 标题，外观由同页 WXSS 的同名类控制。 -->
+<view class="deadline-time-title">选择时间（可选）</view>
+<!-- 界面区块 deadline-time-grid：截止时间 / 时间 / grid，外观由同页 WXSS 的同名类控制。 -->
+<!-- wx:if 条件 deadlineTimeMode === 'common' 成立才创建此区块；隐藏按钮不等于后端授权。 -->
+<view class="deadline-time-grid" wx:if="{{deadlineTimeMode === 'common'}}">
+  <view
+  wx:for="{{commonDeadlineTimes}}"
+  wx:key="time"
+  class="deadline-time-option {{selectedDeadlineTime === item.time ? 'selected' : ''}}"
+  data-time="{{item.time}}"
+  bindtap="chooseDeadlineTime"
+  >
+  <text>{{item.name}}</text>
+  <text>{{item.time}}</text>
+</view>
+</view>
+<view class="deadline-custom-time" wx:else>
+  <!-- 界面区块 deadline-wheel-labels：截止时间 / 滚轮 / labels，外观由同页 WXSS 的同名类控制。 -->
+  <view class="deadline-wheel-labels">
+    <text>小时</text>
+    <text>分钟</text>
+  </view>
+  <picker-view
+  class="deadline-wheel"
+  value="{{customTimeIndexes}}"
+  indicator-style="height: 80rpx;"
+  bindchange="onCustomTimeChange"
+  >
+  <picker-view-column>
+    <view wx:for="{{customHours}}" wx:key="*this">{{item}}</view>
+  </picker-view-column>
+  <picker-view-column>
+    <view wx:for="{{customMinutes}}" wx:key="*this">{{item}}</view>
+  </picker-view-column>
+</picker-view>
+</view>
+<!-- 界面区块 deadline-tip：截止时间 / tip，外观由同页 WXSS 的同名类控制。 -->
+<view class="deadline-tip">不选择时间则默认为当天23:59前送达</view>
+<!-- 界面区块 deadline-confirm：截止时间 / 确认，外观由同页 WXSS 的同名类控制。 -->
+<!-- 点击调用 confirmDeadlineDate()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+<view class="deadline-confirm" bindtap="confirmDeadlineDate">确定</view>
+</view>
+</view>
+</view>

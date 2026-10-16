@@ -1,0 +1,325 @@
+
+page {
+  background: #f5f5f5; /* 背景：#f5f5f5 */
+}
+
+.meal-detail {
+  padding: 20rpx 0 150rpx; /* 内边距：内容到边框之间的间距；此处按 上、左右、下 设置为 20rpx 0 150rpx。 */
+}
+
+.detail-card {
+  padding: 28rpx 20rpx; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 28rpx 20rpx。 */
+  background: #fff; /* 背景：#fff */
+}
+
+.detail-heading {
+  color: #222; /* 文字颜色：#222 */
+  font-size: 31rpx; /* 字号：31rpx */
+  font-weight: bold; /* 文字加粗 */
+}
+
+.detail-heading text {
+  margin-right: 8rpx; /* 右外边距：8rpx */
+  color: #0bd565; /* 文字颜色：#0bd565 */
+}
+
+.order-number {
+  margin-top: 20rpx; /* 上外边距：20rpx */
+  padding: 15rpx; /* 内边距：内容到边框之间的间距；此处按 四边 设置为 15rpx。 */
+  background: #f8f9f9; /* 背景：#f8f9f9 */
+  color: #aaa; /* 文字颜色：#aaa */
+  font-size: 22rpx; /* 字号：22rpx */
+  letter-spacing: 2rpx; /* 字符之间的额外间距：2rpx */
+}
+
+.timeline {
+  margin-top: 20rpx; /* 上外边距：20rpx */
+  padding-top: 35rpx; /* 上内边距：35rpx */
+  border-top: 1rpx solid #eee; /* 设置 border-top 为 1rpx solid #eee；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+}
+
+.timeline-step {
+  position: relative; /* 保留布局占位，作为绝对定位的参照 */
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  min-height: 135rpx; /* 最小高度，内容多时可以增高：135rpx */
+  color: #aaa; /* 文字颜色：#aaa */
+}
+
+.timeline-step:first-child {
+  min-height: 0; /* 允许子元素缩小，避免内容撑高布局 */
+}
+
+.timeline-step::before {
+  content: ''; /* 生成空伪元素，用于绘制装饰 */
+  position: absolute; /* 脱离普通布局，相对定位祖先摆放 */
+  left: 20rpx; /* 设置定位元素的 left 偏移为 20rpx；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  top: 24rpx; /* 设置定位元素的 top 偏移为 24rpx；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  bottom: 0; /* 设置定位元素的 bottom 偏移为 0；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  width: 2rpx; /* 宽度：2rpx */
+  background: #ddd; /* 背景：#ddd */
+}
+
+.timeline-step.last::before {
+  display: none; /* 隐藏元素，并取消其占位 */
+}
+
+.dot {
+  z-index: 1; /* 层叠顺序，同一层叠上下文中比较：1 */
+  flex-shrink: 0; /* 空间不足时不压缩 */
+  width: 15rpx; /* 宽度：15rpx */
+  height: 15rpx; /* 高度：15rpx */
+  margin: 8rpx 29rpx 0 13rpx; /* 外边距：元素外侧的间距；此处按 上、右、下、左 设置为 8rpx 29rpx 0 13rpx。 */
+  border-radius: 50%; /* 设置圆角为 50%；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  background: #ddd; /* 背景：#ddd */
+}
+
+.active .dot {
+  background: #0bd565; /* 背景：#0bd565 */
+}
+
+.step-body {
+  flex: 1; /* 按权重 1 分配剩余空间，并允许压缩 */
+  min-width: 0; /* 允许子元素缩小，避免长内容撑宽布局 */
+  padding-bottom: 24rpx; /* 下内边距：24rpx */
+}
+
+.step-title {
+  font-size: 26rpx; /* 字号：26rpx */
+}
+
+.active .step-title {
+  color: #0bd565; /* 文字颜色：#0bd565 */
+  font-weight: bold; /* 文字加粗 */
+}
+
+.step-time {
+  margin: 12rpx 0 20rpx; /* 外边距：元素外侧的间距；此处按 上、左右、下 设置为 12rpx 0 20rpx。 */
+  font-size: 22rpx; /* 字号：22rpx */
+}
+
+.fact {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  justify-content: space-between; /* 两端贴边，中间空隙均分 */
+  gap: 15rpx; /* 子元素之间的间隔：15rpx */
+  margin-bottom: 10rpx; /* 下外边距：10rpx */
+  padding: 13rpx; /* 内边距：内容到边框之间的间距；此处按 四边 设置为 13rpx。 */
+  background: #f7f8f8; /* 背景：#f7f8f8 */
+  color: #666; /* 文字颜色：#666 */
+  font-size: 23rpx; /* 字号：23rpx */
+}
+
+.fact text:last-child {
+  color: #222; /* 文字颜色：#222 */
+  text-align: right; /* 文字右对齐 */
+}
+
+.info-card {
+  margin-top: 20rpx; /* 上外边距：20rpx */
+}
+
+.info-row {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  justify-content: space-between; /* 两端贴边，中间空隙均分 */
+  gap: 16rpx; /* 子元素之间的间隔：16rpx */
+  padding: 22rpx 0; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 22rpx 0。 */
+  border-bottom: 1rpx solid #eee; /* 设置 border-bottom 为 1rpx solid #eee；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+  color: #777; /* 文字颜色：#777 */
+  font-size: 24rpx; /* 字号：24rpx */
+}
+
+.info-row text:last-child {
+  color: #333; /* 文字颜色：#333 */
+  text-align: right; /* 文字右对齐 */
+}
+
+.detail-footer {
+  position: fixed; /* 固定定位，常用于底栏或弹窗 */
+  right: 0; /* 设置定位元素的 right 偏移为 0；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  bottom: 0; /* 设置定位元素的 bottom 偏移为 0；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  left: 0; /* 设置定位元素的 left 偏移为 0；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  padding: 16rpx calc(16rpx + env(safe-area-inset-right)) calc(16rpx + env(safe-area-inset-bottom)); /* 内边距：内容到边框之间的间距；此处按 上、左右、下 设置为 16rpx calc(16rpx + env(safe-area-inset-right)) calc(16rpx + env(safe-area-inset-bottom))。 calc() 用于计算长度，例如整体宽度减边距，或基础内边距加安全区。 env(safe-area-inset-*) 读取设备对应边的安全区，避免内容贴住底部手势条等区域。 */
+  background: #fff; /* 背景：#fff */
+}
+
+.detail-footer button {
+  margin: 0; /* 外边距：元素外侧的间距；此处按 四边 设置为 0。 */
+  background: #e6e6e6; /* 背景：#e6e6e6 */
+  color: #222; /* 文字颜色：#222 */
+  font-size: 27rpx; /* 字号：27rpx */
+  font-weight: bold; /* 文字加粗 */
+}
+
+.detail-footer button, .cancel-actions button {
+  height: 82rpx; /* 高度：82rpx */
+  line-height: 82rpx; /* 设置行盒高度；无单位值乘以字号，rpx 值是明确行高，normal 由字体决定；相同高度和行高常用于单行文字居中；本行值为 82rpx。 */
+}
+
+.detail-footer button::after, .cancel-actions button::after {
+  border: none; /* 设置 border 为 none；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+}
+
+.cancel-mask {
+  position: fixed; /* 固定定位，常用于底栏或弹窗 */
+  z-index: 20; /* 层叠顺序，同一层叠上下文中比较：20 */
+  inset: 0; /* 上右下左都贴边，配合定位覆盖区域 */
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  justify-content: center; /* 子元素沿主轴居中 */
+  background: rgba(0,0,0,.55); /* 背景：rgba(0,0,0,.55) */
+}
+
+.cancel-dialog {
+  box-sizing: border-box; /* 设置的宽高包含内边距和边框 */
+  width: 620rpx; /* 宽度：620rpx */
+  padding: 22rpx; /* 内边距：内容到边框之间的间距；此处按 四边 设置为 22rpx。 */
+  border-radius: 12rpx; /* 设置圆角为 12rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  background: #fff; /* 背景：#fff */
+}
+
+.cancel-title {
+  padding: 14rpx; /* 内边距：内容到边框之间的间距；此处按 四边 设置为 14rpx。 */
+  border-bottom: 1rpx solid #eee; /* 设置 border-bottom 为 1rpx solid #eee；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+  font-size: 29rpx; /* 字号：29rpx */
+  font-weight: bold; /* 文字加粗 */
+  text-align: center; /* 文字水平居中 */
+}
+
+.cancel-message {
+  padding: 40rpx 0; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 40rpx 0。 */
+  font-size: 26rpx; /* 字号：26rpx */
+  text-align: center; /* 文字水平居中 */
+}
+
+.cancel-actions {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  gap: 16rpx; /* 子元素之间的间隔：16rpx */
+}
+
+.cancel-actions button {
+  flex: 1; /* 按权重 1 分配剩余空间，并允许压缩 */
+  margin: 0; /* 外边距：元素外侧的间距；此处按 四边 设置为 0。 */
+  background: #e5e5e5; /* 背景：#e5e5e5 */
+  color: #222; /* 文字颜色：#222 */
+  font-size: 25rpx; /* 字号：25rpx */
+}
+
+.cancel-actions .danger {
+  background: #d43d47; /* 背景：#d43d47 */
+  color: #fff; /* 文字颜色：#fff */
+}
+
+.detail-footer .complete-button, .photo-actions .complete-button {
+  background: #0bd565; /* 背景：#0bd565 */
+  color: #fff; /* 文字颜色：#fff */
+}
+
+.proof-card {
+  margin-top: 20rpx; /* 上外边距：20rpx */
+  padding: 28rpx 20rpx; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 28rpx 20rpx。 */
+  background: #fff; /* 背景：#fff */
+}
+
+.proof-image {
+  display: block; /* 设置为块级显示 */
+  width: 180rpx; /* 宽度：180rpx */
+  height: 180rpx; /* 高度：180rpx */
+  margin-top: 20rpx; /* 上外边距：20rpx */
+  border-radius: 8rpx; /* 设置圆角为 8rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+}
+
+.photo-mask {
+  position: fixed; /* 固定定位，常用于底栏或弹窗 */
+  z-index: 30; /* 层叠顺序，同一层叠上下文中比较：30 */
+  inset: 0; /* 上右下左都贴边，配合定位覆盖区域 */
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  justify-content: center; /* 子元素沿主轴居中 */
+  background: rgba(0, 0, 0, .55); /* 背景：rgba(0, 0, 0, .55) */
+}
+
+.photo-dialog {
+  box-sizing: border-box; /* 设置的宽高包含内边距和边框 */
+  width: 630rpx; /* 宽度：630rpx */
+  padding: 24rpx; /* 内边距：内容到边框之间的间距；此处按 四边 设置为 24rpx。 */
+  border-radius: 12rpx; /* 设置圆角为 12rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  background: #fff; /* 背景：#fff */
+}
+
+.photo-title {
+  padding: 10rpx 0 22rpx; /* 内边距：内容到边框之间的间距；此处按 上、左右、下 设置为 10rpx 0 22rpx。 */
+  font-size: 30rpx; /* 字号：30rpx */
+  font-weight: bold; /* 文字加粗 */
+  text-align: center; /* 文字水平居中 */
+}
+
+.photo-preview {
+  display: block; /* 设置为块级显示 */
+  width: 100%; /* 宽度：100% */
+  height: 480rpx; /* 高度：480rpx */
+  background: #f5f5f5; /* 背景：#f5f5f5 */
+}
+
+.photo-tip {
+  padding: 20rpx 0; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 20rpx 0。 */
+  color: #777; /* 文字颜色：#777 */
+  font-size: 23rpx; /* 字号：23rpx */
+}
+
+.photo-actions {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  gap: 15rpx; /* 子元素之间的间隔：15rpx */
+}
+
+.photo-actions button {
+  flex: 1; /* 按权重 1 分配剩余空间，并允许压缩 */
+  margin: 0; /* 外边距：元素外侧的间距；此处按 四边 设置为 0。 */
+  font-size: 25rpx; /* 字号：25rpx */
+}
+
+.photo-actions button:first-child {
+  background: #e6e6e6; /* 背景：#e6e6e6 */
+  color: #222; /* 文字颜色：#222 */
+}
+
+.photo-actions button::after {
+  border: none; /* 设置 border 为 none；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+}
+
+.action-footer {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  gap: 16rpx; /* 子元素之间的间隔：16rpx */
+}
+
+.action-footer button {
+  flex: 1; /* 按权重 1 分配剩余空间，并允许压缩 */
+  margin: 0; /* 外边距：元素外侧的间距；此处按 四边 设置为 0。 */
+  font-size: 25rpx; /* 字号：25rpx */
+}
+
+.action-footer .secondary-button {
+  background: #e6e6e6; /* 背景：#e6e6e6 */
+  color: #222; /* 文字颜色：#222 */
+}
+
+.action-footer .danger-button {
+  background: #d43d47; /* 背景：#d43d47 */
+  color: #fff; /* 文字颜色：#fff */
+}
+
+.view-photo-button {
+  margin: 18rpx 0 25rpx; /* 外边距：元素外侧的间距；此处按 上、左右、下 设置为 18rpx 0 25rpx。 */
+  border: 1rpx solid #0bd565; /* 设置 border 为 1rpx solid #0bd565；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+  background: #fff; /* 背景：#fff */
+  color: #0bd565; /* 文字颜色：#0bd565 */
+  font-size: 26rpx; /* 字号：26rpx */
+}
+
+.view-photo-button::after, .secondary-button::after {
+  border: none; /* 设置 border 为 none；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+}
+
+.confirm-message {
+  padding: 32rpx 12rpx 48rpx; /* 内边距：内容到边框之间的间距；此处按 上、左右、下 设置为 32rpx 12rpx 48rpx。 */
+  font-size: 26rpx; /* 字号：26rpx */
+  text-align: center; /* 文字水平居中 */
+}

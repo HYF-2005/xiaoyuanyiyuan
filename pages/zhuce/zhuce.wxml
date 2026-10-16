@@ -1,0 +1,59 @@
+<!-- 注册：收集账号、姓名与密码，提交给后端创建用户；WXML 描述页面结构，不是浏览器 HTML。 -->
+<!-- 界面区块 register-page：注册 / 页面，外观由同页 WXSS 的同名类控制。 -->
+<view class="register-page">
+  <!-- 界面区块 heading：标题，外观由同页 WXSS 的同名类控制。 -->
+  <view class="heading">注册校园易援</view>
+  <!-- 界面区块 field：表单字段，外观由同页 WXSS 的同名类控制。 -->
+  <!-- 输入变化调用 onInput()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <input class="field" placeholder="账号（至少4位）" data-field="username" bindinput="onInput" />
+  <input class="field" placeholder="姓名或昵称" data-field="displayName" bindinput="onInput" />
+  <!-- 界面区块 password-field：密码 / 表单字段，外观由同页 WXSS 的同名类控制。 -->
+  <!-- 输入变化调用 onInput()；点击调用 togglePassword()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <view class="password-field">
+    <input
+      class="field"
+      password="{{!showPassword}}"
+      placeholder="密码（至少8位，含字母和数字）"
+      data-field="password"
+      bindinput="onInput"
+    />
+    <view
+      class="visibility-toggle"
+      role="button"
+      aria-label="{{showPassword ? '隐藏密码' : '显示密码'}}"
+      data-field="showPassword"
+      bindtap="togglePassword"
+    >
+      <view class="visibility-eye {{showPassword ? '' : 'closed'}}"></view>
+    </view>
+  </view>
+  <view class="password-field">
+    <input
+      class="field"
+      password="{{!showConfirmPassword}}"
+      placeholder="再次输入密码"
+      data-field="confirmPassword"
+      bindinput="onInput"
+    />
+    <view
+      class="visibility-toggle"
+      role="button"
+      aria-label="{{showConfirmPassword ? '隐藏确认密码' : '显示确认密码'}}"
+      data-field="showConfirmPassword"
+      bindtap="togglePassword"
+    >
+      <view class="visibility-eye {{showConfirmPassword ? '' : 'closed'}}"></view>
+    </view>
+  </view>
+  <view class="agreement" bindtap="toggleAgreement">
+    <text>{{agreed ? '☑' : '□'}}</text>
+    <text>我已阅读并同意</text>
+    <text class="policy-link" data-type="agreement" catchtap="openPolicy">《用户协议》</text>
+    <text>和</text>
+    <text class="policy-link" data-type="privacy" catchtap="openPolicy">《隐私政策》</text>
+  </view>
+  <!-- 界面区块 submit：提交，外观由同页 WXSS 的同名类控制。 -->
+  <!-- 点击调用 submit()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <button class="submit" disabled="{{submitting}}" loading="{{submitting}}" bindtap="submit">注册</button>
+  <view class="hint">注册后可在账户设置中绑定手机号，使用验证码登录。</view>
+</view>

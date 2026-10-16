@@ -1,0 +1,41 @@
+# 后端运行配置；修改连接地址/密码须重新启动服务才能读取。
+# 服务器监听配置；port 可通过 PORT 环境变量覆盖。
+server:
+  # ${环境变量:默认值} 优先用环境变量；默认 8080。
+  port: ${PORT:8080}
+spring:
+  # 数据库连接信息；驱动把 JDBC 请求发送给 MySQL。
+  datasource:
+    # 默认本机 campus_help 数据库；serverTimezone 与时区保持一致。
+    url: ${DB_URL:jdbc:mysql://localhost:3306/campus_help?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai}
+    # 数据库用户名，默认 root；不是小程序登录账号。
+    username: ${DB_USER:root}
+    # 数据库密码来自 DB_PASSWORD，默认空；当前本地启动需提供 123456，源码不在此硬编码。
+    password: ${DB_PASSWORD:}
+    # MySQL 8 JDBC 驱动类，依赖由 Maven 提供。
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  # Spring SQL 初始化配置，启动时读取 resources/schema.sql。
+  sql:
+    init:
+      # always 会执行建表脚本；脚本 IF NOT EXISTS 保留已有表，不会清空数据。
+      mode: always
+      # 按 UTF-8 读取 SQL，支持中文。
+      encoding: UTF-8
+  servlet:
+    # 限制文件上传大小：照片最多 5MB，整个请求最多 6MB。
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 6MB
+  # JSON 序列化配置；LocalDateTime 自身不携带时区，业务服务器时间仍需一致。
+  jackson:
+    time-zone: Asia/Shanghai
+mybatis:
+  configuration:
+    # MyBatis 自动把数据库 publisher_id 映射到 Java publisherId。
+    map-underscore-to-camel-case: true
+app:
+  # 照片存储目录；默认相对于后端运行工作目录的 uploads。
+  uploads-dir: ${UPLOADS_DIR:./uploads}
+  # 本地演示才把验证码返回给调用者；上线前设置为 false 并接入短信服务。
+  # true 返回本地 demoCode；false 时未配置短信接口会返回 501，不会真实发送短信。
+  demo-codes-enabled: ${DEMO_CODES_ENABLED:true}

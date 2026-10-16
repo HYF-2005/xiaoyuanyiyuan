@@ -1,0 +1,9 @@
+<!-- 启动日志：读取本机的小程序启动记录；不是后端服务器日志；WXML 描述页面结构，不是浏览器 HTML。 -->
+<!--logs.wxml-->
+<!-- 界面区块 scrollarea：scrollarea，外观由同页 WXSS 的同名类控制。 -->
+<scroll-view class="scrollarea" scroll-y type="list">
+  <!-- wx:for 遍历 logs，每项生成一份标签；默认 item 为当前项、index 为下标，wx:key 帮助定位更新。 -->
+  <block wx:for="{{logs}}" wx:key="timeStamp" wx:for-item="log">
+    <view class="log-item">{{index + 1}}. {{log.date}}</view>
+  </block>
+</scroll-view>

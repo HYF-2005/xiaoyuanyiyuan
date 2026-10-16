@@ -1,0 +1,20 @@
+/* 启动日志：读取本机的小程序启动记录；不是后端服务器日志：本文件控制页面外观，不发请求、不改数据库。 */
+page {
+  height: 100vh; /* 高度：100vh */
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  flex-direction: column; /* 主轴改为竖直方向，子元素上下排列 */
+}
+
+.scrollarea {
+  flex: 1; /* 按权重 1 分配剩余空间，并允许压缩 */
+  overflow-y: hidden; /* 裁掉竖直方向超出的内容 */
+}
+
+.log-item {
+  margin-top: 20rpx; /* 上外边距：20rpx */
+  text-align: center; /* 文字水平居中 */
+}
+
+.log-item:last-child {
+  padding-bottom: env(safe-area-inset-bottom); /* 下内边距：env(safe-area-inset-bottom)，为设备安全区留空间 */
+}

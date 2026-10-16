@@ -1,0 +1,32 @@
+# 部署辅助文件，不是 Windows 本地启动必经步骤；本次只加注释，未执行部署。
+# systemd 的启动顺序与依赖：先网络和 MySQL。
+[Unit]
+Description=Campus Help Spring Boot API
+After=network.target mysql.service
+Requires=mysql.service
+
+# 服务运行身份、工作目录、环境配置与 JVM 参数。
+[Service]
+Type=simple
+User=campushelp
+Group=campushelp
+WorkingDirectory=/opt/campushelp
+# 从权限受控的文件读取数据库等环境变量，不把密钥写服务源码。
+EnvironmentFile=/etc/campushelp/backend.env
+Environment=TZ=Asia/Shanghai
+# 用 Java 启动 JAR；后端只听本机 127.0.0.1，Nginx 承担外部入口，SQL 初始化在这里被关闭。
+ExecStart=/usr/bin/java -Xms128m -Xmx384m -Duser.timezone=Asia/Shanghai -jar /opt/campushelp/app.jar --server.address=127.0.0.1 --spring.sql.init.mode=never --spring.datasource.hikari.maximum-pool-size=8
+# 异常退出自动重启，等待秒数由 RestartSec 指定。
+Restart=on-failure
+RestartSec=5
+UMask=0027
+# 限制服务额外权限；保护系统路径，只允许指定数据目录写入。
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/campushelp
+
+# 加入多用户启动目标，systemctl enable 后随服务器启动。
+[Install]
+WantedBy=multi-user.target

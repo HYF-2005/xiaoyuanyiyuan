@@ -1,0 +1,112 @@
+<!-- 登录：账号密码登录、手机号演示验证码登录和登录方式切换；WXML 描述页面结构，不是浏览器 HTML。 -->
+<!-- 界面区块 login-page：登录 / 页面，外观由同页 WXSS 的同名类控制。 -->
+<view class="login-page">
+  <!-- 界面区块 brand：品牌，外观由同页 WXSS 的同名类控制。 -->
+  <view class="brand">
+    <!-- Logo图标 -->
+    <!-- image 显示 src 图片；aspectFit 保持比例完整展示，尺寸由 WXSS 决定。 -->
+    <image class="brand-logo" src="/assets/login-logo.png" mode="aspectFit" /> <!-- mode="aspectFit"表示图片按照原来的比例缩放，并且完整显示在指定区域内 -->
+    <!-- 小程序名称 -->
+    <text class="brand-name">校园易援</text>
+  </view>
+
+  <!-- 界面区块 login-tabs：登录 / 切换栏，外观由同页 WXSS 的同名类控制。 -->
+  <view class="login-tabs"><!-- 账号登录和手机号登录两个按钮的外层容器 -->
+    <!-- 1.三元运算符 -->
+    <!-- 2.表示用户点击这个 view 时，
+    调用 index.js 中的 switchLoginMode 函数 -->
+    <view
+    class="tab {{loginMode === 'account' ? 'active' : ''}}"
+    data-mode="account"
+    bindtap="switchLoginMode"
+    >账号登录</view>
+
+  <view
+  class="tab {{loginMode === 'phone' ? 'active' : ''}}"
+  data-mode="phone"
+  bindtap="switchLoginMode"
+  >手机号登录</view>
+</view>
+
+<!-- 界面区块 login-card：登录 / 卡片，外观由同页 WXSS 的同名类控制。 -->
+<!-- wx:if 条件 loginMode === 'account' 成立才创建此区块；隐藏按钮不等于后端授权。 -->
+<view class="login-card" wx:if="{{loginMode === 'account'}}">
+  <view class="field-label">
+    <image class="field-label-icon" src="/assets/icons/school.png" mode="aspectFit" />选择学校</view><!-- mode="aspectFit"保持原比例显示 -->
+
+  <!-- 点击调用 chooseSchool()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <view class="field-box school" bindtap="chooseSchool"><!-- class表示同时使用.field-box .school的wxss样式  bindtap表示点击学校选择框时调用
+    chooseSchool() -->
+    <text>{{schoolName}}</text>
+    <!-- 界面区块 arrow：箭头，外观由同页 WXSS 的同名类控制。 -->
+    <text class="arrow">▾</text>
+  </view>
+
+  <view class="field-label">
+    <image class="field-label-icon" src="/assets/icons/user.png" mode="aspectFit" />账号</view>
+  <!-- 输入变化调用 onAccountInput()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <input class="field-box" placeholder="请输入账号" bindinput="onAccountInput" /><!-- 表示用户每输入一个字符，就调用一次：onAccountInput(e) -->
+
+  <view class="field-label">
+    <image class="field-label-icon" src="/assets/icons/lock.png" mode="aspectFit" />密码</view>
+  <view class="password-box">
+    <!-- 输入变化调用 onPasswordInput()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+    <input password="{{hidePassword}}" placeholder="请输入密码" bindinput="onPasswordInput" /><!-- 这里的 password 是输入框属性，用来控制是否隐藏输入内容 -->
+    <!-- 界面区块 visibility-toggle：密码可见性 / 切换，外观由同页 WXSS 的同名类控制。 -->
+    <!-- 点击调用 togglePassword()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+    <view
+      class="visibility-toggle"
+      role="button"
+      aria-label="{{hidePassword ? '显示密码' : '隐藏密码'}}"
+      bindtap="togglePassword"
+    >
+      <view class="visibility-eye {{hidePassword ? 'closed' : ''}}"></view>
+    </view>
+  </view>
+
+  <!-- 界面区块 forgot：忘记密码，外观由同页 WXSS 的同名类控制。 -->
+  <!-- 点击调用 goToForgotPassword()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <view class="forgot" bindtap="goToForgotPassword">忘记密码?</view>
+  <!-- 点击调用 submitAccountLogin()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <view class="login-button" bindtap="submitAccountLogin">登录</view>
+  <!-- 点击调用 goToRegister()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <view class="register-link" bindtap="goToRegister">没有账号？注册</view>
+</view>
+
+<view class="login-card" wx:else>
+  <!-- 界面区块 field-label：表单字段 / 字段标签，外观由同页 WXSS 的同名类控制。 -->
+  <view class="field-label">
+    <!-- 界面区块 field-label-icon：表单字段 / 字段标签 / 图标，外观由同页 WXSS 的同名类控制。 -->
+    <image class="field-label-icon" src="/assets/icons/phone.png" mode="aspectFit" />手机号
+    <!-- 界面区块 hint：提示，外观由同页 WXSS 的同名类控制。 -->
+    <text class="hint">仅支持已绑定的手机号</text>
+  </view>
+  <!-- 界面区块 field-box：表单字段 / 容器，外观由同页 WXSS 的同名类控制。 -->
+  <input class="field-box" type="number" maxlength="11"
+  placeholder="请输入手机号" bindinput="onPhoneInput" /><!-- maxlength="11"表示最多输入11位 -->
+
+  <view class="field-label"><image class="field-label-icon" src="/assets/icons/mail.png" mode="aspectFit" />验证码</view>
+  <!-- 界面区块 code-row：取件码/取餐码/验证码 / 一行内容，外观由同页 WXSS 的同名类控制。 -->
+  <view class="code-row">
+    <input class="field-box code-input" type="number"
+    placeholder="请输入验证码" bindinput="onCodeInput" />
+    <!-- 界面区块 code-button：取件码/取餐码/验证码 / 按钮，外观由同页 WXSS 的同名类控制。 -->
+    <!-- 点击调用 getDemoCode()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+    <view class="code-button" bindtap="getDemoCode">获取验证码</view>
+  </view>
+
+  <!-- 界面区块 login-button：登录 / 按钮，外观由同页 WXSS 的同名类控制。 -->
+  <!-- 点击调用 submitPhoneLogin()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <view class="login-button" bindtap="submitPhoneLogin">登录</view>
+</view>
+
+<view class="agreement">
+  <view class="check-box {{agreed ? 'checked' : ''}}" bindtap="toggleAgreement">
+    {{agreed ? '✓' : ''}}
+  </view>
+  <text>我已阅读并同意</text>
+  <text class="policy-link" data-type="agreement" catchtap="openPolicy">《用户协议》</text>
+  <text>和</text>
+  <text class="policy-link" data-type="privacy" catchtap="openPolicy">《隐私政策》</text>
+</view>
+</view>

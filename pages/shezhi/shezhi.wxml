@@ -1,0 +1,77 @@
+<!-- 账户设置：安全页面入口、协议弹窗与退出登录；WXML 描述页面结构，不是浏览器 HTML。 -->
+<!-- 界面区块 settings-page：设置 / 页面，外观由同页 WXSS 的同名类控制。 -->
+<view class="settings-page">
+  <!-- 界面区块 settings-heading：设置 / 标题，外观由同页 WXSS 的同名类控制。 -->
+  <view class="settings-heading">
+    <image class="settings-heading-icon" src="/assets/icons/shield.png" mode="aspectFit" />
+    <text>账户安全</text>
+  </view>
+
+  <!-- 界面区块 settings-group：设置 / group，外观由同页 WXSS 的同名类控制。 -->
+  <view class="settings-group">
+    <!-- 点击调用 goToChangePassword()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+    <view class="settings-row" bindtap="goToChangePassword">
+      <image class="settings-icon" src="/assets/icons/lock.png" mode="aspectFit" />
+      <text class="settings-label">修改密码</text>
+      <text class="settings-arrow">›</text>
+    </view>
+
+    <!-- 点击调用 goToChangePhone()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+    <view class="settings-row" bindtap="goToChangePhone">
+      <image class="settings-icon" src="/assets/icons/phone.png" mode="aspectFit" />
+      <text class="settings-label">更换号码</text>
+      <text class="settings-value">{{boundPhone || '—'}}</text>
+      <text class="settings-arrow">›</text>
+    </view>
+
+    <!-- 点击调用 goToCancelAccount()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+    <view class="settings-row" bindtap="goToCancelAccount">
+      <image class="settings-icon" src="/assets/icons/power.png" mode="aspectFit" />
+      <text class="settings-label">注销账号</text>
+      <text class="settings-arrow">›</text>
+    </view>
+  </view>
+  <!-- 界面区块 settings-heading settings-other-heading：设置 / 标题 / 设置 / other / 标题，外观由同页 WXSS 的同名类控制。 -->
+  <view class="settings-heading settings-other-heading">
+    <image class="settings-heading-icon" src="/assets/icons/settings.png" mode="aspectFit" />
+    <text>其他</text>
+  </view>
+
+  <view class="settings-group">
+    <!-- 点击调用 openAbout()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+    <view class="settings-row" bindtap="openAbout">
+      <image class="settings-icon" src="/assets/icons/info.png" mode="aspectFit" />
+      <text class="settings-label">关于我们</text>
+      <text class="settings-arrow">›</text>
+    </view>
+
+    <!-- 点击调用 openPolicy()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+    <view class="settings-row" data-type="agreement" bindtap="openPolicy">
+      <image class="settings-icon" src="/assets/icons/document.png" mode="aspectFit" />
+      <text class="settings-label">用户协议</text>
+      <text class="settings-arrow">›</text>
+    </view>
+
+    <view class="settings-row" data-type="privacy" bindtap="openPolicy">
+      <image class="settings-icon" src="/assets/icons/privacy.png" mode="aspectFit" />
+      <text class="settings-label">隐私政策</text>
+      <text class="settings-arrow">›</text>
+    </view>
+  </view>
+  <!-- 界面区块 settings-logout：设置 / logout，外观由同页 WXSS 的同名类控制。 -->
+  <!-- 点击调用 logout()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <button class="settings-logout" bindtap="logout">退出登录</button>
+  <!-- 界面区块 about-overlay：关于 / overlay，外观由同页 WXSS 的同名类控制。 -->
+  <!-- wx:if 条件 showAbout 成立才创建此区块；隐藏按钮不等于后端授权。 -->
+  <!-- 点击调用 closeAbout()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <view class="about-overlay" wx:if="{{showAbout}}" bindtap="closeAbout">
+    <!-- 界面区块 about-dialog：关于 / 弹窗，外观由同页 WXSS 的同名类控制。 -->
+    <view class="about-dialog" catchtap="noop">
+      <view class="about-title">关于我们</view>
+      <view class="about-content">
+        校园易援 v1.0.13 为大学生打造安全便捷的校园互助生态平台
+      </view>
+      <button class="about-confirm" bindtap="closeAbout">确定</button>
+    </view>
+  </view>
+</view>

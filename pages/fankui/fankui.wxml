@@ -1,0 +1,33 @@
+<!-- 问题反馈：提交文字意见并防止重复提交；WXML 描述页面结构，不是浏览器 HTML。 -->
+<!-- 界面区块 feedback-page：反馈 / 页面，外观由同页 WXSS 的同名类控制。 -->
+<view class="feedback-page">
+  <!-- 界面区块 feedback-card：反馈 / 卡片，外观由同页 WXSS 的同名类控制。 -->
+  <view class="feedback-card">
+    <textarea
+    class="feedback-input"
+    placeholder="请详细描述您遇到的问题或建议，我们会尽快处理（10-100字）"
+    maxlength="100"
+    value="{{content}}"
+    bindinput="onContentInput"
+    />
+    <view class="feedback-count">
+      <text class="{{content.length < 10 ? 'feedback-count-short' : ''}}">
+        {{content.length}}
+      </text>/100
+    </view>
+  </view>
+  <!-- 界面区块 feedback-actions：反馈 / 操作组，外观由同页 WXSS 的同名类控制。 -->
+  <view class="feedback-actions">
+    <button
+    class="feedback-cancel"
+    bindtap="cancelFeedback"
+    disabled="{{submitting}}"
+    >取消</button>
+
+  <button
+  class="feedback-submit"
+  bindtap="submitFeedback"
+  disabled="{{submitting}}"
+  >{{submitting ? '已保存' : '提交反馈'}}</button>
+</view>
+</view>

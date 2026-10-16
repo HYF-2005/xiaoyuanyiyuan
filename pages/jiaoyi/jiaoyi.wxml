@@ -1,0 +1,31 @@
+<!-- 交易明细：按月份和收入/支出筛选后端推导的演示账单；WXML 描述页面结构，不是浏览器 HTML。 -->
+<!-- 界面区块 transactions-page：transactions / 页面，外观由同页 WXSS 的同名类控制。 -->
+<view class="transactions-page">
+  <!-- 界面区块 transactions-filter：transactions / 筛选，外观由同页 WXSS 的同名类控制。 -->
+  <!-- 点击调用 chooseFilter()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <view class="transactions-filter"><text bindtap="chooseFilter">{{filter}} ▾</text></view>
+  <!-- 界面区块 transactions-month：transactions / 月份，外观由同页 WXSS 的同名类控制。 -->
+  <view class="transactions-month">
+    <!-- 选择变化调用 onMonthChange()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+    <picker mode="date" fields="month" value="{{month}}" bindchange="onMonthChange"><text>{{monthLabel}} ▴</text></picker>
+    <text class="transactions-totals">支出 ¥{{expenseTotal}}　收入 ¥{{incomeTotal}}</text>
+  </view>
+  <!-- 界面区块 transaction-list：账单 / 列表，外观由同页 WXSS 的同名类控制。 -->
+  <view class="transaction-list">
+    <view
+    class="transaction-item"
+    wx:for="{{transactions}}"
+    wx:key="id"
+    data-id="{{item.id}}"
+    bindtap="openDetail"
+    >
+    <view class="transaction-icon {{item.kind === 'refund' ? '' : 'payment-icon'}}">{{item.icon}}</view>
+    <view class="transaction-info">
+      <view class="transaction-title">{{item.title}}</view>
+      <view class="transaction-time">{{item.time}}</view>
+    </view>
+    <text class="transaction-amount">{{item.amount}}</text>
+  </view>
+  <view class="transaction-end">{{transactions.length ? '没有更多了' : '暂无账单'}}</view>
+</view>
+</view>

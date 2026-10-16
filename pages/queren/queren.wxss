@@ -1,0 +1,127 @@
+/* 取件发布确认：展示上一页的草稿，勾选协议后提交后端：本文件控制页面外观，不发请求、不改数据库。 */
+page {
+  background: #f5f5f5; /* 背景：#f5f5f5 */
+}
+
+.confirm-page {
+  padding: 20rpx; /* 内边距：内容到边框之间的间距；此处按 四边 设置为 20rpx。 */
+}
+
+.details-card {
+  padding: 24rpx; /* 内边距：内容到边框之间的间距；此处按 四边 设置为 24rpx。 */
+  background: #fff; /* 背景：#fff */
+}
+
+.details-title {
+  padding-bottom: 24rpx; /* 下内边距：24rpx */
+  border-bottom: 1rpx solid #eee; /* 设置 border-bottom 为 1rpx solid #eee；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+  font-size: 30rpx; /* 字号：30rpx */
+  font-weight: bold; /* 文字加粗 */
+}
+
+.detail-row {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  justify-content: space-between; /* 两端贴边，中间空隙均分 */
+  gap: 24rpx; /* 子元素之间的间隔：24rpx */
+  min-height: 86rpx; /* 最小高度，内容多时可以增高：86rpx */
+  padding: 12rpx 0; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 12rpx 0。 */
+  box-sizing: border-box; /* 设置的宽高包含内边距和边框 */
+  border-bottom: 1rpx solid #f5f5f5; /* 设置 border-bottom 为 1rpx solid #f5f5f5；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+  font-size: 27rpx; /* 字号：27rpx */
+}
+
+.detail-label {
+  flex-shrink: 0; /* 空间不足时不压缩 */
+  color: #888; /* 文字颜色：#888 */
+}
+
+.detail-value {
+  flex: 1; /* 按权重 1 分配剩余空间，并允许压缩 */
+  min-width: 0; /* 允许子元素缩小，避免长内容撑宽布局 */
+  text-align: right; /* 文字右对齐 */
+  overflow-wrap: break-word; /* 控制长文字断行；break-word 在必要时拆开长词，anywhere 允许任意位置断行并影响最小内容宽度；本行值为 break-word。 */
+  color: #333; /* 文字颜色：#333 */
+}
+
+.package-item {
+  margin: 8rpx 0; /* 外边距：元素外侧的间距；此处按 上下、左右 设置为 8rpx 0。 */
+}
+
+.package-code {
+  display: inline-block; /* 行内排列，同时可设置宽高 */
+  margin-right: 8rpx; /* 右外边距：8rpx */
+  padding: 4rpx 10rpx; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 4rpx 10rpx。 */
+  border: 1rpx solid #60bd97; /* 设置 border 为 1rpx solid #60bd97；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+  border-radius: 6rpx; /* 设置圆角为 6rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  color: #45aa80; /* 文字颜色：#45aa80 */
+}
+
+.detail-reward {
+  color: #f16b83; /* 文字颜色：#f16b83 */
+  font-weight: bold; /* 文字加粗 */
+}
+
+.settlement-notice {
+  margin-top: 20rpx; /* 上外边距：20rpx */
+  padding: 24rpx 16rpx; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 24rpx 16rpx。 */
+  background: #e8f6ff; /* 背景：#e8f6ff */
+  color: #3983ad; /* 文字颜色：#3983ad */
+  font-size: 25rpx; /* 字号：25rpx */
+  line-height: 1.6; /* 设置行盒高度；无单位值乘以字号，rpx 值是明确行高，normal 由字体决定；相同高度和行高常用于单行文字居中；本行值为 1.6。 */
+}
+
+.agreement-row {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  gap: 16rpx; /* 子元素之间的间隔：16rpx */
+  margin-top: 20rpx; /* 上外边距：20rpx */
+  padding: 24rpx 16rpx; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 24rpx 16rpx。 */
+  background: #fff; /* 背景：#fff */
+  font-size: 25rpx; /* 字号：25rpx */
+  color: #666; /* 文字颜色：#666 */
+}
+
+.agreement-box {
+  width: 34rpx; /* 宽度：34rpx */
+  height: 34rpx; /* 高度：34rpx */
+  flex-shrink: 0; /* 空间不足时不压缩 */
+  border: 1rpx solid #ccc; /* 设置 border 为 1rpx solid #ccc；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+  border-radius: 4rpx; /* 设置圆角为 4rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  text-align: center; /* 文字水平居中 */
+  line-height: 34rpx; /* 设置行盒高度；无单位值乘以字号，rpx 值是明确行高，normal 由字体决定；相同高度和行高常用于单行文字居中；本行值为 34rpx。 */
+}
+
+.agreement-box.checked {
+  border-color: #10cf72; /* 边框颜色：#10cf72 */
+  color: #10cf72; /* 文字颜色：#10cf72 */
+}
+
+.confirm-page {
+  padding-bottom: 130rpx; /* 下内边距：130rpx */
+}
+
+.confirm-footer {
+  position: fixed; /* 固定定位，常用于底栏或弹窗 */
+  left: 0; /* 设置定位元素的 left 偏移为 0；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  right: 0; /* 设置定位元素的 right 偏移为 0；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  bottom: 0; /* 设置定位元素的 bottom 偏移为 0；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  padding: 18rpx 24rpx 30rpx; /* 内边距：内容到边框之间的间距；此处按 上、左右、下 设置为 18rpx 24rpx 30rpx。 */
+  background: #fff; /* 背景：#fff */
+}
+
+.confirm-button {
+  height: 84rpx; /* 高度：84rpx */
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  justify-content: center; /* 子元素沿主轴居中 */
+  border-radius: 8rpx; /* 设置圆角为 8rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  background: #10cf72; /* 背景：#10cf72 */
+  color: #fff; /* 文字颜色：#fff */
+  font-size: 30rpx; /* 字号：30rpx */
+  font-weight: bold; /* 文字加粗 */
+}
+
+.confirm-button.saved {
+  background: #aaa; /* 背景：#aaa */
+}

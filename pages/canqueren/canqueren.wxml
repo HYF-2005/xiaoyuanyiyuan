@@ -1,0 +1,29 @@
+<!-- 取餐发布确认：展示餐品草稿并调用后端创建订单；WXML 描述页面结构，不是浏览器 HTML。 -->
+<!-- 界面区块 meal-confirm：取餐 / 确认，外观由同页 WXSS 的同名类控制。 -->
+<!-- wx:if 条件 draft 成立才创建此区块；隐藏按钮不等于后端授权。 -->
+<view class="meal-confirm" wx:if="{{draft}}">
+  <!-- 界面区块 confirm-card：确认 / 卡片，外观由同页 WXSS 的同名类控制。 -->
+  <view class="confirm-card">
+    <view class="confirm-title">订单详情</view>
+    <view class="confirm-row"><text>标题</text><text>{{draft.title}}</text></view>
+    <view class="confirm-row"><text>取餐餐厅</text><text>{{draft.restaurant}}</text></view>
+    <!-- wx:for 遍历 draft.codes，每项生成一份标签；默认 item 为当前项、index 为下标，wx:key 帮助定位更新。 -->
+    <view class="confirm-row"><text>取餐码</text><view class="codes"><text wx:for="{{draft.codes}}" wx:key="index">{{item}}</text></view></view>
+    <view class="confirm-row"><text>餐品数量</text><text>{{draft.codes.length}}份</text></view>
+    <view class="confirm-row"><text>送达地址</text><text>{{draft.deliveryBuilding}} {{draft.deliveryAddress}}</text></view>
+    <view class="confirm-row"><text>截止时间</text><text>{{draft.deadlineLabel}}</text></view>
+    <view class="confirm-row"><text>报酬</text><text class="reward">¥{{draft.reward}}</text></view>
+  </view>
+  <!-- 界面区块 settlement：结算说明，外观由同页 WXSS 的同名类控制。 -->
+  <view class="settlement">取餐发布无需线上预付费用，服务完成后双方线下结算；相关权益均遵循《取餐代拿需求协议》。</view>
+  <!-- 界面区块 agreement：协议，外观由同页 WXSS 的同名类控制。 -->
+  <!-- 点击调用 toggleAgreement()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <view class="agreement" bindtap="toggleAgreement">
+    <text class="checkbox {{agreementChecked ? 'checked' : ''}}">{{agreementChecked ? '✓' : ''}}</text>
+    <text>我已阅读并同意《取餐代拿需求协议》</text>
+  </view>
+  <!-- 界面区块 confirm-footer：确认 / 底部操作栏，外观由同页 WXSS 的同名类控制。 -->
+  <!-- 点击调用 publish()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <!-- disabled/loading 绑定请求锁：操作进行中禁用按钮或显示加载状态，后端仍要防重复状态变更。 -->
+  <view class="confirm-footer"><button disabled="{{published || publishing}}" bindtap="publish">{{published ? '已发布' : publishing ? '发布中...' : '确认发布'}}</button></view>
+</view>

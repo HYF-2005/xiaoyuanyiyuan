@@ -1,0 +1,160 @@
+/* 忘记密码：身份验证界面与设置新密码；最终校验由后端完成：本文件控制页面外观，不发请求、不改数据库。 */
+page {
+  background: #f5f5f5; /* 背景：#f5f5f5 */
+}
+
+.forgot-page {
+  min-height: 100vh; /* 最小高度，内容多时可以增高：100vh */
+  padding: 54rpx 28rpx; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 54rpx 28rpx。 */
+  box-sizing: border-box; /* 设置的宽高包含内边距和边框 */
+}
+
+.steps {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: flex-start; /* 子元素沿交叉轴靠起点 */
+  justify-content: center; /* 子元素沿主轴居中 */
+  margin-bottom: 78rpx; /* 下外边距：78rpx */
+}
+
+.step {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  flex-direction: column; /* 主轴改为竖直方向，子元素上下排列 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  color: #aaa; /* 文字颜色：#aaa */
+  font-size: 22rpx; /* 字号：22rpx */
+}
+
+.step.current {
+  color: #0bd565; /* 文字颜色：#0bd565 */
+}
+
+.step-number {
+  width: 52rpx; /* 宽度：52rpx */
+  height: 52rpx; /* 高度：52rpx */
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  justify-content: center; /* 子元素沿主轴居中 */
+  border-radius: 50%; /* 设置圆角为 50%；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  background: #ddd; /* 背景：#ddd */
+  color: #666; /* 文字颜色：#666 */
+  font-size: 26rpx; /* 字号：26rpx */
+  margin-bottom: 12rpx; /* 下外边距：12rpx */
+}
+
+.current .step-number {
+  background: #0bd565; /* 背景：#0bd565 */
+  color: #fff; /* 文字颜色：#fff */
+}
+
+.step-line {
+  width: 120rpx; /* 宽度：120rpx */
+  height: 2rpx; /* 高度：2rpx */
+  margin: 26rpx 18rpx 0; /* 外边距：元素外侧的间距；此处按 上、左右、下 设置为 26rpx 18rpx 0。 */
+  background: #ddd; /* 背景：#ddd */
+}
+
+.verify-card {
+  padding: 30rpx; /* 内边距：内容到边框之间的间距；此处按 四边 设置为 30rpx。 */
+  border-radius: 16rpx; /* 设置圆角为 16rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  background: #fff; /* 背景：#fff */
+}
+
+.card-title {
+  font-size: 32rpx; /* 字号：32rpx */
+  font-weight: bold; /* 文字加粗 */
+}
+
+.card-tip {
+  margin: 14rpx 0 30rpx; /* 外边距：元素外侧的间距；此处按 上、左右、下 设置为 14rpx 0 30rpx。 */
+  color: #999; /* 文字颜色：#999 */
+  font-size: 23rpx; /* 字号：23rpx */
+}
+
+.field-label {
+  margin: 24rpx 0 12rpx; /* 外边距：元素外侧的间距；此处按 上、左右、下 设置为 24rpx 0 12rpx。 */
+  font-size: 26rpx; /* 字号：26rpx */
+  color: #333; /* 文字颜色：#333 */
+}
+
+.field-input {
+  height: 76rpx; /* 高度：76rpx */
+  padding: 0 18rpx; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 0 18rpx。 */
+  box-sizing: border-box; /* 设置的宽高包含内边距和边框 */
+  border-radius: 8rpx; /* 设置圆角为 8rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  background: #f5f5f5; /* 背景：#f5f5f5 */
+  font-size: 25rpx; /* 字号：25rpx */
+}
+
+.code-row {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  gap: 16rpx; /* 子元素之间的间隔：16rpx */
+}
+
+.code-input {
+  flex: 1; /* 按权重 1 分配剩余空间，并允许压缩 */
+  min-width: 0; /* 允许子元素缩小，避免长内容撑宽布局 */
+}
+
+.code-button {
+  width: 166rpx; /* 宽度：166rpx */
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  justify-content: center; /* 子元素沿主轴居中 */
+  border-radius: 8rpx; /* 设置圆角为 8rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  background: #0bd565; /* 背景：#0bd565 */
+  color: #fff; /* 文字颜色：#fff */
+  font-size: 22rpx; /* 字号：22rpx */
+}
+
+.next-button {
+  height: 78rpx; /* 高度：78rpx */
+  margin-top: 34rpx; /* 上外边距：34rpx */
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  justify-content: center; /* 子元素沿主轴居中 */
+  border-radius: 8rpx; /* 设置圆角为 8rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  background: #0bd565; /* 背景：#0bd565 */
+  color: #fff; /* 文字颜色：#fff */
+  font-size: 28rpx; /* 字号：28rpx */
+  font-weight: bold; /* 文字加粗 */
+}
+
+.password-row {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  height: 76rpx; /* 高度：76rpx */
+  padding: 0 18rpx; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 0 18rpx。 */
+  border-radius: 8rpx; /* 设置圆角为 8rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  background: #f5f5f5; /* 背景：#f5f5f5 */
+}
+
+.password-row input {
+  flex: 1; /* 按权重 1 分配剩余空间，并允许压缩 */
+  min-width: 0; /* 允许子元素缩小，避免长内容撑宽布局 */
+  font-size: 25rpx; /* 字号：25rpx */
+}
+
+.step-line.completed {
+  background: #0bd565; /* 背景：#0bd565 */
+}
+
+.strength-row {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  gap: 12rpx; /* 子元素之间的间隔：12rpx */
+  margin: 14rpx 0 24rpx; /* 外边距：元素外侧的间距；此处按 上、左右、下 设置为 14rpx 0 24rpx。 */
+  color: #999; /* 文字颜色：#999 */
+  font-size: 20rpx; /* 字号：20rpx */
+}
+
+.strength-bars {
+  flex: 1; /* 按权重 1 分配剩余空间，并允许压缩 */
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  gap: 6rpx; /* 子元素之间的间隔：6rpx */
+}
+
+.strength-bar {
+  flex: 1; /* 按权重 1 分配剩余空间，并允许压缩 */
+  height: 5rpx; /* 高度：5rpx */
+  border-radius: 3rpx; /* 设置圆角为 3rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+}

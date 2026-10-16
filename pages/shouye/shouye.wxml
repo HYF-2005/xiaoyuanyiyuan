@@ -1,0 +1,211 @@
+<!-- 首页：待接订单市场、我的订单和个人中心共用这一个页面；WXML 描述页面结构，不是浏览器 HTML。 -->
+<!-- 界面区块 home-page：首页 / 页面，外观由同页 WXSS 的同名类控制。 -->
+<view class="home-page">
+  <!-- wx:if 条件 activeTab === 'home' 成立才创建此区块；隐藏按钮不等于后端授权。 -->
+  <block wx:if="{{activeTab === 'home'}}">
+    <view class="search-panel">
+      <view class="service-tabs">
+        <view
+        class="service-tab {{serviceType === 'parcel' ? 'active' : ''}}"
+        data-type="parcel"
+        bindtap="switchService"
+        >取件</view>
+
+      <view
+      class="service-tab {{serviceType === 'meal' ? 'active' : ''}}"
+      data-type="meal"
+      bindtap="switchService"
+      >取餐</view>
+  </view>
+
+  <view class="search-box">
+    <view class="search-icon"></view>
+    <input
+    class="search-input"
+    placeholder="{{serviceType === 'parcel' ? '搜索取件...' : '搜索取餐...'}}"
+    value="{{marketKeyword}}"
+    bindinput="onMarketSearch"
+    />
+  </view>
+</view>
+
+<view class="market-panel">
+  <!-- wx:if 条件 marketOrders.length === 0 成立才创建此区块；隐藏按钮不等于后端授权。 -->
+  <view class="empty-state" wx:if="{{marketOrders.length === 0}}">暂无数据</view>
+  <!-- wx:for 遍历 marketOrders，每项生成一份标签；默认 item 为当前项、index 为下标，wx:key 帮助定位更新。 -->
+  <!-- 点击调用 openMarketDetail()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <view
+    class="order-card"
+    wx:for="{{marketOrders}}"
+    wx:key="id"
+    data-id="{{item.id}}"
+    bindtap="openMarketDetail"
+  >
+    <view class="order-card-top">
+      <view class="order-tags">
+        <view class="order-type-tag"><image class="order-type-icon" src="/assets/icons/{{serviceType === 'meal' ? 'meal' : 'parcel'}}.png" mode="aspectFit" />{{serviceType === 'meal' ? '取餐' : '取件'}}</view>
+        <!-- wx:if 条件 item.myRole === 'publisher' || item.myRole === 'runner' 成立才创建此区块；隐藏按钮不等于后端授权。 -->
+        <text wx:if="{{item.myRole === 'publisher' || item.myRole === 'runner'}}" class="order-owner-tag {{item.myRole === 'runner' ? 'owner-runner' : 'owner-publisher'}}">{{item.myRole === 'runner' ? '我接单' : '我发布'}}</text>
+      </view>
+      <text class="order-price">¥{{item.cardReward}}</text>
+    </view>
+    <view class="order-card-title">{{item.title}}</view>
+    <view class="order-route">{{serviceType === 'meal' ? item.restaurant : item.station}} → {{item.deliveryBuilding}}</view>
+    <view class="order-meta">
+      <view class="order-publisher">{{item.publisherText}}<text class="order-credit">信用分 {{item.publisherCreditText}}</text></view>
+      <view class="order-status {{item.status === '已接单' ? 'status-accepted' : ''}}">{{item.status}}</view>
+    </view>
+    <!-- wx:if 条件 item.remainingText 成立才创建此区块；隐藏按钮不等于后端授权。 -->
+    <view class="order-remaining" wx:if="{{item.remainingText}}">{{item.remainingText}}</view>
+  </view>
+  <view class="orders-end" wx:if="{{marketOrders.length > 0}}">没有更多了</view>
+</view>
+<!-- 点击调用 goToPublish()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+<view class="publish-button" bindtap="goToPublish">＋</view>
+</block>
+
+<!-- 界面区块 publish-type-mask：发布 / type / 遮罩，外观由同页 WXSS 的同名类控制。 -->
+<!-- wx:if 条件 publishTypeVisible 成立才创建此区块；隐藏按钮不等于后端授权。 -->
+<!-- 点击调用 closePublishType()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+<view class="publish-type-mask" wx:if="{{publishTypeVisible}}" bindtap="closePublishType"></view>
+<!-- 界面区块 publish-type-sheet：发布 / type / sheet，外观由同页 WXSS 的同名类控制。 -->
+<view class="publish-type-sheet" wx:if="{{publishTypeVisible}}" catchtap="noop">
+  <view class="publish-type-title">选择发布类型</view>
+  <!-- 点击调用 choosePublishType()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <view class="publish-type-item" data-type="parcel" bindtap="choosePublishType"><image class="publish-type-icon" src="/assets/icons/parcel.png" mode="aspectFit" />发布取件</view>
+  <view class="publish-type-item" data-type="meal" bindtap="choosePublishType"><image class="publish-type-icon" src="/assets/icons/meal.png" mode="aspectFit" />发布取餐</view>
+  <view class="publish-type-cancel" bindtap="closePublishType">取消</view>
+</view>
+
+<!-- 界面区块 orders-panel：orders / panel，外观由同页 WXSS 的同名类控制。 -->
+<!-- wx:if 条件 activeTab === 'orders' 成立才创建此区块；隐藏按钮不等于后端授权。 -->
+<view class="orders-panel" wx:if="{{activeTab === 'orders'}}">
+  <view class="orders-toolbar">
+    <view class="service-tabs">
+      <!-- 点击调用 switchOrderType()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+      <view class="service-tab {{orderType === 'parcel' ? 'active' : ''}}" data-type="parcel" bindtap="switchOrderType">取件</view>
+      <view class="service-tab {{orderType === 'meal' ? 'active' : ''}}" data-type="meal" bindtap="switchOrderType">取餐</view>
+    </view>
+    <view class="search-box order-search">
+      <view class="search-icon"></view>
+      <!-- 输入变化调用 onOrderSearch()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+      <input class="search-input" placeholder="搜索..." value="{{orderKeyword}}" bindinput="onOrderSearch" />
+    </view>
+    <view class="order-filter-bar">
+      <!-- 点击调用 chooseOrderStatus()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+      <view class="order-filter-item" bindtap="chooseOrderStatus">{{orderStatusFilter}}<view class="filter-arrow"></view></view>
+      <!-- 点击调用 chooseOrderSort()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+      <view class="order-filter-item" bindtap="chooseOrderSort">{{orderSort === 'near' ? '截止时间从近到远' : '截止时间从远到近'}}<view class="filter-arrow"></view></view>
+    </view>
+  </view>
+
+  <!-- wx:if 条件 filteredOrders.length === 0 成立才创建此区块；隐藏按钮不等于后端授权。 -->
+  <view class="empty-state" wx:if="{{filteredOrders.length === 0}}">暂无订单</view>
+  <!-- wx:for 遍历 filteredOrders，每项生成一份标签；默认 item 为当前项、index 为下标，wx:key 帮助定位更新。 -->
+  <!-- 点击调用 openOrderDetail()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <view
+    class="order-card"
+    wx:for="{{filteredOrders}}"
+    wx:key="id"
+    data-id="{{item.id}}"
+    bindtap="openOrderDetail"
+  >
+    <view class="order-card-top">
+      <view class="order-tags">
+        <view class="order-type-tag"><image class="order-type-icon" src="/assets/icons/{{orderType === 'meal' ? 'meal' : 'parcel'}}.png" mode="aspectFit" />{{orderType === 'meal' ? '取餐' : '取件'}}</view>
+        <text class="order-owner-tag {{item.myRole === 'runner' ? 'owner-runner' : 'owner-publisher'}}">{{item.myRole === 'runner' ? '我接单' : '我发布'}}</text>
+      </view>
+      <text class="order-price">¥{{item.cardReward}}</text>
+    </view>
+    <view class="order-card-title">{{item.title}}</view>
+    <view class="order-route">{{orderType === 'meal' ? item.restaurant : item.station}} → {{item.deliveryBuilding}}</view>
+    <view class="order-meta">
+      <view class="order-publisher">{{item.publisherText}}<text class="order-credit">信用分 {{item.publisherCreditText}}</text></view>
+      <view class="order-status {{item.status === '已接单' ? 'status-accepted' : ''}}">{{item.status}}</view>
+    </view>
+    <view class="order-remaining" wx:if="{{item.remainingText}}">{{item.remainingText}}</view>
+  </view>
+  <view class="orders-end" wx:if="{{filteredOrders.length > 0}}">没有更多了</view>
+</view>
+<!-- 界面区块 mine-panel：个人中心 / panel，外观由同页 WXSS 的同名类控制。 -->
+<!-- wx:if 条件 activeTab === 'mine' 成立才创建此区块；隐藏按钮不等于后端授权。 -->
+<view class="mine-panel" wx:if="{{activeTab === 'mine'}}">
+  <!-- 界面区块 mine-profile-card：个人中心 / 个人资料 / 卡片，外观由同页 WXSS 的同名类控制。 -->
+  <view class="mine-profile-card">
+    <view class="mine-profile-top">
+      <view class="mine-avatar">{{avatarInitial}}</view>
+      <view class="mine-profile-text">
+        <view class="mine-name">{{displayName || '同学'}}</view>
+        <view class="mine-student-id">{{username}}</view>
+      </view>
+    </view>
+
+    <view class="mine-stats">
+      <!-- 点击调用 goToCredit()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+      <view class="mine-stat" bindtap="goToCredit">
+        <view class="mine-stat-content">
+          <view class="mine-stat-value">{{creditScore}}</view>
+          <view class="mine-stat-label">信用分</view>
+        </view>
+        <text class="mine-stat-arrow">›</text>
+      </view>
+
+      <!-- 点击调用 goToTransactions()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+      <view class="mine-stat" bindtap="goToTransactions">
+        <view class="mine-stat-content">
+          <view class="mine-stat-value">¥{{incomeTotal}}</view>
+          <view class="mine-stat-label">收入</view>
+        </view>
+        <text class="mine-stat-arrow">›</text>
+      </view>
+    </view>
+  </view>
+  <!-- 界面区块 mine-menu：个人中心 / 功能菜单，外观由同页 WXSS 的同名类控制。 -->
+  <view class="mine-menu">
+    <!-- 点击调用 goToSettings()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+    <view class="mine-menu-item" bindtap="goToSettings">
+      <image class="mine-menu-icon" src="/assets/icons/settings.png" mode="aspectFit" />
+      <text>账户设置</text>
+    </view>
+    <!-- 点击调用 goToFeedback()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+    <view class="mine-menu-item" bindtap="goToFeedback">
+      <image class="mine-menu-icon" src="/assets/icons/help.png" mode="aspectFit" />
+      <text>问题反馈</text>
+    </view>
+    <view class="mine-menu-item" bindtap="logout">
+      <image class="mine-menu-icon" src="/assets/icons/logout.png" mode="aspectFit" />
+      <text>退出登录</text>
+    </view>
+  </view>
+</view>
+<!-- 界面区块 bottom-nav：底部 / 导航，外观由同页 WXSS 的同名类控制。 -->
+<view class="bottom-nav">
+  <!-- 点击调用 showHome()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <view class="nav-item {{activeTab === 'home' ? 'active' : ''}}" bindtap="showHome">
+    <image
+      class="nav-image"
+      mode="aspectFit"
+      src="{{activeTab === 'home' ? '/assets/icons/nav-home-active.png' : '/assets/icons/nav-home.png'}}"
+    />
+    <text>首页</text>
+  </view>
+  <!-- 点击调用 showOrders()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <view class="nav-item {{activeTab === 'orders' ? 'active' : ''}}" bindtap="showOrders">
+    <image
+      class="nav-image"
+      mode="aspectFit"
+      src="{{activeTab === 'orders' ? '/assets/icons/nav-orders-active.png' : '/assets/icons/nav-orders.png'}}"
+    />
+    <text>订单</text>
+  </view>
+  <!-- 点击调用 showMine()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+  <view class="nav-item {{activeTab === 'mine' ? 'active' : ''}}" bindtap="showMine">
+    <image
+      class="nav-image"
+      mode="aspectFit"
+      src="{{activeTab === 'mine' ? '/assets/icons/nav-mine-active.png' : '/assets/icons/nav-mine.png'}}"
+    />
+    <text>我的</text>
+  </view>
+</view>
+</view>

@@ -1,0 +1,70 @@
+<!-- 取件发布确认：展示上一页的草稿，勾选协议后提交后端；WXML 描述页面结构，不是浏览器 HTML。 -->
+<!-- 界面区块 confirm-page：确认 / 页面，外观由同页 WXSS 的同名类控制。 -->
+<view class="confirm-page" wx:if="{{draft}}">
+  <!-- 界面区块 details-card：details / 卡片，外观由同页 WXSS 的同名类控制。 -->
+  <view class="details-card">
+    <view class="details-title">订单详情</view>
+
+    <view class="detail-row">
+      <text class="detail-label">标题</text>
+      <text class="detail-value">{{title}}</text>
+    </view>
+
+    <view class="detail-row">
+      <text class="detail-label">取件驿站</text>
+      <text class="detail-value">{{draft.station}}</text>
+    </view>
+
+    <view class="detail-row">
+      <text class="detail-label">取件码</text>
+      <view class="detail-value">
+        <!-- wx:for 遍历 draft.packages，每项生成一份标签；默认 item 为当前项、index 为下标，wx:key 帮助定位更新。 -->
+        <view class="package-item" wx:for="{{draft.packages}}" wx:key="index">
+          <text class="package-code">{{item.code}}</text>
+          <text>{{item.size}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="detail-row">
+      <text class="detail-label">快递数量</text>
+      <text class="detail-value">{{draft.packages.length}}件</text>
+    </view>
+
+    <view class="detail-row">
+      <text class="detail-label">收件地址</text>
+      <text class="detail-value">{{draft.deliveryBuilding}} {{draft.deliveryAddress}}</text>
+    </view>
+
+    <view class="detail-row">
+      <text class="detail-label">截至时间</text>
+      <text class="detail-value">{{draft.deadlineLabel}}</text>
+    </view>
+
+    <view class="detail-row">
+      <text class="detail-label">报酬</text>
+      <text class="detail-value detail-reward">¥{{draft.reward}}</text>
+    </view>
+  </view>
+
+  <!-- 界面区块 settlement-notice：结算说明 / notice，外观由同页 WXSS 的同名类控制。 -->
+  <view class="settlement-notice">
+    取件发布无需线上预付费用，服务完成后双方线下结算；相关权责均遵循《快递代拿需求协议》。
+  </view>
+
+  <!-- 界面区块 agreement-row：协议 / 一行内容，外观由同页 WXSS 的同名类控制。 -->
+  <view class="agreement-row" bindtap="toggleAgreement">
+    <!-- 界面区块 agreement-box {{agreementChecked ? 'checked' : ''}}：协议 / 容器 / agreementChecked / 已勾选，外观由同页 WXSS 的同名类控制。 -->
+    <view class="agreement-box {{agreementChecked ? 'checked' : ''}}">
+      {{agreementChecked ? '✓' : ''}}
+    </view>
+    <text>我已阅读并同意《快递代拿需求协议》</text>
+  </view>
+  <view class="confirm-footer">
+    <!-- 界面区块 confirm-button {{published ? 'saved' : ''}}：确认 / 按钮 / published / saved，外观由同页 WXSS 的同名类控制。 -->
+    <!-- 点击调用 onConfirmPublish()，函数在同页 JS；data-* 携带所点项目的信息。 -->
+    <view class="confirm-button {{published ? 'saved' : ''}}" bindtap="onConfirmPublish">
+      {{published ? '已发布' : publishing ? '发布中...' : '确认发布'}}
+    </view>
+  </view>
+</view>

@@ -1,0 +1,800 @@
+/* 首页：待接订单市场、我的订单和个人中心共用这一个页面：本文件控制页面外观，不发请求、不改数据库。 */
+page {
+  background: #f5f5f5; /* 背景：#f5f5f5 */
+}
+
+.home-page {
+  min-height: 100vh; /* 最小高度，内容多时可以增高：100vh */
+}
+
+.search-panel {
+  background: #fff; /* 背景：#fff */
+  padding-bottom: 18rpx; /* 下内边距：18rpx */
+}
+
+.service-tabs {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  height: 90rpx; /* 高度：90rpx */
+}
+
+.service-tab {
+  position: relative; /* 保留布局占位，作为绝对定位的参照 */
+  flex: 1; /* 按权重 1 分配剩余空间，并允许压缩 */
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  justify-content: center; /* 子元素沿主轴居中 */
+  color: #333; /* 文字颜色：#333 */
+  font-size: 28rpx; /* 字号：28rpx */
+}
+
+.service-tab.active {
+  color: #0bd565; /* 文字颜色：#0bd565 */
+  font-weight: bold; /* 文字加粗 */
+}
+
+.service-tab.active::after {
+  content: ""; /* 生成空伪元素，用于绘制装饰 */
+  position: absolute; /* 脱离普通布局，相对定位祖先摆放 */
+  bottom: 8rpx; /* 设置定位元素的 bottom 偏移为 8rpx；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  width: 52rpx; /* 宽度：52rpx */
+  height: 4rpx; /* 高度：4rpx */
+  border-radius: 2rpx; /* 设置圆角为 2rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  background: #0bd565; /* 背景：#0bd565 */
+}
+
+.search-box {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  height: 64rpx; /* 高度：64rpx */
+  margin: 10rpx 18rpx 0; /* 外边距：元素外侧的间距；此处按 上、左右、下 设置为 10rpx 18rpx 0。 */
+  padding: 0 22rpx; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 0 22rpx。 */
+  border-radius: 32rpx; /* 设置圆角为 32rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  background: #f5f5f5; /* 背景：#f5f5f5 */
+}
+
+.search-icon {
+  position: relative; /* 保留布局占位，作为绝对定位的参照 */
+  width: 18rpx; /* 宽度：18rpx */
+  height: 18rpx; /* 高度：18rpx */
+  margin-right: 16rpx; /* 右外边距：16rpx */
+  border: 2rpx solid #75d6a2; /* 设置 border 为 2rpx solid #75d6a2；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+  border-radius: 50%; /* 设置圆角为 50%；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+}
+
+.search-icon::after {
+  content: ""; /* 生成空伪元素，用于绘制装饰 */
+  position: absolute; /* 脱离普通布局，相对定位祖先摆放 */
+  right: -7rpx; /* 设置定位元素的 right 偏移为 -7rpx；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  bottom: -4rpx; /* 设置定位元素的 bottom 偏移为 -4rpx；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  width: 9rpx; /* 宽度：9rpx */
+  height: 2rpx; /* 高度：2rpx */
+  background: #75d6a2; /* 背景：#75d6a2 */
+  transform: rotate(45deg); /* 变换元素：rotate(45deg)；rotate 用 deg 表示旋转角度，translate 的百分比通常按自身尺寸计算；translateY(-50%) 向上移动自身高度的一半。 */
+}
+
+.search-input {
+  flex: 1; /* 按权重 1 分配剩余空间，并允许压缩 */
+  min-width: 0; /* 允许子元素缩小，避免长内容撑宽布局 */
+  font-size: 26rpx; /* 字号：26rpx */
+}
+
+.empty-state {
+  padding-top: 70rpx; /* 上内边距：70rpx */
+  text-align: center; /* 文字水平居中 */
+  color: #999; /* 文字颜色：#999 */
+  font-size: 26rpx; /* 字号：26rpx */
+}
+
+.publish-button {
+  position: fixed; /* 固定定位，常用于底栏或弹窗 */
+  right: 28rpx; /* 设置定位元素的 right 偏移为 28rpx；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  bottom: 210rpx; /* 设置定位元素的 bottom 偏移为 210rpx；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  width: 88rpx; /* 宽度：88rpx */
+  height: 88rpx; /* 高度：88rpx */
+  border-radius: 50%; /* 设置圆角为 50%；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  background: #0bd565; /* 背景：#0bd565 */
+  color: #fff; /* 文字颜色：#fff */
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  justify-content: center; /* 子元素沿主轴居中 */
+  font-size: 52rpx; /* 字号：52rpx */
+  box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, 0.18); /* 添加阴影；依次是水平偏移、垂直偏移、模糊半径和颜色；本行值为 0 6rpx 16rpx rgba(0, 0, 0, 0.18)。 rgba() 的前三项是红绿蓝，最后一项是透明度，0 全透明、1 不透明。 */
+}
+
+.bottom-nav {
+  position: fixed; /* 固定定位，常用于底栏或弹窗 */
+  left: 0; /* 设置定位元素的 left 偏移为 0；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  right: 0; /* 设置定位元素的 right 偏移为 0；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  bottom: 0; /* 设置定位元素的 bottom 偏移为 0；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  z-index: 10; /* 层叠顺序，同一层叠上下文中比较：10 */
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  height: 100rpx; /* 高度：100rpx */
+  padding-bottom: env(safe-area-inset-bottom); /* 下内边距：env(safe-area-inset-bottom)，为设备安全区留空间 */
+  background: #fff; /* 背景：#fff */
+  border-top: 1rpx solid #eee; /* 设置 border-top 为 1rpx solid #eee；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+}
+
+.nav-item {
+  flex: 1; /* 按权重 1 分配剩余空间，并允许压缩 */
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  flex-direction: column; /* 主轴改为竖直方向，子元素上下排列 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  justify-content: center; /* 子元素沿主轴居中 */
+  color: #999; /* 文字颜色：#999 */
+  font-size: 21rpx; /* 字号：21rpx */
+}
+
+.nav-item.active {
+  color: #0bd565; /* 文字颜色：#0bd565 */
+}
+
+.nav-image {
+  display: block; /* 设置为块级显示 */
+  width: 64rpx; /* 宽度：64rpx */
+  height: 64rpx; /* 高度：64rpx */
+  margin-bottom: 4rpx; /* 下外边距：4rpx */
+}
+
+.orders-panel {
+  padding: 20rpx 18rpx 140rpx; /* 内边距：内容到边框之间的间距；此处按 上、左右、下 设置为 20rpx 18rpx 140rpx。 */
+}
+
+.orders-title {
+  margin-bottom: 20rpx; /* 下外边距：20rpx */
+  font-size: 30rpx; /* 字号：30rpx */
+  font-weight: bold; /* 文字加粗 */
+}
+
+.order-card {
+  margin-bottom: 16rpx; /* 下外边距：16rpx */
+  padding: 24rpx; /* 内边距：内容到边框之间的间距；此处按 四边 设置为 24rpx。 */
+  border-radius: 10rpx; /* 设置圆角为 10rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  background: #fff; /* 背景：#fff */
+  color: #666; /* 文字颜色：#666 */
+  font-size: 24rpx; /* 字号：24rpx */
+  line-height: 1.8; /* 设置行盒高度；无单位值乘以字号，rpx 值是明确行高，normal 由字体决定；相同高度和行高常用于单行文字居中；本行值为 1.8。 */
+}
+
+.order-heading {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  justify-content: space-between; /* 两端贴边，中间空隙均分 */
+  color: #333; /* 文字颜色：#333 */
+  font-size: 28rpx; /* 字号：28rpx */
+  font-weight: bold; /* 文字加粗 */
+}
+
+.order-status {
+  display: table; /* 采用表格布局方式 */
+  margin: 16rpx 0 0 auto; /* 外边距：元素外侧的间距；此处按 上、右、下、左 设置为 16rpx 0 0 auto。 auto 为自动分配；常见的 0 auto 可让有确定宽度的块水平居中，也受布局环境影响。 */
+  padding: 4rpx 12rpx; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 4rpx 12rpx。 */
+  border-radius: 6rpx; /* 设置圆角为 6rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  background: #eee; /* 背景：#eee */
+  color: #555; /* 文字颜色：#555 */
+  font-size: 23rpx; /* 字号：23rpx */
+  line-height: 1.5; /* 设置行盒高度；无单位值乘以字号，rpx 值是明确行高，normal 由字体决定；相同高度和行高常用于单行文字居中；本行值为 1.5。 */
+}
+
+.orders-panel .service-tabs {
+  margin: -20rpx -18rpx 20rpx; /* 外边距：元素外侧的间距；此处按 上、左右、下 设置为 -20rpx -18rpx 20rpx。 负外边距会把元素向邻近区域拉近或延伸。 */
+  background: #fff; /* 背景：#fff */
+}
+
+.order-search {
+  margin: 0 0 20rpx; /* 外边距：元素外侧的间距；此处按 上、左右、下 设置为 0 0 20rpx。 */
+}
+
+.order-filter {
+  padding: 0 28rpx 20rpx; /* 内边距：内容到边框之间的间距；此处按 上、左右、下 设置为 0 28rpx 20rpx。 */
+  background: #fff; /* 背景：#fff */
+  color: #555; /* 文字颜色：#555 */
+  font-size: 26rpx; /* 字号：26rpx */
+}
+
+.order-filter-bar {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  justify-content: space-between; /* 两端贴边，中间空隙均分 */
+  padding: 0 28rpx 20rpx; /* 内边距：内容到边框之间的间距；此处按 上、左右、下 设置为 0 28rpx 20rpx。 */
+  background: #fff; /* 背景：#fff */
+  color: #555; /* 文字颜色：#555 */
+  font-size: 26rpx; /* 字号：26rpx */
+}
+
+.order-card-top {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  justify-content: space-between; /* 两端贴边，中间空隙均分 */
+}
+
+.order-tags {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  gap: 12rpx; /* 子元素之间的间隔：12rpx */
+}
+
+.order-type-tag,
+.order-owner-tag {
+  padding: 4rpx 12rpx; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 4rpx 12rpx。 */
+  border-radius: 6rpx; /* 设置圆角为 6rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  font-size: 23rpx; /* 字号：23rpx */
+  font-weight: normal; /* 使用普通字重 */
+}
+
+.order-type-tag {
+  background: #f5f5f5; /* 背景：#f5f5f5 */
+  color: #444; /* 文字颜色：#444 */
+}
+
+.order-owner-tag {
+  border: 1rpx solid #1875ee; /* 设置 border 为 1rpx solid #1875ee；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+  color: #1875ee; /* 文字颜色：#1875ee */
+}
+
+.order-price {
+  color: #ff6571; /* 文字颜色：#ff6571 */
+  font-size: 32rpx; /* 字号：32rpx */
+  font-weight: bold; /* 文字加粗 */
+}
+
+.order-card-title {
+  margin-top: 16rpx; /* 上外边距：16rpx */
+  color: #222; /* 文字颜色：#222 */
+  font-size: 29rpx; /* 字号：29rpx */
+  font-weight: bold; /* 文字加粗 */
+}
+
+.order-route {
+  margin-top: 12rpx; /* 上外边距：12rpx */
+  color: #999; /* 文字颜色：#999 */
+  font-size: 24rpx; /* 字号：24rpx */
+}
+
+.orders-end {
+  padding: 28rpx 0; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 28rpx 0。 */
+  color: #999; /* 文字颜色：#999 */
+  text-align: center; /* 文字水平居中 */
+  font-size: 25rpx; /* 字号：25rpx */
+}
+
+.order-remaining {
+  margin-top: 10rpx; /* 上外边距：10rpx */
+  color: #999; /* 文字颜色：#999 */
+  text-align: right; /* 文字右对齐 */
+  font-size: 22rpx; /* 字号：22rpx */
+}
+
+.orders-toolbar {
+  margin: -20rpx -18rpx 20rpx; /* 外边距：元素外侧的间距；此处按 上、左右、下 设置为 -20rpx -18rpx 20rpx。 负外边距会把元素向邻近区域拉近或延伸。 */
+  padding: 0 18rpx 18rpx; /* 内边距：内容到边框之间的间距；此处按 上、左右、下 设置为 0 18rpx 18rpx。 */
+  background: #fff; /* 背景：#fff */
+}
+
+.orders-toolbar .service-tabs {
+  margin: 0 -18rpx 20rpx; /* 外边距：元素外侧的间距；此处按 上、左右、下 设置为 0 -18rpx 20rpx。 负外边距会把元素向邻近区域拉近或延伸。 */
+}
+
+.orders-toolbar .order-search {
+  margin: 0 0 18rpx; /* 外边距：元素外侧的间距；此处按 上、左右、下 设置为 0 0 18rpx。 */
+}
+
+.orders-toolbar .order-filter-bar {
+  padding: 0 10rpx; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 0 10rpx。 */
+}
+
+.mine-panel {
+  padding: 20rpx 16rpx 140rpx; /* 内边距：内容到边框之间的间距；此处按 上、左右、下 设置为 20rpx 16rpx 140rpx。 */
+}
+
+.mine-profile-card {
+  padding: 0 30rpx 30rpx; /* 内边距：内容到边框之间的间距；此处按 上、左右、下 设置为 0 30rpx 30rpx。 */
+  border-radius: 14rpx; /* 设置圆角为 14rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  background: #fff; /* 背景：#fff */
+}
+
+.mine-profile-top {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  justify-content: center; /* 子元素沿主轴居中 */
+  gap: 44rpx; /* 子元素之间的间隔：44rpx */
+  min-height: 260rpx; /* 最小高度，内容多时可以增高：260rpx */
+}
+
+.mine-avatar {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  justify-content: center; /* 子元素沿主轴居中 */
+  width: 130rpx; /* 宽度：130rpx */
+  height: 130rpx; /* 高度：130rpx */
+  border-radius: 50%; /* 设置圆角为 50%；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  background: #607f98; /* 背景：#607f98 */
+  color: #fff; /* 文字颜色：#fff */
+  font-size: 62rpx; /* 字号：62rpx */
+  font-weight: bold; /* 文字加粗 */
+}
+
+.mine-name {
+  color: #222; /* 文字颜色：#222 */
+  font-size: 34rpx; /* 字号：34rpx */
+  font-weight: bold; /* 文字加粗 */
+}
+
+.mine-student-id {
+  margin-top: 14rpx; /* 上外边距：14rpx */
+  color: #333; /* 文字颜色：#333 */
+  font-size: 28rpx; /* 字号：28rpx */
+}
+
+.mine-stats {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  padding-top: 30rpx; /* 上内边距：30rpx */
+  border-top: 1rpx solid #eee; /* 设置 border-top 为 1rpx solid #eee；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+}
+
+.mine-stat {
+  position: relative; /* 保留布局占位，作为绝对定位的参照 */
+  flex: 1; /* 按权重 1 分配剩余空间，并允许压缩 */
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  justify-content: center; /* 子元素沿主轴居中 */
+  height: 180rpx; /* 高度：180rpx */
+}
+
+.mine-stat + .mine-stat {
+  border-left: 1rpx solid #e5e5e5; /* 设置 border-left 为 1rpx solid #e5e5e5；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+}
+
+.mine-stat-content {
+  text-align: center; /* 文字水平居中 */
+}
+
+.mine-stat-value {
+  color: #333; /* 文字颜色：#333 */
+  font-size: 44rpx; /* 字号：44rpx */
+  font-weight: bold; /* 文字加粗 */
+}
+
+.mine-stat-label {
+  margin-top: 16rpx; /* 上外边距：16rpx */
+  color: #777; /* 文字颜色：#777 */
+  font-size: 26rpx; /* 字号：26rpx */
+}
+
+.mine-stat-arrow {
+  position: absolute; /* 脱离普通布局，相对定位祖先摆放 */
+  right: 20rpx; /* 设置定位元素的 right 偏移为 20rpx；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  color: #ccc; /* 文字颜色：#ccc */
+  font-size: 40rpx; /* 字号：40rpx */
+}
+
+.mine-menu {
+  margin-top: 20rpx; /* 上外边距：20rpx */
+  border-radius: 14rpx; /* 设置圆角为 14rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  background: #fff; /* 背景：#fff */
+  overflow: hidden; /* 裁掉超出区域的内容 */
+}
+
+.mine-menu-item {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  height: 108rpx; /* 高度：108rpx */
+  padding: 0 32rpx; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 0 32rpx。 */
+  color: #222; /* 文字颜色：#222 */
+  font-size: 28rpx; /* 字号：28rpx */
+}
+
+.mine-menu-item + .mine-menu-item {
+  border-top: 1rpx solid #eee; /* 设置 border-top 为 1rpx solid #eee；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+}
+
+.mine-menu-icon {
+  width: 54rpx; /* 宽度：54rpx */
+  height: 54rpx; /* 高度：54rpx */
+  margin-right: 22rpx; /* 右外边距：22rpx */
+  flex: none; /* 不伸长，也不压缩 */
+}
+
+.order-meta {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  justify-content: space-between; /* 两端贴边，中间空隙均分 */
+  margin-top: 10rpx; /* 上外边距：10rpx */
+}
+
+.order-meta .order-status {
+  margin: 0; /* 外边距：元素外侧的间距；此处按 四边 设置为 0。 */
+}
+
+.order-publisher {
+  color: #999; /* 文字颜色：#999 */
+  font-size: 24rpx; /* 字号：24rpx */
+}
+
+.market-panel {
+  padding: 20rpx 18rpx 170rpx; /* 内边距：内容到边框之间的间距；此处按 上、左右、下 设置为 20rpx 18rpx 170rpx。 */
+}
+
+.market-deadline {
+  margin-top: 10rpx; /* 上外边距：10rpx */
+  color: #ff6571; /* 文字颜色：#ff6571 */
+  font-size: 24rpx; /* 字号：24rpx */
+}
+
+.status-accepted {
+  background: #0052d9; /* 背景：#0052d9 */
+  color: #fff; /* 文字颜色：#fff */
+}
+
+.publish-type-mask {
+  position: fixed; /* 固定定位，常用于底栏或弹窗 */
+  z-index: 20; /* 层叠顺序，同一层叠上下文中比较：20 */
+  inset: 0; /* 上右下左都贴边，配合定位覆盖区域 */
+  background: rgba(0,0,0,.45); /* 背景：rgba(0,0,0,.45) */
+}
+
+.publish-type-sheet {
+  position: fixed; /* 固定定位，常用于底栏或弹窗 */
+  z-index: 21; /* 层叠顺序，同一层叠上下文中比较：21 */
+  right: 0; /* 设置定位元素的 right 偏移为 0；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  bottom: 0; /* 设置定位元素的 bottom 偏移为 0；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  left: 0; /* 设置定位元素的 left 偏移为 0；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  border-radius: 18rpx 18rpx 0 0; /* 设置圆角为 18rpx 18rpx 0 0；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  background: #fff; /* 背景：#fff */
+}
+
+.publish-type-title {
+  padding: 28rpx; /* 内边距：内容到边框之间的间距；此处按 四边 设置为 28rpx。 */
+  color: #222; /* 文字颜色：#222 */
+  text-align: center; /* 文字水平居中 */
+  font-size: 27rpx; /* 字号：27rpx */
+  font-weight: bold; /* 文字加粗 */
+}
+
+.publish-type-item {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  height: 100rpx; /* 高度：100rpx */
+  padding: 0 34rpx; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 0 34rpx。 */
+  border-top: 1rpx solid #eee; /* 设置 border-top 为 1rpx solid #eee；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+  color: #222; /* 文字颜色：#222 */
+  font-size: 28rpx; /* 字号：28rpx */
+}
+
+.publish-type-icon {
+  width: 52rpx; /* 宽度：52rpx */
+  height: 52rpx; /* 高度：52rpx */
+  margin-right: 20rpx; /* 右外边距：20rpx */
+  flex: none; /* 不伸长，也不压缩 */
+}
+
+.publish-type-cancel {
+  margin-top: 14rpx; /* 上外边距：14rpx */
+  padding: 28rpx; /* 内边距：内容到边框之间的间距；此处按 四边 设置为 28rpx。 */
+  border-top: 12rpx solid #f5f5f5; /* 设置 border-top 为 12rpx solid #f5f5f5；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+  color: #777; /* 文字颜色：#777 */
+  text-align: center; /* 文字水平居中 */
+  font-size: 27rpx; /* 字号：27rpx */
+}
+
+/* “我的订单”列表：工具区铺满屏幕，卡片与原版保持相同的留白和层级。 */
+.orders-panel {
+  padding: 0 0 150rpx; /* 内边距：内容到边框之间的间距；此处按 上、左右、下 设置为 0 0 150rpx。 */
+  background: #f5f5f5; /* 背景：#f5f5f5 */
+}
+
+.orders-toolbar {
+  margin: 0 0 20rpx; /* 外边距：元素外侧的间距；此处按 上、左右、下 设置为 0 0 20rpx。 */
+  padding: 0; /* 内边距：内容到边框之间的间距；此处按 四边 设置为 0。 */
+  background: #fff; /* 背景：#fff */
+}
+
+.orders-toolbar .service-tabs {
+  height: 114rpx; /* 高度：114rpx */
+  margin: 0; /* 外边距：元素外侧的间距；此处按 四边 设置为 0。 */
+}
+
+.orders-toolbar .service-tab {
+  font-size: 27rpx; /* 字号：27rpx */
+}
+
+.orders-toolbar .service-tab.active::after {
+  bottom: 20rpx; /* 设置定位元素的 bottom 偏移为 20rpx；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  width: 60rpx; /* 宽度：60rpx */
+  height: 6rpx; /* 高度：6rpx */
+  border-radius: 4rpx; /* 设置圆角为 4rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+}
+
+.orders-toolbar .order-search {
+  height: 70rpx; /* 高度：70rpx */
+  margin: 0 20rpx 0; /* 外边距：元素外侧的间距；此处按 上、左右、下 设置为 0 20rpx 0。 */
+  padding: 0 26rpx; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 0 26rpx。 */
+  border-radius: 40rpx; /* 设置圆角为 40rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  background: #f5f5f5; /* 背景：#f5f5f5 */
+}
+
+.orders-toolbar .search-icon {
+  border-color: #00bf60; /* 边框颜色：#00bf60 */
+}
+
+.orders-toolbar .search-icon::after {
+  background: #00bf60; /* 背景：#00bf60 */
+}
+
+.orders-toolbar .search-input {
+  font-size: 26rpx; /* 字号：26rpx */
+}
+
+.orders-toolbar .order-filter-bar {
+  height: 96rpx; /* 高度：96rpx */
+  padding: 0 22rpx; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 0 22rpx。 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  color: #444; /* 文字颜色：#444 */
+  font-size: 26rpx; /* 字号：26rpx */
+}
+
+.order-filter-item {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  flex: 1; /* 按权重 1 分配剩余空间，并允许压缩 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  justify-content: center; /* 子元素沿主轴居中 */
+  white-space: nowrap; /* 文字不自动换行 */
+}
+
+.order-filter-item + .order-filter-item {
+  flex: 1.55; /* 按权重 1.55 分配剩余空间 */
+}
+
+.filter-arrow {
+  width: 0; /* 宽度：0 */
+  height: 0; /* 高度：0 */
+  margin-left: 16rpx; /* 左外边距：16rpx */
+  border-left: 8rpx solid transparent; /* 设置 border-left 为 8rpx solid transparent；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+  border-right: 8rpx solid transparent; /* 设置 border-right 为 8rpx solid transparent；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+  border-top: 9rpx solid #444; /* 设置 border-top 为 9rpx solid #444；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+}
+
+.orders-panel .order-card {
+  box-sizing: border-box; /* 设置的宽高包含内边距和边框 */
+  min-height: 340rpx; /* 最小高度，内容多时可以增高：340rpx */
+  margin: 0 20rpx 20rpx; /* 外边距：元素外侧的间距；此处按 上、左右、下 设置为 0 20rpx 20rpx。 */
+  padding: 22rpx 24rpx; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 22rpx 24rpx。 */
+  border-radius: 14rpx; /* 设置圆角为 14rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  line-height: 1.4; /* 设置行盒高度；无单位值乘以字号，rpx 值是明确行高，normal 由字体决定；相同高度和行高常用于单行文字居中；本行值为 1.4。 */
+}
+
+.orders-panel .order-card-top {
+  min-height: 44rpx; /* 最小高度，内容多时可以增高：44rpx */
+}
+
+.orders-panel .order-type-tag {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  gap: 12rpx; /* 子元素之间的间隔：12rpx */
+  padding: 7rpx 18rpx; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 7rpx 18rpx。 */
+  color: #333; /* 文字颜色：#333 */
+  font-size: 24rpx; /* 字号：24rpx */
+}
+
+.order-type-icon {
+  position: relative; /* 保留布局占位，作为绝对定位的参照 */
+  box-sizing: border-box; /* 设置的宽高包含内边距和边框 */
+  width: 27rpx; /* 宽度：27rpx */
+  height: 29rpx; /* 高度：29rpx */
+  border: 2rpx solid #00c768; /* 设置 border 为 2rpx solid #00c768；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+  border-radius: 4rpx; /* 设置圆角为 4rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+}
+
+.order-type-icon::before,
+.order-type-icon::after {
+  content: ""; /* 生成空伪元素，用于绘制装饰 */
+  position: absolute; /* 脱离普通布局，相对定位祖先摆放 */
+  left: 4rpx; /* 设置定位元素的 left 偏移为 4rpx；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  right: 4rpx; /* 设置定位元素的 right 偏移为 4rpx；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+  border-top: 2rpx solid #00c768; /* 设置 border-top 为 2rpx solid #00c768；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+}
+
+.order-type-icon::before {
+  top: 5rpx; /* 设置定位元素的 top 偏移为 5rpx；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+}
+
+.order-type-icon::after {
+  bottom: 5rpx; /* 设置定位元素的 bottom 偏移为 5rpx；参照对象由 position 和祖先决定，负数可移出参照边界，auto 表示自动计算。 */
+}
+
+.orders-panel .order-owner-tag {
+  padding: 5rpx 12rpx; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 5rpx 12rpx。 */
+  border-color: #ff7a24; /* 边框颜色：#ff7a24 */
+  color: #ff7a24; /* 文字颜色：#ff7a24 */
+  font-size: 24rpx; /* 字号：24rpx */
+}
+
+.orders-panel .order-price {
+  color: #ff6068; /* 文字颜色：#ff6068 */
+  font-size: 35rpx; /* 字号：35rpx */
+}
+
+.orders-panel .order-card-title {
+  margin-top: 22rpx; /* 上外边距：22rpx */
+  font-size: 29rpx; /* 字号：29rpx */
+  font-weight: normal; /* 使用普通字重 */
+}
+
+.orders-panel .order-route {
+  margin-top: 19rpx; /* 上外边距：19rpx */
+  color: #9aa3af; /* 文字颜色：#9aa3af */
+  font-size: 24rpx; /* 字号：24rpx */
+}
+
+.orders-panel .order-meta {
+  margin-top: 20rpx; /* 上外边距：20rpx */
+  min-height: 40rpx; /* 最小高度，内容多时可以增高：40rpx */
+}
+
+.orders-panel .order-publisher {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  color: #9aa3af; /* 文字颜色：#9aa3af */
+  font-size: 25rpx; /* 字号：25rpx */
+}
+
+.orders-panel .order-credit {
+  margin-left: 24rpx; /* 左外边距：24rpx */
+}
+
+.orders-panel .order-status {
+  padding: 5rpx 14rpx; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 5rpx 14rpx。 */
+  font-size: 23rpx; /* 字号：23rpx */
+}
+
+.orders-panel .status-accepted {
+  background: #0052d9; /* 背景：#0052d9 */
+  color: #fff; /* 文字颜色：#fff */
+}
+
+.orders-panel .order-remaining {
+  margin-top: 17rpx; /* 上外边距：17rpx */
+  color: #9aa3af; /* 文字颜色：#9aa3af */
+  font-size: 22rpx; /* 字号：22rpx */
+}
+
+.orders-panel .orders-end {
+  padding: 20rpx 0 40rpx; /* 内边距：内容到边框之间的间距；此处按 上、左右、下 设置为 20rpx 0 40rpx。 */
+  font-size: 25rpx; /* 字号：25rpx */
+}
+
+/* 取件、取餐订单卡片统一使用参考图的布局。 */
+.market-panel .order-card,
+.orders-panel .order-card {
+  box-sizing: border-box; /* 设置的宽高包含内边距和边框 */
+  min-height: 300rpx; /* 最小高度，内容多时可以增高：300rpx */
+  margin: 0 0 18rpx; /* 外边距：元素外侧的间距；此处按 上、左右、下 设置为 0 0 18rpx。 */
+  padding: 26rpx 22rpx 22rpx; /* 内边距：内容到边框之间的间距；此处按 上、左右、下 设置为 26rpx 22rpx 22rpx。 */
+  border-radius: 14rpx; /* 设置圆角为 14rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  background: #fff; /* 背景：#fff */
+  line-height: 1.35; /* 设置行盒高度；无单位值乘以字号，rpx 值是明确行高，normal 由字体决定；相同高度和行高常用于单行文字居中；本行值为 1.35。 */
+}
+
+.market-panel .order-card-top,
+.orders-panel .order-card-top {
+  min-height: 48rpx; /* 最小高度，内容多时可以增高：48rpx */
+}
+
+.market-panel .order-tags,
+.orders-panel .order-tags {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  gap: 12rpx; /* 子元素之间的间隔：12rpx */
+}
+
+.market-panel .order-type-tag,
+.orders-panel .order-type-tag {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  gap: 8rpx; /* 子元素之间的间隔：8rpx */
+  padding: 6rpx 14rpx; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 6rpx 14rpx。 */
+  border-radius: 7rpx; /* 设置圆角为 7rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  background: #f5f5f5; /* 背景：#f5f5f5 */
+  color: #252525; /* 文字颜色：#252525 */
+  font-size: 25rpx; /* 字号：25rpx */
+}
+
+.market-panel .order-type-icon,
+.orders-panel .order-type-icon {
+  position: static; /* 恢复普通文档布局 */
+  display: block; /* 设置为块级显示 */
+  width: 36rpx; /* 宽度：36rpx */
+  height: 36rpx; /* 高度：36rpx */
+  border: 0; /* 设置 border 为 0；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+  border-radius: 0; /* 设置圆角为 0；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  flex: none; /* 不伸长，也不压缩 */
+}
+
+.market-panel .order-type-icon::before,
+.market-panel .order-type-icon::after,
+.orders-panel .order-type-icon::before,
+.orders-panel .order-type-icon::after {
+  content: none; /* 不生成这个伪元素 */
+}
+
+.market-panel .order-owner-tag,
+.orders-panel .order-owner-tag {
+  padding: 5rpx 12rpx; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 5rpx 12rpx。 */
+  border: 1rpx solid #1875ee; /* 设置 border 为 1rpx solid #1875ee；宽度、线型、颜色可一起写，solid 实线、dashed 虚线，none/0 取消边框，transparent 为透明颜色。 */
+  border-radius: 6rpx; /* 设置圆角为 6rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  color: #1875ee; /* 文字颜色：#1875ee */
+  font-size: 24rpx; /* 字号：24rpx */
+}
+
+.market-panel .owner-runner,
+.orders-panel .owner-runner {
+  border-color: #ff7a24; /* 边框颜色：#ff7a24 */
+  color: #ff7a24; /* 文字颜色：#ff7a24 */
+}
+
+.market-panel .order-price,
+.orders-panel .order-price {
+  color: #ff6068; /* 文字颜色：#ff6068 */
+  font-size: 35rpx; /* 字号：35rpx */
+  font-weight: bold; /* 文字加粗 */
+}
+
+.market-panel .order-card-title,
+.orders-panel .order-card-title {
+  margin-top: 22rpx; /* 上外边距：22rpx */
+  color: #222; /* 文字颜色：#222 */
+  font-size: 29rpx; /* 字号：29rpx */
+  font-weight: normal; /* 使用普通字重 */
+}
+
+.market-panel .order-route,
+.orders-panel .order-route {
+  margin-top: 18rpx; /* 上外边距：18rpx */
+  overflow: hidden; /* 裁掉超出区域的内容 */
+  color: #9aa3af; /* 文字颜色：#9aa3af */
+  font-size: 24rpx; /* 字号：24rpx */
+  text-overflow: ellipsis; /* 文字被裁切时显示省略号，需配合宽度和溢出设置 */
+  white-space: nowrap; /* 文字不自动换行 */
+}
+
+.market-panel .order-meta,
+.orders-panel .order-meta {
+  min-height: 46rpx; /* 最小高度，内容多时可以增高：46rpx */
+  margin-top: 18rpx; /* 上外边距：18rpx */
+}
+
+.market-panel .order-publisher,
+.orders-panel .order-publisher {
+  display: flex; /* 启用弹性布局，排列内部元素 */
+  align-items: center; /* 子元素沿交叉轴居中 */
+  min-width: 0; /* 允许子元素缩小，避免长内容撑宽布局 */
+  color: #9aa3af; /* 文字颜色：#9aa3af */
+  font-size: 25rpx; /* 字号：25rpx */
+}
+
+.market-panel .order-credit,
+.orders-panel .order-credit {
+  margin-left: 24rpx; /* 左外边距：24rpx */
+}
+
+.market-panel .order-status,
+.orders-panel .order-status {
+  margin: 0; /* 外边距：元素外侧的间距；此处按 四边 设置为 0。 */
+  padding: 7rpx 14rpx; /* 内边距：内容到边框之间的间距；此处按 上下、左右 设置为 7rpx 14rpx。 */
+  border-radius: 6rpx; /* 设置圆角为 6rpx；一个值应用四角，四个值依次为左上、右上、右下、左下；50% 在正方形上得到圆形。 */
+  background: #f1f1f1; /* 背景：#f1f1f1 */
+  color: #555; /* 文字颜色：#555 */
+  font-size: 23rpx; /* 字号：23rpx */
+  white-space: nowrap; /* 文字不自动换行 */
+}
+
+.market-panel .status-accepted,
+.orders-panel .status-accepted {
+  background: #0052d9; /* 背景：#0052d9 */
+  color: #fff; /* 文字颜色：#fff */
+}
+
+.market-panel .order-remaining,
+.orders-panel .order-remaining {
+  margin-top: 10rpx; /* 上外边距：10rpx */
+  color: #9aa3af; /* 文字颜色：#9aa3af */
+  font-size: 22rpx; /* 字号：22rpx */
+  text-align: right; /* 文字右对齐 */
+}
