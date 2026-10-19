@@ -16,6 +16,12 @@ public class User {
     private String phone;
     // displayName：界面展示姓名
     private String displayName;
+    // 批量导入的院系资料；手工注册用户为空
+    private String college;
+    private String major;
+    private String grade;
+    private String className;
+    private String dormitory;
     // creditBase：基础信用分，数据库默认 61；业务层叠加订单事件
     private Integer creditBase;
     // active：账号有效标记，1 正常 / 0 已停用

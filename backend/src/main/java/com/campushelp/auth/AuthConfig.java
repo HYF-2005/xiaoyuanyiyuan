@@ -20,6 +20,8 @@ public class AuthConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(interceptor).addPathPatterns("/api/**")
         .excludePathPatterns("/api/auth/register", "/api/auth/login", "/api/auth/phone-login",
-        "/api/auth/code", "/api/auth/reset-password", "/api/health");
+        "/api/auth/code", "/api/auth/reset-password", "/api/health",
+        // 后台接口走独立管理员拦截器，不能被小程序用户 token 规则先拦下。
+        "/api/admin/**");
     }
 }

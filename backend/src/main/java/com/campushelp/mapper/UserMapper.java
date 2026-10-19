@@ -24,10 +24,28 @@ public interface UserMapper {
     // findByPhone：按绑定手机号找有效用户，供手机号登录和防重绑定。
     User findByPhone(String phone);
 
+    @Select("SELECT * FROM users WHERE username = #{username} LIMIT 1")
+    // findAnyByUsername：后台导入时检查包括已停用账号在内的账号占用。
+    User findAnyByUsername(String username);
+
+    @Select("SELECT * FROM users WHERE phone = #{phone} LIMIT 1")
+    // findAnyByPhone：后台导入时检查包括已停用账号在内的手机号占用。
+    User findAnyByPhone(String phone);
+
     @Insert("INSERT INTO users (username, password_hash, phone, display_name) VALUES (#{username}, #{passwordHash}, #{phone}, #{displayName})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     // insert：插入用户；useGeneratedKeys 把数据库生成主键写回 user.id。
     int insert(User user);
+
+    @Insert("""
+        INSERT INTO users (username, password_hash, phone, display_name, credit_base, active,
+                           college, major, grade, class_name, dormitory)
+        VALUES (#{username}, #{passwordHash}, #{phone}, #{displayName}, #{creditBase}, #{active},
+                #{college}, #{major}, #{grade}, #{className}, #{dormitory})
+        """)
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    // insertImported：批量导入使用完整资料插入；手工注册仍走 insert，避免字段默认值被覆盖。
+    int insertImported(User user);
 
     @Update("UPDATE users SET password_hash = #{hash} WHERE id = #{id} AND active = 1")
     // updatePassword：给有效用户更新 BCrypt 密码哈希；传入 hash，不传明文。

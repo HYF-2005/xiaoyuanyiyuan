@@ -38,7 +38,7 @@ public class ApiErrorHandler {
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<Map<String,
     String>> oversized() {
-        return ResponseEntity.badRequest().body(Map.of("message", "照片不能超过 5MB"));
+        return ResponseEntity.badRequest().body(Map.of("message", "上传文件过大，请检查大小限制"));
     }
 
     @ExceptionHandler({

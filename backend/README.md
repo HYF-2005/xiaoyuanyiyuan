@@ -14,7 +14,7 @@
 - 小程序主要页面已通过 `utils/api.js` 请求后端，包括登录、订单、照片、信用分、账单、设置和反馈。
 - 用户协议和隐私政策 PDF 位于 `src/main/resources/static/docs`，后端启动后可通过 `/docs/user-agreement.pdf` 和 `/docs/privacy-policy.pdf` 公开预览。
 - 注销账号会校验密码和未完成订单，再停用账号并撤销登录会话；历史订单保留用于审计。
-- 未实现微信支付、提现和后台管理。
+- 未实现微信支付、提现；后台管理由独立的 `admin-web` 提供，小程序端不包含后台页面。
 
 ## 启动
 
@@ -94,6 +94,10 @@ LaunchAgent 当前直接调用 `/Users/feng/Downloads/xiaochengxu/backend/target
 | GET | /api/orders/{id}/proof | 读取照片，仅订单双方可访问 |
 | POST | /api/orders/{id}/confirm | 发布者确认完成 |
 | POST | /api/orders/{id}/cancel | 发布者取消待接订单，或接单者取消已接订单 |
+| GET | /api/locations | 发布页启用的驿站/食堂档口/送达建筑树 |
+| GET | /api/admin/risk-orders | 风险订单分页、汇总 |
+| POST | /api/admin/risk-orders/scan | 手动重扫风险规则 |
+| PATCH | /api/admin/risk-orders/{id}/review | 标记放行/确认风险，不自动处罚 |
 | POST | /api/feedback | 保存反馈 |
 
 ## 请求示例

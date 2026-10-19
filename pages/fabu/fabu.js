@@ -1,4 +1,7 @@
 // 发布取件需求：驿站、取件码、包裹大小、送达地址、期限和报酬
+const { request } = require('../../utils/api')
+
+// 后台地址接口不可用时仍保留原有本地字典，避免断网无法发布。
 const BUILDING_OPTIONS = {
   宿舍楼: [
   '一号学生宿舍',
@@ -40,7 +43,7 @@ Page({
   data: {
     // station：已经选中的取件驿站
     station: '',
-    // stations：驿站选项，来自本地数组
+    // stations：驿站选项；优先读取后台地址字典，本地数组只作兜底
     stations: ['北苑菜鸟驿站',
     '南苑菜鸟驿站'],
     // stationPickerVisible：驿站弹窗开关
@@ -121,8 +124,38 @@ Page({
     '教学楼',
     '实训楼',
     '餐厅'],
-    buildingOptions: BUILDING_OPTIONS['宿舍楼']
+    buildingOptions: BUILDING_OPTIONS['宿舍楼'],
+    // buildingMap：分类 -> 建筑名称；后台地址读取成功后覆盖本地兜底
+    buildingMap: BUILDING_OPTIONS
 
+  },
+
+  // onLoad：进入发布页时读取后台启用的驿站和送达建筑。
+  onLoad() {
+    this.loadLocations()
+  },
+
+  // loadLocations：后台地址成功时更新选项；失败保留本地字典，不阻塞发布。
+  async loadLocations() {
+    try {
+      const data = await request('/locations')
+      const stations = (data.stations || []).map(item => item.name)
+      const buildingMap = {}
+      ;(data.buildingCategories || []).forEach(category => {
+        buildingMap[category.name] = (category.buildings || []).map(item => item.name)
+      })
+      const categories = Object.keys(buildingMap)
+      const currentCategory = categories.includes(this.data.buildingCategory) ? this.data.buildingCategory : (categories[0] || '')
+      this.setData({
+        stations,
+        buildingMap,
+        buildingCategories: categories,
+        buildingCategory: currentCategory,
+        buildingOptions: currentCategory ? buildingMap[currentCategory] : []
+      })
+    } catch (error) {
+      console.warn('后台地址读取失败，使用发布页本地兜底', error)
+    }
   },
 
   // chooseStation：打开驿站选择弹窗。
@@ -230,7 +263,7 @@ Page({
       buildingPickerVisible: true,
       buildingCategoryMode: false,
       buildingKeyword: '',
-      buildingOptions: BUILDING_OPTIONS[this.data.buildingCategory] || []
+      buildingOptions: this.data.buildingMap[this.data.buildingCategory] || []
     })
   },
 
@@ -257,7 +290,7 @@ Page({
 
     this.setData({
       buildingCategory: category,
-      buildingOptions: BUILDING_OPTIONS[category] || [],
+      buildingOptions: this.data.buildingMap[category] || [],
       buildingCategoryMode: false,
       buildingKeyword: ''
     })
@@ -265,7 +298,7 @@ Page({
   onBuildingSearch(e) {
     const value = e.detail.value
     const keyword = value.trim()
-    const options = BUILDING_OPTIONS[this.data.buildingCategory] || []
+    const options = this.data.buildingMap[this.data.buildingCategory] || []
 
     this.setData({
       buildingKeyword: value,

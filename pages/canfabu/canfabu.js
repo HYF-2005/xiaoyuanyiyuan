@@ -1,4 +1,7 @@
 // 发布取餐需求：餐厅三级联动、取餐码、地址、时间与建议报酬
+const { request } = require('../../utils/api')
+
+// 后台接口不可用时仍保留原有本地字典，避免断网无法发布。
 // 本地选项字典：对象的键是分类/食堂，值是楼栋或下级选项；不是动态查询数据库。
 const RESTAURANTS = {
   '北苑食堂(一饭)': {
@@ -93,8 +96,10 @@ Page({
     restaurant: '',
     // restaurantPickerVisible：餐厅三级滚轮弹窗开关
     restaurantPickerVisible: false,
-    // restaurantNames：食堂名称列表
+    // restaurantNames：食堂名称列表；优先读取后台地址字典
     restaurantNames: Object.keys(RESTAURANTS),
+    // restaurantMap：后台或本地食堂 -> 楼层 -> 档口字典
+    restaurantMap: RESTAURANTS,
     // floorNames：当前食堂的楼层列表
     floorNames: [],
     // vendorNames：当前楼层的档口列表
@@ -124,6 +129,8 @@ Page({
     buildingCategoryMode: true,
     // buildingCategories：全部分类名称
     buildingCategories: Object.keys(BUILDINGS),
+    // buildingMap：分类 -> 建筑名称；后台地址读取成功后覆盖本地兜底
+    buildingMap: BUILDINGS,
     // buildingOptions：当前可选楼栋列表
     buildingOptions: [],
     // buildingKeyword：建筑搜索输入
@@ -157,25 +164,57 @@ Page({
     suggestedReward: '0.00'
   },
 
-  // onLoad：读取当前时分作为滚轮默认位置；未确认时不算填写了截止时间。
+  // onLoad：读取当前时分作为滚轮默认位置，并加载后台地址字典。
   onLoad() {
     const now = new Date()
     // setData 合并更新页面状态并触发 WXML 重绘；this.data 可读，直接改它不会可靠更新界面。
     this.setData({
       defaultTime: `${pad(now.getHours())}:${pad(now.getMinutes())}`
     })
+    this.loadLocations()
+  },
+
+  // loadLocations：把后台食堂/楼层/档口和建筑分类转换成页面现有字典结构。
+  async loadLocations() {
+    try {
+      const data = await request('/locations')
+      const restaurantMap = {}
+      ;(data.canteens || []).forEach(canteen => {
+        restaurantMap[canteen.name] = {}
+        ;(canteen.floors || []).forEach(floor => {
+          restaurantMap[canteen.name][floor.name] = (floor.vendors || []).map(item => item.name)
+        })
+      })
+      const buildingMap = {}
+      ;(data.buildingCategories || []).forEach(category => {
+        buildingMap[category.name] = (category.buildings || []).map(item => item.name)
+      })
+      this.setData({
+        restaurantMap,
+        restaurantNames: Object.keys(restaurantMap),
+        buildingMap,
+        buildingCategories: Object.keys(buildingMap)
+      })
+    } catch (error) {
+      console.warn('后台地址读取失败，使用取餐页本地兜底', error)
+    }
   },
 
   // openRestaurantPicker：打开食堂→楼层→档口三级滚轮，恢复上一次确认的选择。
   openRestaurantPicker() {
     const names = this.data.restaurantNames
+    if (!names.length) return
     const indexes = this.data.confirmedRestaurantIndexes
-    const floorNames = Object.keys(RESTAURANTS[names[indexes[0]]])
+    const restaurantIndex = Math.min(indexes[0] || 0, names.length - 1)
+    const floorNames = Object.keys(this.data.restaurantMap[names[restaurantIndex]] || {})
+    const floorIndex = Math.min(indexes[1] || 0, Math.max(0, floorNames.length - 1))
+    const vendorNames = (this.data.restaurantMap[names[restaurantIndex]] || {})[floorNames[floorIndex]] || []
+    const vendorIndex = Math.min(indexes[2] || 0, Math.max(0, vendorNames.length - 1))
     this.setData({
       restaurantPickerVisible: true,
-      restaurantIndexes: [...indexes],
+      restaurantIndexes: [restaurantIndex, floorIndex, vendorIndex],
       floorNames,
-      vendorNames: RESTAURANTS[names[indexes[0]]][floorNames[indexes[1]]]
+      vendorNames
     })
   },
 
@@ -191,9 +230,9 @@ Page({
       indexes[2] = 0
     }
     const name = this.data.restaurantNames[indexes[0]]
-    const floorNames = Object.keys(RESTAURANTS[name])
+    const floorNames = Object.keys(this.data.restaurantMap[name])
     indexes[1] = Math.min(indexes[1], floorNames.length - 1)
-    const vendorNames = RESTAURANTS[name][floorNames[indexes[1]]]
+    const vendorNames = this.data.restaurantMap[name][floorNames[indexes[1]]]
     indexes[2] = Math.min(indexes[2], vendorNames.length - 1)
     this.setData({
       restaurantIndexes: indexes,
@@ -291,7 +330,7 @@ Page({
     this.setData({
       buildingCategory: category,
       buildingCategoryMode: false,
-      buildingOptions: BUILDINGS[category],
+      buildingOptions: this.data.buildingMap[category],
       buildingKeyword: ''
     })
   },
@@ -310,14 +349,14 @@ Page({
     this.setData({
       buildingCategoryMode: false,
       buildingKeyword: '',
-      buildingOptions: BUILDINGS[this.data.buildingCategory]
+      buildingOptions: this.data.buildingMap[this.data.buildingCategory]
     })
   },
 
   // onBuildingSearch：按输入关键词过滤本地建筑选项；取件页查当前分类，取餐页未选分类时可查全部。
   onBuildingSearch(e) {
     const keyword = e.detail.value
-    const source = this.data.buildingCategory ? BUILDINGS[this.data.buildingCategory] : Object.keys(BUILDINGS).reduce((all, category) => all.concat(BUILDINGS[category]), [])
+    const source = this.data.buildingCategory ? this.data.buildingMap[this.data.buildingCategory] : Object.keys(this.data.buildingMap).reduce((all, category) => all.concat(this.data.buildingMap[category]), [])
     const options = source.filter(item => item.includes(keyword.trim()))
     this.setData({
       buildingKeyword: keyword,

@@ -26,8 +26,9 @@ spring:
   servlet:
     # 限制文件上传大小：照片最多 5MB，整个请求最多 6MB。
     multipart:
-      max-file-size: 5MB
-      max-request-size: 6MB
+      # 订单凭证照片仍由业务层限制为 5MB；用户 Excel 导入允许 10MB。
+      max-file-size: 10MB
+      max-request-size: 12MB
   # JSON 序列化配置；LocalDateTime 自身不携带时区，业务服务器时间仍需一致。
   jackson:
     time-zone: Asia/Shanghai
@@ -36,6 +37,10 @@ mybatis:
     # MyBatis 自动把数据库 publisher_id 映射到 Java publisherId。
     map-underscore-to-camel-case: true
 app:
+  # 首次部署可选：设置 ADMIN_INIT_PASSWORD 后自动创建初始管理员；默认空表示不创建。
+  admin-init:
+    username: ${ADMIN_INIT_USERNAME:admin}
+    password: ${ADMIN_INIT_PASSWORD:}
   # 照片存储目录；默认相对于后端运行工作目录的 uploads。
   uploads-dir: ${UPLOADS_DIR:./uploads}
   # 本地演示才把验证码返回给调用者；上线前设置为 false 并接入短信服务。

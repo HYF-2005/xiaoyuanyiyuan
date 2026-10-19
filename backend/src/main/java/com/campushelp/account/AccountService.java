@@ -37,6 +37,13 @@ public class AccountService {
     public CreditSummary credit(Long userId) {
         User user = users.findById(userId);
         if (user == null) throw new ApiException(HttpStatus.UNAUTHORIZED, "账号不存在");
+        return credit(user);
+    }
+
+    // credit(User)：后台可传入已查询出的任意用户（包括已停用账号），不需要再走 active=1 的登录查询。
+    public CreditSummary credit(User user) {
+        if (user == null || user.getId() == null) throw new ApiException(HttpStatus.UNAUTHORIZED, "账号不存在");
+        Long userId = user.getId();
         List<CreditRecord> records = new ArrayList<>();
         for (HelpOrder order : orders.byRunner(userId)) {
             if ("已完成".equals(order.getStatus()) && order.getCompletedAt() != null
@@ -55,7 +62,8 @@ public class AccountService {
         }
         records.sort(Comparator.comparing(CreditRecord::at).reversed());
         // 在基础分上汇总变动，再用 min/max 把结果限制在 0–100。
-        int score = Math.max(0, Math.min(100, user.getCreditBase()
+        int base = user.getCreditBase() == null ? 61 : user.getCreditBase();
+        int score = Math.max(0, Math.min(100, base
         + records.stream().mapToInt(CreditRecord::change).sum()));
         return new CreditSummary(score, records);
     }

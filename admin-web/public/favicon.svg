@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="g" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4c98ff"/>
+      <stop offset="1" stop-color="#2164d6"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="#071a32"/>
+  <rect x="8" y="8" width="48" height="48" rx="12" fill="url(#g)"/>
+  <text x="32" y="43" fill="#ffffff" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="30" font-weight="700" text-anchor="middle">援</text>
+</svg>

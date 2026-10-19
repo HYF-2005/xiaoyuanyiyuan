@@ -8,6 +8,10 @@
         "type": "folder"
       },
       {
+        "value": "admin-web",
+        "type": "folder"
+      },
+      {
         "value": "design",
         "type": "folder"
       },
