@@ -3,9 +3,13 @@
 <view class="feedback-page">
   <!-- 界面区块 feedback-card：反馈 / 卡片，外观由同页 WXSS 的同名类控制。 -->
   <view class="feedback-card">
+    <view wx:if="{{orderNo}}" class="feedback-context">
+      <text class="feedback-context-label">关联订单</text>
+      <text class="feedback-context-value">{{orderNo}}</text>
+    </view>
     <textarea
     class="feedback-input"
-    placeholder="请详细描述您遇到的问题或建议，我们会尽快处理（10-100字）"
+    placeholder="{{orderNo ? '请详细描述该订单遇到的问题（10-100字）' : '请详细描述您遇到的问题或建议，我们会尽快处理（10-100字）'}}"
     maxlength="100"
     value="{{content}}"
     bindinput="onContentInput"

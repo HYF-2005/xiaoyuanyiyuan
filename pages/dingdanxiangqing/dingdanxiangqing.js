@@ -190,6 +190,14 @@ Page({
     })
   },
 
+  // goToFeedback：携带订单编号跳转问题反馈页，反馈内容会关联该订单。
+  goToFeedback() {
+    const orderNo = this.data.displayId || `UO${this.data.orderId}`
+    wx.navigateTo({
+      url: `/pages/fankui/fankui?orderId=${encodeURIComponent(this.data.orderId)}&orderNo=${encodeURIComponent(orderNo)}`
+    })
+  },
+
   openConfirm() {
     if (this.data.order && this.data.order.status === '待确认' && this.data.role === 'publisher' && this.data.order.hasCompletionPhoto) {
       this.setData({

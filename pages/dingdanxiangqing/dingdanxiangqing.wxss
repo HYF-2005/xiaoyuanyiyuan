@@ -271,3 +271,18 @@ page {
   font-size: 26rpx; /* 字号：26rpx */
   text-align: center; /* 文字水平居中 */
 }
+
+.feedback-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6rpx;
+  margin-top: 18rpx;
+  color: #0bd565;
+  font-size: 24rpx;
+  line-height: 1.5;
+}
+
+.feedback-link-arrow {
+  font-size: 30rpx;
+  line-height: 1;
+}

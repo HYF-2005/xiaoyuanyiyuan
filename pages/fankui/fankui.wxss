@@ -13,6 +13,26 @@ page {
   background: #fff; /* 背景：#fff */
 }
 
+
+.feedback-context {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 20rpx;
+  margin-bottom: 20rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+  font-size: 26rpx;
+}
+
+.feedback-context-label {
+  color: #888;
+}
+
+.feedback-context-value {
+  color: #0bd565;
+  font-weight: 600;
+}
+
 .feedback-input {
   width: 100%; /* 宽度：100% */
   height: 400rpx; /* 高度：400rpx */

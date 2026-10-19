@@ -9,7 +9,19 @@ Page({
     // content：用户输入的反馈正文
     content: '',
     // submitting：提交请求锁，防止多次创建/反馈/注销
-    submitting: false
+    submitting: false,
+    // orderNo：从订单详情进入时展示的关联订单编号
+    orderNo: '',
+    // orderId：关联订单主键，保留给后续反馈接口使用
+    orderId: ''
+  },
+
+  // onLoad：接收订单详情页传来的关联订单信息。
+  onLoad(options) {
+    this.setData({
+      orderNo: String(options.orderNo || ''),
+      orderId: String(options.orderId || '')
+    })
   },
 
   // onContentInput：保存反馈输入内容。
@@ -27,15 +39,18 @@ Page({
   // submitFeedback：检查反馈字数并锁住按钮，POST /feedback 写数据库；成功后返回。
   async submitFeedback() {
     if (this.data.submitting) return
-    const content = this.data.content.trim()
+    const input = this.data.content.trim()
 
-    if (content.length < 10) {
+    if (input.length < 10) {
       wx.showToast({
         title: '请至少输入10个字',
         icon: 'none'
       })
       return
     }
+    const content = this.data.orderNo
+      ? `订单 ${this.data.orderNo}：${input}`
+      : input
     this.setData({
       submitting: true
     })
