@@ -99,7 +99,7 @@
 
       <div class="sidebar-foot">
         <span class="version-dot"></span>
-        v1.1.0 · 校园易援
+        v1.2.0 · 校园易援
       </div>
     </aside>
 

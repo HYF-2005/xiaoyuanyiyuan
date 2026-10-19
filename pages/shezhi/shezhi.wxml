@@ -69,7 +69,7 @@
     <view class="about-dialog" catchtap="noop">
       <view class="about-title">关于我们</view>
       <view class="about-content">
-        校园易援 v1.0.13 为大学生打造安全便捷的校园互助生态平台
+        校园易援 v1.2.0 为大学生打造安全便捷的校园互助生态平台
       </view>
       <button class="about-confirm" bindtap="closeAbout">确定</button>
     </view>

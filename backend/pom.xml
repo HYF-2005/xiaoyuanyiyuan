@@ -12,7 +12,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/x
 </parent>
 <groupId>com.campushelp</groupId>
 <artifactId>campus-help-backend</artifactId>
-<version>1.0.0-SNAPSHOT</version>
+<version>1.2.0</version>
 <name>campus-help-backend</name>
 <!-- Spring Boot 3 需要 Java 17；这里决定编译目标，系统运行也必须提供合适 JDK。 -->
 <properties><java.version>17</java.version></properties>

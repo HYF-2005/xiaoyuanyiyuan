@@ -19,7 +19,7 @@
 	<array>
 		<string>/usr/bin/java</string>
 		<string>-jar</string>
-		<string>/Users/feng/Downloads/xiaochengxu/backend/target/campus-help-backend-1.0.0-SNAPSHOT.jar</string>
+		<string>/Users/feng/Downloads/xiaochengxu/backend/target/campus-help-backend-1.2.0.jar</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>

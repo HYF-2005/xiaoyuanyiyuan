@@ -6,7 +6,7 @@
 ![后端](https://img.shields.io/badge/Java-17-orange)
 ![框架](https://img.shields.io/badge/Spring%20Boot-3.3.12-brightgreen)
 ![数据库](https://img.shields.io/badge/MySQL-8.0-blue)
-![版本](https://img.shields.io/badge/version-v1.1.0-blue)
+![版本](https://img.shields.io/badge/version-v1.2.0-blue)
 
 仓库地址：<https://github.com/HYF-2005/xiaoyuanyiyuan>
 
@@ -18,12 +18,13 @@
 |---|---|---|
 | `v1.0.0` | `a668a1c` | 首版：登录注册、订单发布与接单、账户、信用分、账单等 |
 | `v1.1.0` | `0324eb4` | 新增公告中心、公告详情、首页公告条、未读红点、登录后 5 秒强提醒、首页轮播 |
+| `v1.2.0` | `b647c56` | 新增管理后台、权限管理、学生批量导入、风险订单、财务与内容管理；重构实名认证注册流程 |
 
-当前 `main` 对应 `v1.1.0`。
+当前 `main` 对应 `v1.2.0`。
 
 > 关于“两版轮播”：
 >
-> - `v1.0.0` 和 `v1.1.0` 是两个**历史版本**；
+> - `v1.0.0`、`v1.1.0` 和 `v1.2.0` 是**历史版本**；
 > - 当前代码使用**动态文字版**轮播：背景图不带字，标题/副标题由 WXML 从数据库读取并渲染；
 > - `design/banners/*-with-text.jpg` 是之前的整图版素材，只做设计归档；
 > - 当前代码如果直接换回带字图片，会出现文字重影。整图版和动态版要同时可切换，需要额外增加 `render_mode` 字段，目前尚未实现。

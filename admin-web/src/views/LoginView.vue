@@ -29,7 +29,7 @@
             <span>数据表</span>
           </div>
           <div class="metric">
-            <strong>v1.1.0</strong>
+            <strong>v1.2.0</strong>
             <span>当前版本</span>
           </div>
         </div>

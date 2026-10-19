@@ -63,7 +63,7 @@ launchctl bootout "gui/$(id -u)/com.campushelp.backend"
 launchctl bootstrap "gui/$(id -u)" "$HOME/Library/LaunchAgents/com.campushelp.backend.plist"
 ```
 
-LaunchAgent 当前直接调用 `/Users/feng/Downloads/xiaochengxu/backend/target/campus-help-backend-1.0.0-SNAPSHOT.jar`，避免项目目录变更或旧副本导致启动失败。
+LaunchAgent 当前直接调用 `/Users/feng/Downloads/xiaochengxu/backend/target/campus-help-backend-1.2.0.jar`，避免项目目录变更或旧副本导致启动失败。
 
 首次启动会通过 `schema.sql` 创建缺失表，不会清空已有表。服务地址是 `http://localhost:8080`；健康检查为 `GET /api/health`。
 
