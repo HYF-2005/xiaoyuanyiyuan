@@ -1,0 +1,52 @@
+<!-- 公告中心：全部/未读/系统筛选、未读红点、全部已读；点击卡片进入详情。 -->
+<view class="notice-center">
+  <view class="notice-filter">
+    <view class="filter-chips">
+      <view class="filter-chip {{filter === 'all' ? 'active' : ''}}" data-filter="all" bindtap="switchFilter">全部</view>
+      <view class="filter-chip {{filter === 'unread' ? 'active' : ''}}" data-filter="unread" bindtap="switchFilter">
+        <text>未读</text>
+        <text class="chip-count" wx:if="{{unreadCount > 0}}">{{unreadCount}}</text>
+      </view>
+      <view class="filter-chip {{filter === 'system' ? 'active' : ''}}" data-filter="system" bindtap="switchFilter">系统</view>
+    </view>
+    <view class="read-all {{unreadCount === 0 ? 'disabled' : ''}}" bindtap="markAllRead">全部已读</view>
+  </view>
+
+  <view class="notice-summary" wx:if="{{!loading && filteredAnnouncements.length > 0}}">{{summaryText}}</view>
+
+  <view class="notice-list" wx:if="{{filteredAnnouncements.length > 0}}">
+    <view
+      class="notice-card {{item.read ? 'is-read' : ''}}"
+      wx:for="{{filteredAnnouncements}}"
+      wx:key="id"
+      data-id="{{item.id}}"
+      bindtap="openDetail"
+    >
+      <view class="notice-card-top">
+        <view class="notice-title-row">
+          <view class="notice-dot {{item.read ? 'is-read' : ''}}"></view>
+          <view class="notice-title">{{item.title}}</view>
+        </view>
+        <view class="notice-arrow"></view>
+      </view>
+      <view class="notice-summary-text">{{item.summary}}</view>
+      <view class="notice-card-bottom">
+        <view class="notice-tags">
+          <text class="notice-tag {{item.category === '活动' ? 'tag-activity' : 'tag-system'}}">{{item.category}}</text>
+          <text class="notice-tag tag-level" wx:if="{{item.level !== '普通'}}">{{item.level}}</text>
+          <text class="notice-tag tag-pin" wx:if="{{item.pinned}}">置顶</text>
+        </view>
+        <text class="notice-time">{{item.dateText}}</text>
+      </view>
+    </view>
+    <view class="notice-list-end">没有更多了</view>
+  </view>
+
+  <view class="notice-empty" wx:elif="{{!loading}}">
+    <image class="notice-empty-icon" src="/assets/icons/bell.png" mode="aspectFit" />
+    <view class="notice-empty-title">{{filter === 'unread' ? '没有未读公告' : (filter === 'system' ? '暂无系统公告' : '暂无公告')}}</view>
+    <view class="notice-empty-sub">{{filter === 'unread' ? '所有公告都看过了' : '有新内容会在这里出现'}}</view>
+  </view>
+
+  <view class="notice-loading" wx:else>加载中...</view>
+</view>

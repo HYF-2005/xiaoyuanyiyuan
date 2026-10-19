@@ -128,3 +128,83 @@ CREATE TABLE IF NOT EXISTS feedback (
   -- 外键确保关联记录存在，不能随意删掉仍被引用的用户。
   CONSTRAINT fk_feedback_user FOREIGN KEY (user_id) REFERENCES users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 轮播位：首页可配置的公告、活动、广告海报；link_type/link_value 决定点击去向。
+CREATE TABLE IF NOT EXISTS banners (
+  -- BIGINT 自增主键；同表内唯一。
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  -- 后台识别用稳定编码；即使标题修改也不影响配置。
+  code VARCHAR(64) NOT NULL UNIQUE,
+  -- 海报地址；可以是包内 /assets 路径或 HTTPS 地址。
+  image_url VARCHAR(500) NOT NULL,
+  -- 左上角角标：公告 / 活动 / 推广。
+  tag VARCHAR(20) NOT NULL DEFAULT '公告',
+  -- 兜底标题，图片失败时展示，也便于后台识别。
+  title VARCHAR(120) NOT NULL,
+  -- 兜底副标题，海报通常已包含文案。
+  subtitle VARCHAR(255) NULL,
+  -- notice / page / web / miniProgram / none。
+  link_type VARCHAR(20) NOT NULL DEFAULT 'none',
+  -- 公告 id、站内路径、H5 地址或目标 appId。
+  link_value VARCHAR(500) NULL,
+  -- 数字越小越靠前。
+  sort_order INT NOT NULL DEFAULT 0,
+  -- 1 展示 / 0 停用。
+  enabled TINYINT(1) NOT NULL DEFAULT 1,
+  -- 可选生效时间；null 表示立即生效。
+  start_at DATETIME(3) NULL,
+  -- 可选失效时间；null 表示长期有效。
+  end_at DATETIME(3) NULL,
+  -- 数据库默认记录创建时刻，精度到毫秒。
+  created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  -- 为常见筛选条件建立索引，加快查询；不是新增业务数据。
+  INDEX idx_banner_active (enabled, sort_order)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 公告：标题、摘要、正文、分类、重要级别、置顶和强提醒标记。
+CREATE TABLE IF NOT EXISTS announcements (
+  -- BIGINT 自增主键；同表内唯一。
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  -- 公告标题，列表和弹窗共用。
+  title VARCHAR(120) NOT NULL,
+  -- 列表摘要；为空时由业务层从正文截取。
+  summary VARCHAR(255) NULL,
+  -- 公告正文，纯文本保留换行；前端不做 HTML 注入。
+  content TEXT NOT NULL,
+  -- 系统公告 / 活动。
+  category VARCHAR(20) NOT NULL DEFAULT '系统公告',
+  -- 普通 / 重要 / 紧急。
+  level VARCHAR(10) NOT NULL DEFAULT '普通',
+  -- 1 置顶，排序优先于发布时间。
+  pinned TINYINT(1) NOT NULL DEFAULT 0,
+  -- 1 登录后有未读时自动弹出，并执行 5 秒强制阅读。
+  force_read TINYINT(1) NOT NULL DEFAULT 1,
+  -- 1 已发布 / 0 草稿；未来 published_at 可做定时发布。
+  is_published TINYINT(1) NOT NULL DEFAULT 1,
+  -- 发布时间；首页和列表只读取已到时间的公告。
+  published_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  -- 数据库默认记录创建时刻，精度到毫秒。
+  created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  -- 为列表和强提醒查询建立索引；不是新增业务数据。
+  INDEX idx_announcement_feed (is_published, published_at),
+  INDEX idx_announcement_pending (is_published, force_read, published_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 公告已读：一个用户对一条公告最多一条记录；唯一键让重复标记幂等。
+CREATE TABLE IF NOT EXISTS announcement_reads (
+  -- BIGINT 自增主键；同表内唯一。
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  -- 关联 users.id 的阅读者。
+  user_id BIGINT NOT NULL,
+  -- 关联 announcements.id 的公告。
+  announcement_id BIGINT NOT NULL,
+  -- 首次标记已读时间。
+  read_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  -- 同一用户同一公告只保留一条，重复写入由 INSERT IGNORE 跳过。
+  UNIQUE KEY uk_announcement_read (user_id, announcement_id),
+  -- 公告被删除时一并清理已读记录。
+  CONSTRAINT fk_read_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  CONSTRAINT fk_read_announcement FOREIGN KEY (announcement_id) REFERENCES announcements(id) ON DELETE CASCADE,
+  -- 为按公告反查已读人数建立索引；不是新增业务数据。
+  INDEX idx_read_announcement (announcement_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

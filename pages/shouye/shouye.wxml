@@ -29,6 +29,81 @@
   </view>
 </view>
 
+<!-- 轮播：背景图只负责视觉，标题/副标题由后台数据动态渲染；图片失败时显示同色兜底文案。 -->
+<view class="home-banner" wx:if="{{banners.length > 0}}">
+  <swiper
+    class="banner-swiper"
+    autoplay="{{banners.length > 1}}"
+    circular
+    interval="4000"
+    duration="400"
+    bindchange="onBannerChange"
+  >
+    <swiper-item
+      class="banner-slide"
+      wx:for="{{banners}}"
+      wx:key="id"
+      data-index="{{index}}"
+      bindtap="onBannerTap"
+    >
+      <image
+        wx:if="{{item.imageUrl}}"
+        class="banner-image"
+        src="{{item.imageUrl}}"
+        mode="aspectFill"
+        data-index="{{index}}"
+        binderror="onBannerImageError"
+      />
+      <view wx:else class="banner-fallback">
+        <view class="banner-fallback-tag">{{item.tag}}</view>
+        <view class="banner-fallback-title">{{item.title}}</view>
+        <view class="banner-fallback-sub">{{item.subtitle}}</view>
+      </view>
+      <!-- 背景图不带文字，标题/副标题由后台字段渲染；换文案只需改数据库。 -->
+      <view class="banner-copy" wx:if="{{item.imageUrl}}">
+        <view class="banner-title" wx:if="{{item.title}}">{{item.title}}</view>
+        <view class="banner-sub" wx:if="{{item.subtitle}}">{{item.subtitle}}</view>
+      </view>
+      <view class="banner-tag" wx:if="{{item.tag && item.imageUrl}}">{{item.tag}}</view>
+      <view class="banner-cta">查看详情 <view class="banner-cta-arrow"></view></view>
+    </swiper-item>
+  </swiper>
+  <view class="banner-dots" wx:if="{{banners.length > 1}}">
+    <view
+      wx:for="{{banners}}"
+      wx:key="id"
+      class="banner-dot {{index === bannerIndex ? 'active' : ''}}"
+    ></view>
+  </view>
+</view>
+
+<!-- 公告条：展示最新公告；右侧公告中心常驻，未读时铃铛带小红点。 -->
+<view class="notice-bar">
+  <view class="notice-main" bindtap="openLatestNotice">
+    <view class="notice-icon">
+      <image class="notice-icon-image" src="/assets/icons/megaphone.png" mode="aspectFit" />
+    </view>
+    <view class="notice-title">
+      <text class="notice-label">公告</text>
+      <text class="notice-text">{{noticeBarText}}</text>
+    </view>
+  </view>
+  <view class="notice-divider"></view>
+  <view class="notice-more" catchtap="openNoticeCenter">
+    <view class="notice-bell-wrap">
+      <image class="notice-bell" src="/assets/icons/bell.png" mode="aspectFit" />
+      <view class="notice-red-dot" wx:if="{{hasUnreadNotice}}"></view>
+    </view>
+    <text>公告中心</text>
+    <view class="notice-chevron"></view>
+  </view>
+</view>
+
+<view class="market-section-head">
+  <view class="market-section-title">待接订单</view>
+  <view class="market-section-count">共 {{marketOrders.length}} 单</view>
+</view>
+
 <view class="market-panel">
   <!-- wx:if 条件 marketOrders.length === 0 成立才创建此区块；隐藏按钮不等于后端授权。 -->
   <view class="empty-state" wx:if="{{marketOrders.length === 0}}">暂无数据</view>
@@ -178,6 +253,39 @@
     </view>
   </view>
 </view>
+
+<!-- 登录后强提醒：居中卡片，遮罩不可点；5 秒后才允许关闭。 -->
+<view class="notice-mask" wx:if="{{noticeModalVisible && noticeModal}}" catchtouchmove="noop">
+  <view class="notice-mask-bg" catchtap="noop"></view>
+  <view class="notice-dialog" catchtap="noop">
+    <view class="notice-dialog-head" catchtouchmove="noop">
+      <view class="notice-dialog-icon">
+        <image class="notice-dialog-icon-image" src="/assets/icons/megaphone.png" mode="aspectFit" />
+      </view>
+      <view class="notice-dialog-kicker">
+        <text class="notice-level" wx:if="{{noticeModal.level !== '普通'}}">{{noticeModal.level}}</text>
+        <text>{{noticeModal.category}} · {{noticeModal.publishedText}}</text>
+      </view>
+      <view class="notice-dialog-title">{{noticeModal.title}}</view>
+      <view class="notice-dialog-meta">发布人：校园易援运营团队</view>
+    </view>
+    <scroll-view class="notice-dialog-body" scroll-y="true">
+      <text class="notice-dialog-content" user-select="true">{{noticeModal.content}}</text>
+    </scroll-view>
+    <view class="notice-dialog-foot" catchtouchmove="noop">
+      <view class="notice-progress">
+        <view class="notice-progress-inner" style="width: {{noticeProgress}}%;"></view>
+      </view>
+      <view class="notice-close {{noticeCanClose ? 'ready' : ''}}" bindtap="closeNoticeModal">
+        <view class="notice-clock" wx:if="{{!noticeCanClose}}"></view>
+        <text wx:if="{{!noticeCanClose}}">{{noticeCountdown}} 秒后可关闭</text>
+        <text wx:else>我已阅读</text>
+      </view>
+      <view class="notice-dialog-tip">倒计时结束前，点击遮罩不会关闭</view>
+    </view>
+  </view>
+</view>
+
 <!-- 界面区块 bottom-nav：底部 / 导航，外观由同页 WXSS 的同名类控制。 -->
 <view class="bottom-nav">
   <!-- 点击调用 showHome()，函数在同页 JS；data-* 携带所点项目的信息。 -->

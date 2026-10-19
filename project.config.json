@@ -6,6 +6,26 @@
       {
         "value": "backend",
         "type": "folder"
+      },
+      {
+        "value": "design",
+        "type": "folder"
+      },
+      {
+        "value": "tmp",
+        "type": "folder"
+      },
+      {
+        "value": "tests",
+        "type": "folder"
+      },
+      {
+        "value": "面试资料",
+        "type": "folder"
+      },
+      {
+        "value": ".m2-local",
+        "type": "folder"
       }
     ],
     "include": []

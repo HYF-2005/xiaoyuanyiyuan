@@ -9,6 +9,10 @@ const {
   orderView
 }
 = require('../../utils/api-format')
+const {
+  formatNoticeDateTime
+}
+= require('../../utils/notice-format')
 
 Page({
   data: {
@@ -42,11 +46,34 @@ Page({
     // username：用户账号
     username: '',
     // avatarInitial：姓名首字作为头像文字
-    avatarInitial: '同'
+    avatarInitial: '同',
+    // banners：后端返回的当前有效轮播；图片和跳转都由后台配置
+    banners: [],
+    // bannerIndex：当前轮播下标，用于自定义指示点
+    bannerIndex: 0,
+    // latestNotice：最新一条公告，用于公告条和快捷打开详情
+    latestNotice: null,
+    // noticeBarText：公告条单行文案，加载中/空状态也由它承载
+    noticeBarText: '公告加载中...',
+    // hasUnreadNotice：控制公告中心入口的小红点
+    hasUnreadNotice: false,
+    // noticeModalVisible：登录后强提醒弹窗是否显示
+    noticeModalVisible: false,
+    // noticeModal：当前强制阅读的公告
+    noticeModal: null,
+    // noticeCountdown：剩余秒数，仅用于显示
+    noticeCountdown: 5,
+    // noticeCanClose：倒计时结束后才允许关闭
+    noticeCanClose: false,
+    // noticeProgress：倒计时进度条百分比
+    noticeProgress: 0
   },
 
   // onLoad：读取路由 tab/type 参数；发布完成回来时可以直接定位到我的订单区域。
   onLoad(options) {
+    // 每个页面实例只自动弹一次；关闭后不再连锁弹出下一条强提醒。
+    this.noticePopupShown = false
+    this.noticeDeadline = 0
     if (options && options.tab === 'orders') {
       this.setData({
         activeTab: 'orders',
@@ -69,6 +96,8 @@ Page({
     this.loadOrders()
     this.loadMarketOrders()
     this.loadAccountSummary()
+    this.loadHomeContent()
+    this.resumeNoticeCountdown()
     this.clearCountdownTimer()
     this.countdownTimer = setInterval(() => {
       this.loadOrders(); this.loadMarketOrders()
@@ -77,7 +106,7 @@ Page({
 
   async onPullDownRefresh() {
     try {
-      await Promise.all([this.loadOrders(), this.loadMarketOrders(), this.loadAccountSummary()])
+      await Promise.all([this.loadOrders(), this.loadMarketOrders(), this.loadAccountSummary(), this.loadHomeContent()])
     } finally {
       wx.stopPullDownRefresh()
     }
@@ -102,14 +131,50 @@ Page({
     }
   },
 
-  // onHide：页面隐藏/销毁时清理计时器，防止离开后仍定时请求。
-  onHide() {
-    this.clearCountdownTimer()
+  // loadHomeContent：一次并发读取轮播和公告聚合；任一接口失败不拖垮另一个，也不打断订单列表。
+  async loadHomeContent() {
+    const [bannerResult, overviewResult] = await Promise.all([
+      request('/banners').catch(error => {
+        console.warn('读取轮播失败', error)
+        return null
+      }),
+      request('/announcements/overview').catch(error => {
+        console.warn('读取公告失败', error)
+        return null
+      })
+    ])
+    const banners = Array.isArray(bannerResult) ? bannerResult : this.data.banners
+    if (!overviewResult) {
+      this.setData({
+        banners,
+        noticeBarText: this.data.latestNotice ? this.data.latestNotice.title : '暂无公告'
+      })
+      return
+    }
+    const latestNotice = overviewResult.latest || null
+    this.setData({
+      banners,
+      latestNotice,
+      noticeBarText: latestNotice ? latestNotice.title : '暂无公告',
+      hasUnreadNotice: Number(overviewResult.unreadCount) > 0
+    })
+    // 强提醒只在当前页面实例首次出现；关闭一条后不立即弹下一条。
+    if (overviewResult.pending && !this.noticePopupShown) {
+      this.noticePopupShown = true
+      this.showNoticeModal(overviewResult.pending)
+    }
   },
 
-  // onUnload：页面隐藏/销毁时清理计时器，防止离开后仍定时请求。
+  // onHide：页面隐藏时停止计时器；保留截止时间，回来后可继续倒计时。
+  onHide() {
+    this.clearCountdownTimer()
+    this.clearNoticeTimer()
+  },
+
+  // onUnload：页面卸载时清理所有计时器，防止离开后仍触发 setData。
   onUnload() {
     this.clearCountdownTimer()
+    this.clearNoticeTimer()
   },
 
   // clearCountdownTimer：停止首页每分钟刷新订单的计时器；离开页面时清理，避免重复请求。
@@ -117,6 +182,172 @@ Page({
     if (this.countdownTimer) {
       clearInterval(this.countdownTimer)
       this.countdownTimer = null
+    }
+  },
+
+  // clearNoticeTimer：只停止每 200ms 的倒计时刷新，不清除 noticeDeadline。
+  clearNoticeTimer() {
+    if (this.noticeTimer) {
+      clearInterval(this.noticeTimer)
+      this.noticeTimer = null
+    }
+  },
+
+  // startNoticeTimer：先立即刷新一次，再启动 200ms 定时器，让秒数和进度条平滑变化。
+  startNoticeTimer() {
+    this.clearNoticeTimer()
+    this.updateNoticeCountdown()
+    this.noticeTimer = setInterval(() => this.updateNoticeCountdown(), 200)
+  },
+
+  // updateNoticeCountdown：用绝对截止时间计算剩余量，避免切后台再回来时倒计时被暂停。
+  updateNoticeCountdown() {
+    if (!this.data.noticeModalVisible) {
+      this.clearNoticeTimer()
+      return
+    }
+    const remaining = Math.max(0, this.noticeDeadline - Date.now())
+    const countdown = Math.ceil(remaining / 1000)
+    const progress = Math.min(100, Math.max(0, Math.round((5000 - remaining) / 50)))
+    if (remaining <= 0) {
+      this.clearNoticeTimer()
+      this.setData({
+        noticeCountdown: 0,
+        noticeCanClose: true,
+        noticeProgress: 100
+      })
+      return
+    }
+    if (countdown !== this.data.noticeCountdown || progress !== this.data.noticeProgress) {
+      this.setData({
+        noticeCountdown: countdown,
+        noticeCanClose: false,
+        noticeProgress: progress
+      })
+    }
+  },
+
+  // resumeNoticeCountdown：从其他页面返回或切回前台时，沿用原截止时间继续倒计时。
+  resumeNoticeCountdown() {
+    if (!this.data.noticeModalVisible) return
+    if (!this.noticeDeadline) this.noticeDeadline = Date.now() + this.data.noticeCountdown * 1000
+    this.startNoticeTimer()
+  },
+
+  // showNoticeModal：展示强提醒卡片，并重置 5 秒强制阅读窗口。
+  showNoticeModal(notice) {
+    this.noticeDeadline = Date.now() + 5000
+    this.setData({
+      noticeModalVisible: true,
+      noticeModal: Object.assign({}, notice, {
+        publishedText: formatNoticeDateTime(notice.publishedAt)
+      }),
+      noticeCountdown: 5,
+      noticeCanClose: false,
+      noticeProgress: 0
+    })
+    this.startNoticeTimer()
+  },
+
+  // closeNoticeModal：倒计时未结束时点击无效；结束后关闭并把该公告标记已读。
+  closeNoticeModal() {
+    if (!this.data.noticeCanClose || !this.data.noticeModal) return
+    const id = this.data.noticeModal.id
+    this.clearNoticeTimer()
+    this.noticeDeadline = 0
+    this.setData({
+      noticeModalVisible: false,
+      noticeModal: null,
+      noticeCanClose: false,
+      noticeCountdown: 5,
+      noticeProgress: 0
+    })
+    this.markNoticeRead(id)
+  },
+
+  // markNoticeRead：写已读后按服务端最新未读数更新红点；失败时保留红点，下次进入再同步。
+  async markNoticeRead(id) {
+    try {
+      const result = await request(`/announcements/${encodeURIComponent(id)}/read`, 'POST')
+      this.setData({
+        hasUnreadNotice: Number(result.unreadCount) > 0
+      })
+    } catch (error) {
+      console.warn('标记公告已读失败', error)
+    }
+  },
+
+  // openLatestNotice：点公告条打开最新公告详情；没有公告时给出轻提示。
+  openLatestNotice() {
+    if (!this.data.latestNotice) {
+      wx.showToast({
+        title: '暂无公告',
+        icon: 'none'
+      })
+      return
+    }
+    wx.navigateTo({
+      url: `/pages/gonggaoxiangqing/gonggaoxiangqing?id=${encodeURIComponent(this.data.latestNotice.id)}`
+    })
+  },
+
+  // openNoticeCenter：进入公告中心；点击事件用 catchtap 阻止冒泡到公告条。
+  openNoticeCenter() {
+    wx.navigateTo({
+      url: '/pages/gonggao/gonggao'
+    })
+  },
+
+  // onBannerChange：同步自定义指示点；swiper 自身负责轮播，不在这里改 current。
+  onBannerChange(e) {
+    this.setData({
+      bannerIndex: Number(e.detail.current) || 0
+    })
+  },
+
+  // onBannerImageError：单张海报加载失败时清空该图，WXML 自动切成同色兜底文案。
+  onBannerImageError(e) {
+    const index = Number(e.currentTarget.dataset.index)
+    if (!Number.isInteger(index) || !this.data.banners[index]) return
+    this.setData({
+      [`banners[${index}].imageUrl`]: ''
+    })
+  },
+
+  // onBannerTap：按后台 linkType 分流；只允许站内 /pages 路径，避免任意路由注入。
+  onBannerTap(e) {
+    const index = Number(e.currentTarget.dataset.index)
+    const banner = this.data.banners[index]
+    if (!banner) return
+    const linkType = banner.linkType
+    const linkValue = banner.linkValue
+    if (linkType === 'notice' && linkValue) {
+      wx.navigateTo({
+        url: `/pages/gonggaoxiangqing/gonggaoxiangqing?id=${encodeURIComponent(linkValue)}`
+      })
+      return
+    }
+    if (linkType === 'page' && linkValue && String(linkValue).indexOf('/pages/') === 0) {
+      wx.navigateTo({
+        url: linkValue
+      })
+      return
+    }
+    if (linkType === 'miniProgram' && linkValue) {
+      wx.navigateToMiniProgram({
+        appId: linkValue,
+        fail: () => wx.showToast({
+          title: '小程序跳转失败',
+          icon: 'none'
+        })
+      })
+      return
+    }
+    if (linkType === 'web') {
+      wx.showToast({
+        title: '网页跳转需先配置业务域名',
+        icon: 'none'
+      })
     }
   },
 
@@ -280,6 +511,7 @@ Page({
       activeTab: 'home'
     })
     this.loadMarketOrders()
+    this.loadHomeContent()
     wx.setNavigationBarTitle({
       title: '首页'
     })

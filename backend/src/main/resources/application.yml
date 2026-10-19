@@ -21,6 +21,8 @@ spring:
       mode: always
       # 按 UTF-8 读取 SQL，支持中文。
       encoding: UTF-8
+      # 启动时执行演示轮播/公告种子数据；INSERT IGNORE 保证幂等。
+      data-locations: classpath:data.sql
   servlet:
     # 限制文件上传大小：照片最多 5MB，整个请求最多 6MB。
     multipart:

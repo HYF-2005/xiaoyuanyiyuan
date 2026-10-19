@@ -1,0 +1,29 @@
+<!-- 公告详情：展示完整正文；打开后自动标记已读，返回公告中心时红点会同步。 -->
+<view class="detail-page" wx:if="{{notice}}">
+  <view class="detail-card">
+    <view class="detail-tags">
+      <text class="detail-tag {{notice.category === '活动' ? 'activity' : 'system'}}">{{notice.category}}</text>
+      <text class="detail-tag level" wx:if="{{notice.level !== '普通'}}">{{notice.level}}</text>
+      <text class="detail-tag pin" wx:if="{{notice.pinned}}">置顶</text>
+    </view>
+    <view class="detail-title">{{notice.title}}</view>
+    <view class="detail-meta">
+      <text>校园易援运营团队</text>
+      <text>{{notice.publishedText}}</text>
+    </view>
+    <view class="detail-divider"></view>
+    <text class="detail-content" user-select="true">{{notice.content}}</text>
+  </view>
+  <view class="detail-foot">校园易援 · 让校园生活更方便</view>
+</view>
+
+<view class="detail-state" wx:elif="{{loading}}">
+  <view class="state-loading">加载中...</view>
+</view>
+
+<view class="detail-state" wx:else>
+  <image class="state-empty-icon" src="/assets/icons/bell.png" mode="aspectFit" />
+  <view class="state-empty-title">公告不存在或已下线</view>
+  <view class="state-empty-sub">可能已被撤回，请返回公告中心查看其他内容</view>
+  <view class="state-back" bindtap="goBack">返回公告中心</view>
+</view>

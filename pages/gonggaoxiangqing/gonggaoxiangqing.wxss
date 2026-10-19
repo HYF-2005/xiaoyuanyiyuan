@@ -1,0 +1,137 @@
+/* 公告详情：白底正文卡片，长文保留换行和可选中文本。 */
+
+page {
+  background: #f5f5f5;
+}
+
+.detail-page {
+  min-height: 100vh;
+  padding: 24rpx 28rpx 60rpx;
+  box-sizing: border-box;
+}
+
+.detail-card {
+  padding: 36rpx 32rpx 46rpx;
+  border-radius: 24rpx;
+  background: #fff;
+  box-shadow: 0 2rpx 10rpx rgba(16, 24, 40, 0.025);
+}
+
+.detail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.detail-tag {
+  padding: 4rpx 12rpx;
+  border-radius: 6rpx;
+  font-size: 19rpx;
+  line-height: 1.4;
+}
+
+.detail-tag.system {
+  background: #eef7f1;
+  color: #0a8f4b;
+}
+
+.detail-tag.activity {
+  background: #fff5e8;
+  color: #d97706;
+}
+
+.detail-tag.level {
+  background: #fff0f0;
+  color: #e5484d;
+}
+
+.detail-tag.pin {
+  background: #eef2f8;
+  color: #4b5563;
+}
+
+.detail-title {
+  margin-top: 18rpx;
+  color: #1b2127;
+  font-size: 36rpx;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8rpx;
+  margin-top: 16rpx;
+  color: #aab1b9;
+  font-size: 20rpx;
+}
+
+.detail-divider {
+  height: 1rpx;
+  margin: 28rpx 0;
+  background: #f0f2f4;
+}
+
+.detail-content {
+  display: block;
+  color: #4f5963;
+  font-size: 27rpx;
+  line-height: 1.9;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.detail-foot {
+  padding: 30rpx 0 10rpx;
+  color: #b6bcc3;
+  font-size: 20rpx;
+  text-align: center;
+}
+
+.detail-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+  padding: 0 60rpx;
+  box-sizing: border-box;
+}
+
+.state-loading {
+  color: #aab1b9;
+  font-size: 24rpx;
+}
+
+.state-empty-icon {
+  width: 100rpx;
+  height: 100rpx;
+  opacity: 0.22;
+}
+
+.state-empty-title {
+  margin-top: 24rpx;
+  color: #6b747e;
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.state-empty-sub {
+  margin-top: 12rpx;
+  color: #aab1b9;
+  font-size: 22rpx;
+  line-height: 1.7;
+  text-align: center;
+}
+
+.state-back {
+  margin-top: 32rpx;
+  padding: 18rpx 44rpx;
+  border-radius: 40rpx;
+  background: #0bd565;
+  color: #fff;
+  font-size: 24rpx;
+}

@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    width: 1500px; min-height: 900px;
+    padding: 50px;
+    background: #eef2f6;
+    font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    color: #17212b;
+  }
+  .h1 { font-size: 30px; line-height: 1.2; font-weight: 700; letter-spacing: .3px; }
+  .h1 span { font-size: 17px; font-weight: 500; color: #64748b; margin-left: 12px; letter-spacing: 0; }
+  .head-sub { margin-top: 7px; color: #64748b; font-size: 14px; line-height: 1.5; }
+  .section-label {
+    display: flex; align-items: center; gap: 8px;
+    margin: 26px 0 12px; font-size: 14px; font-weight: 600; color: #334155;
+  }
+  .section-label .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dot.current { background: #94a3b8; }
+  .dot.dynamic { background: #0aa85a; }
+  .section-label .hint { font-size: 12px; font-weight: 400; color: #94a3b8; margin-left: 4px; }
+  .row { display: flex; gap: 28px; width: 1400px; }
+  .card {
+    position: relative; width: 686px; height: 272px; flex: none;
+    border-radius: 28px; overflow: hidden;
+    background-size: cover; background-position: center;
+    box-shadow: 0 14px 34px rgba(15, 23, 42, .12);
+  }
+  .tag {
+    position: absolute; top: 10px; left: 12px;
+    padding: 5px 10px; border-radius: 9px;
+    background: rgba(255,255,255,.16);
+    border: 1px solid rgba(255,255,255,.24);
+    color: #fff; font-size: 12px; line-height: 1;
+    letter-spacing: .5px; backdrop-filter: blur(5px);
+  }
+  .cta {
+    position: absolute; right: 12px; bottom: 10px;
+    display: flex; align-items: center; gap: 5px;
+    padding: 6px 10px; border-radius: 999px;
+    background: rgba(0,0,0,.22);
+    color: #fff; font-size: 11px; line-height: 1;
+    letter-spacing: .5px; backdrop-filter: blur(5px);
+  }
+  .arrow {
+    width: 5px; height: 5px;
+    border-top: 1.6px solid #fff; border-right: 1.6px solid #fff;
+    transform: rotate(45deg); margin-top: -1px;
+  }
+  .copy { position: absolute; left: 44px; top: 58px; width: 430px; z-index: 2; }
+  .title {
+    color: #fff; font-size: 39px; line-height: 1.12; font-weight: 700;
+    letter-spacing: 1px; white-space: nowrap;
+    text-shadow: 0 2px 8px rgba(0,0,0,.10);
+  }
+  .sub {
+    margin-top: 16px; color: rgba(255,255,255,.88);
+    font-size: 16px; line-height: 1.35; letter-spacing: .4px;
+    white-space: nowrap;
+  }
+  .note {
+    margin-top: 22px; font-size: 13px; line-height: 1.6; color: #64748b;
+  }
+  .note b { color: #0f766e; font-weight: 600; }
+</style>
+</head>
+<body>
+  <div class="h1">轮播卡片：整图 vs 动态文字<span>同一套背景，只改变文字层</span></div>
+  <div class="head-sub">上排为当前方案，下排为动态方案；两张卡片等宽等高，便于直接对比。</div>
+
+  <div class="section-label"><span class="dot current"></span>当前方案 · 文字画在 JPG 里<span class="hint">改文案必须重新做图</span></div>
+  <div class="row">
+    <div class="card" style="background-image:url('banner-trade.jpg')">
+      <div class="tag">公告</div>
+      <div class="cta">查看详情 <i class="arrow"></i></div>
+    </div>
+    <div class="card" style="background-image:url('banner-protocol.jpg')">
+      <div class="tag">须知</div>
+      <div class="cta">查看详情 <i class="arrow"></i></div>
+    </div>
+  </div>
+
+  <div class="section-label"><span class="dot dynamic"></span>动态方案 · 背景图 + WXML 文字<span class="hint">改 Navicat 的 title / subtitle 即可</span></div>
+  <div class="row">
+    <div class="card" style="background-image:url('bg-trade.png')">
+      <div class="copy">
+        <div class="title">校园易援交易模式</div>
+        <div class="sub">线下交易，详情请看公告</div>
+      </div>
+      <div class="tag">公告</div>
+      <div class="cta">查看详情 <i class="arrow"></i></div>
+    </div>
+    <div class="card" style="background-image:url('bg-protocol.png')">
+      <div class="copy">
+        <div class="title">平台服务协议更新</div>
+        <div class="sub">订单责任与隐私说明 · 请留意变更</div>
+      </div>
+      <div class="tag">须知</div>
+      <div class="cta">查看详情 <i class="arrow"></i></div>
+    </div>
+  </div>
+
+  <div class="note"><b>动态方案：</b>背景图不带文字，标题和副标题由小程序读取数据库渲染；以后改公告或换文案，不用再找设计做图。图片仍负责插画和氛围，版式保持一致。</div>
+</body>
+</html>

@@ -1,0 +1,758 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>首页 · 轮播图与公告栏排版方案</title>
+<style>
+  :root{
+    --green:#0bd565;
+    --green-deep:#00b85a;
+    --green-ink:#0a8f4b;
+    --ink:#1d2329;
+    --ink-2:#58616c;
+    --muted:#9aa3af;
+    --line:#eceef0;
+    --bg:#f5f6f7;
+    --red:#fa5151;
+    --card-shadow:0 1px 2px rgba(16,24,40,.035);
+  }
+  *{box-sizing:border-box;-webkit-font-smoothing:antialiased;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:#edf1f4;
+    font-family:"PingFang SC","Hiragino Sans GB","Helvetica Neue",Arial,sans-serif;
+    color:var(--ink);
+  }
+  .board{
+    width:980px;
+    padding:44px 52px 40px;
+  }
+  .view-home .board-notice{display:none;}
+  .view-notice .board-home{display:none;}
+
+  /* ---------- board header ---------- */
+  .board-head{margin-bottom:28px;}
+  .kicker{
+    font-size:9px;letter-spacing:2.2px;color:#95a0aa;font-weight:600;
+    text-transform:uppercase;
+  }
+  .board-head h1{
+    margin:9px 0 0;font-size:24px;line-height:1.25;font-weight:700;letter-spacing:.2px;color:#182027;
+  }
+  .board-head .sub{
+    margin-top:7px;font-size:11.5px;color:#8b959f;letter-spacing:.2px;
+  }
+
+  .stage{display:flex;gap:56px;align-items:flex-start;}
+  .device-col{flex:none;}
+  .device{
+    position:relative;width:390px;height:844px;border-radius:46px;background:var(--bg);
+    overflow:hidden;
+    box-shadow:0 0 0 10px #0d1216, 0 34px 60px rgba(17,28,38,.22);
+  }
+  .device::before{
+    content:"";position:absolute;z-index:80;top:9px;left:50%;transform:translateX(-50%);
+    width:120px;height:31px;background:#0d1216;border-radius:18px;
+  }
+  .home-indicator{
+    position:absolute;z-index:90;left:50%;bottom:8px;transform:translateX(-50%);
+    width:134px;height:5px;border-radius:4px;background:#0d1216;
+  }
+  .screen{
+    position:absolute;inset:0;overflow:hidden;background:var(--bg);
+    border-radius:46px;
+  }
+  .device-caption{
+    margin-top:20px;text-align:center;font-size:11px;color:#8c969f;letter-spacing:.2px;
+  }
+  .device-caption b{color:#4e5862;font-weight:600;}
+
+  /* ---------- status bar / nav ---------- */
+  .statusbar{
+    position:relative;z-index:5;height:47px;padding:14px 22px 0;
+    background:var(--green);display:flex;align-items:center;justify-content:space-between;
+    color:#082014;
+  }
+  .statusbar .time{font-size:14px;font-weight:600;letter-spacing:.3px;}
+  .sys-icons{display:flex;align-items:center;gap:6px;}
+  .navbar{
+    position:relative;z-index:5;height:44px;background:var(--green);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .navbar .title{font-size:17px;font-weight:600;color:#fff;letter-spacing:.3px;}
+  .capsule{
+    position:absolute;right:16px;top:7px;width:86px;height:30px;border-radius:15px;
+    border:.5px solid rgba(255,255,255,.5);background:rgba(0,0,0,.13);
+    display:flex;align-items:center;overflow:hidden;
+  }
+  .capsule .dots{flex:1;display:flex;justify-content:center;gap:4px;}
+  .capsule .dots i{width:4px;height:4px;border-radius:50%;background:#fff;}
+  .capsule .sep{width:.5px;height:16px;background:rgba(255,255,255,.45);}
+  .capsule .target{flex:1;display:flex;align-items:center;justify-content:center;}
+  .capsule .target i{
+    position:relative;width:14px;height:14px;border:1.4px solid #fff;border-radius:50%;
+  }
+  .capsule .target i::after{
+    content:"";position:absolute;inset:3.4px;border-radius:50%;background:#fff;
+  }
+
+  /* ---------- top panel ---------- */
+  .top-panel{background:#fff;padding-bottom:12px;}
+  .tabs{display:flex;height:56px;}
+  .tab{
+    position:relative;flex:1;display:flex;align-items:center;justify-content:center;
+    font-size:14px;color:#333;
+  }
+  .tab.active{color:var(--green);font-weight:600;}
+  .tab.active::after{
+    content:"";position:absolute;bottom:2px;width:26px;height:3px;border-radius:2px;background:var(--green);
+  }
+  .search{
+    height:34px;margin:2px 16px 0;padding:0 12px;border-radius:17px;background:#f5f5f5;
+    display:flex;align-items:center;gap:8px;color:#a7aeb6;font-size:13px;
+  }
+  .search svg{flex:none;}
+
+  /* ---------- banner ---------- */
+  .banner{
+    position:relative;height:136px;margin:0 16px;border-radius:14px;overflow:hidden;
+    background:
+      radial-gradient(circle at 89% 6%,rgba(255,255,255,.24),transparent 33%),
+      radial-gradient(circle at 76% 104%,rgba(255,255,255,.14),transparent 40%),
+      linear-gradient(116deg,#067848 0%,#09ad5c 48%,#46d98b 100%);
+    box-shadow:0 8px 20px rgba(4,126,73,.18);
+  }
+  .banner .ring{position:absolute;border:1px solid rgba(255,255,255,.14);border-radius:50%;}
+  .banner .r1{width:210px;height:210px;right:-68px;top:-78px;}
+  .banner .r2{width:130px;height:130px;right:-14px;top:-26px;}
+  .banner .art{
+    position:absolute;right:20px;bottom:27px;width:66px;height:56px;
+    border:1.6px solid rgba(255,255,255,.6);border-radius:8px;
+    transform:rotate(-5deg);
+  }
+  .banner .art::before{
+    content:"";position:absolute;left:0;right:0;top:17px;border-top:1.6px solid rgba(255,255,255,.5);
+  }
+  .banner .art::after{
+    content:"";position:absolute;left:50%;top:0;bottom:0;border-left:1.6px solid rgba(255,255,255,.5);
+  }
+  .banner .art i{
+    position:absolute;right:-13px;top:-15px;width:26px;height:26px;border-radius:50%;
+    background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.5);
+  }
+  .banner-content{position:absolute;inset:0;padding:17px 18px 14px;display:flex;flex-direction:column;z-index:2;}
+  .banner-tag{
+    align-self:flex-start;padding:3px 8px;border-radius:4px;font-size:9.5px;letter-spacing:.6px;
+    color:#fff;background:rgba(255,255,255,.18);border:.5px solid rgba(255,255,255,.45);
+  }
+  .banner-title{
+    margin-top:11px;font-size:20px;font-weight:600;line-height:1.25;color:#fff;letter-spacing:.2px;
+    text-shadow:0 1px 3px rgba(0,72,38,.18);
+  }
+  .banner-sub{margin-top:6px;font-size:11px;color:rgba(255,255,255,.85);letter-spacing:.1px;}
+  .banner-dots{position:absolute;left:18px;bottom:15px;display:flex;gap:5px;z-index:2;}
+  .banner-dots i{width:4px;height:4px;border-radius:2px;background:rgba(255,255,255,.45);}
+  .banner-dots i.on{width:14px;background:#fff;}
+  .banner-cta{
+    position:absolute;right:16px;bottom:13px;z-index:2;display:flex;align-items:center;gap:3px;
+    font-size:9.5px;color:rgba(255,255,255,.92);letter-spacing:.2px;
+  }
+  .chev-white{
+    width:5px;height:5px;border-top:1px solid rgba(255,255,255,.9);border-right:1px solid rgba(255,255,255,.9);
+    transform:rotate(45deg);
+  }
+
+  /* ---------- notice bar ---------- */
+  .notice-bar{
+    height:46px;margin:10px 16px 0;padding:0 10px 0 8px;background:#fff;border-radius:12px;
+    display:flex;align-items:center;box-shadow:var(--card-shadow);
+  }
+  .notice-meg{
+    flex:none;width:28px;height:28px;border-radius:9px;background:#e9f9f0;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .notice-title{
+    flex:1;min-width:0;margin-left:8px;font-size:12.5px;color:#333;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .notice-title b{color:var(--green-deep);font-weight:600;margin-right:4px;}
+  .notice-divider{flex:none;width:.5px;height:16px;background:var(--line);margin:0 8px 0 6px;}
+  .notice-more{
+    position:relative;flex:none;display:flex;align-items:center;gap:3px;
+    font-size:11.5px;color:var(--green-ink);
+  }
+  .notice-more .red-dot{
+    position:absolute;left:9px;top:-3px;width:6px;height:6px;border-radius:50%;
+    background:var(--red);box-shadow:0 0 0 1.5px #fff;
+  }
+  .chev-green{
+    width:4.5px;height:4.5px;border-top:1px solid #0aa85a;border-right:1px solid #0aa85a;
+    transform:rotate(45deg);margin-left:1px;
+  }
+
+  /* ---------- section head ---------- */
+  .section-head{
+    display:flex;align-items:center;justify-content:space-between;margin:14px 18px 8px;
+  }
+  .section-head .h{
+    display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:#222;
+  }
+  .section-head .h::before{
+    content:"";width:3px;height:12px;border-radius:2px;background:var(--green);
+  }
+  .section-head .count{font-size:10.5px;color:#a3aab3;}
+
+  /* ---------- order cards ---------- */
+  .card{
+    margin:0 16px 10px;padding:13px 13px 11px;background:#fff;border-radius:13px;box-shadow:var(--card-shadow);
+  }
+  .card-top{display:flex;align-items:center;justify-content:space-between;}
+  .tags{display:flex;align-items:center;gap:6px;}
+  .type-tag{
+    display:flex;align-items:center;gap:4px;height:22px;padding:0 7px;
+    border-radius:6px;background:#f5f6f7;font-size:11px;color:#333;
+  }
+  .type-tag img{width:13px;height:13px;}
+  .price{font-size:17px;font-weight:700;color:#ff6068;letter-spacing:-.2px;}
+  .card-title{margin-top:9px;font-size:14px;font-weight:500;line-height:1.4;color:#222;}
+  .card-route{
+    margin-top:7px;font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .card-meta{display:flex;align-items:center;justify-content:space-between;margin-top:8px;}
+  .publisher{display:flex;gap:10px;font-size:10.5px;color:var(--muted);}
+  .status{padding:3px 7px;border-radius:5px;background:#f2f3f4;font-size:10px;color:#5a626b;}
+  .remaining{margin-top:4px;text-align:right;font-size:9.5px;color:var(--muted);}
+  .order-end{padding:2px 0 22px;text-align:center;font-size:10px;color:#b0b6bd;}
+
+  /* ---------- fab / bottom nav ---------- */
+  .fab{
+    position:absolute;z-index:14;right:16px;bottom:96px;width:44px;height:44px;border-radius:50%;
+    background:linear-gradient(145deg,#14dd73,#07b85b);
+    box-shadow:0 8px 18px rgba(11,213,101,.36);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .fab::before,.fab::after{content:"";position:absolute;background:#fff;border-radius:2px;}
+  .fab::before{width:18px;height:2px;}
+  .fab::after{width:2px;height:18px;}
+  .bottom-nav{
+    position:absolute;z-index:15;left:0;right:0;bottom:0;height:78px;
+    padding:7px 0 22px;display:flex;background:rgba(255,255,255,.97);
+    border-top:.5px solid var(--line);
+  }
+  .nav-item{
+    flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+    font-size:9.5px;color:var(--muted);
+  }
+  .nav-item img{width:25px;height:25px;}
+  .nav-item.active{color:var(--green);font-weight:500;}
+
+  /* ---------- modal ---------- */
+  .scrim{
+    position:absolute;left:0;right:0;top:91px;bottom:0;z-index:30;background:rgba(9,15,20,.54);
+  }
+  .dialog{
+    position:absolute;z-index:31;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:322px;background:#fff;border-radius:20px;overflow:hidden;
+    box-shadow:0 26px 64px rgba(8,16,24,.32);
+  }
+  .dialog-inner{padding:22px 22px 0;}
+  .dialog-icon{
+    width:44px;height:44px;margin:0 auto;border-radius:14px;background:#eafaf0;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .dialog-kicker{
+    margin-top:10px;text-align:center;font-size:10px;color:#98a1aa;letter-spacing:.2px;
+  }
+  .mini-pill{
+    display:inline-block;margin-right:5px;padding:2px 6px;border-radius:4px;
+    background:#fff0f0;color:#e5484d;font-size:9px;font-weight:600;vertical-align:1px;
+  }
+  .dialog-title{
+    margin-top:6px;text-align:center;font-size:18px;line-height:1.5;font-weight:600;
+    color:#1b2127;letter-spacing:.1px;
+  }
+  .dialog-date{margin-top:5px;text-align:center;font-size:9.5px;color:#aab1b9;}
+  .dialog-body{margin-top:13px;max-height:236px;overflow:hidden;}
+  .dialog-body p{margin:0 0 7px;font-size:11.5px;line-height:1.9;color:#5a636d;}
+  .dialog-body .lines{
+    margin:2px 0 8px;padding:9px 12px;border-radius:9px;background:#f7f8f9;
+    font-size:11px;line-height:1.95;color:#4b545f;
+  }
+  .dialog-body .lines span{color:#0aa85a;font-weight:600;}
+  .dialog-body .warn{
+    padding:8px 11px;border-radius:9px;background:#fff7ed;
+    font-size:10px;line-height:1.7;color:#c07222;
+  }
+  .dialog-foot{
+    margin-top:10px;padding:12px 18px 15px;border-top:.5px solid #f0f2f4;
+  }
+  .progress{height:3px;border-radius:2px;background:#eef1f3;overflow:hidden;margin-bottom:10px;}
+  .progress i{
+    display:block;width:20%;height:100%;border-radius:2px;
+    background:linear-gradient(90deg,#0bd565,#25df87);
+  }
+  .close-btn{
+    height:43px;border-radius:11px;background:#f0f2f4;color:#9aa3af;
+    display:flex;align-items:center;justify-content:center;gap:5px;
+    font-size:12.5px;font-weight:600;
+  }
+  .close-btn .num{color:#0aa85a;font-size:12.5px;font-weight:700;}
+  .dialog-note{margin-top:7px;text-align:center;font-size:8.5px;color:#b6bcc3;letter-spacing:.1px;}
+
+  /* ---------- notice center ---------- */
+  .notice-page{background:#f5f6f7;}
+  .back{
+    position:absolute;left:16px;top:10px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;
+  }
+  .back i{
+    width:9px;height:9px;border-left:1.7px solid #fff;border-bottom:1.7px solid #fff;
+    transform:rotate(45deg);margin-left:2px;
+  }
+  .filter-bar{
+    background:#fff;padding:10px 14px 12px;display:flex;align-items:center;gap:7px;
+    border-bottom:.5px solid #f0f2f4;
+  }
+  .chip{
+    height:27px;padding:0 11px;border-radius:14px;background:#f4f6f7;color:#626b75;
+    display:flex;align-items:center;gap:4px;font-size:11px;
+  }
+  .chip.active{background:#e9f9f0;color:#0aa85a;font-weight:600;}
+  .chip .n{font-size:9.5px;opacity:.8;}
+  .chip .dot{width:5px;height:5px;border-radius:50%;background:var(--red);}
+  .mark-all{margin-left:auto;font-size:10.5px;color:#8d969f;}
+  .notice-list{padding:12px 14px 26px;}
+  .notice-card{
+    position:relative;margin-bottom:10px;padding:13px 14px 11px;background:#fff;border-radius:12px;
+    box-shadow:var(--card-shadow);
+  }
+  .notice-card .row{display:flex;align-items:flex-start;gap:7px;}
+  .unread-dot{flex:none;width:6px;height:6px;margin-top:5px;border-radius:50%;background:var(--red);}
+  .read-holder{flex:none;width:6px;}
+  .notice-card h3{margin:0;font-size:13.5px;line-height:1.45;font-weight:600;color:#222;}
+  .notice-card.read h3{font-weight:400;color:#69727c;}
+  .notice-card p{
+    margin:7px 0 0 13px;font-size:10.5px;line-height:1.7;color:#9aa3af;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .notice-card .foot{display:flex;align-items:center;margin:9px 0 0 13px;}
+  .tag{padding:2px 6px;border-radius:4px;font-size:9px;line-height:1.5;}
+  .tag.system{background:#eafaf0;color:#0aa85a;}
+  .tag.activity{background:#fff3e8;color:#df7a1f;}
+  .tag.pinned{background:#fff0f0;color:#e5484d;margin-right:5px;}
+  .notice-card .date{margin-left:auto;font-size:9.5px;color:#b2b8bf;}
+  .list-end{padding:12px 0 16px;text-align:center;font-size:9.5px;color:#b2b8bf;}
+
+  /* ---------- legend ---------- */
+  .legend{flex:1;min-width:0;padding-top:8px;}
+  .legend-head{
+    display:flex;align-items:center;gap:8px;margin-bottom:18px;
+    font-size:10px;letter-spacing:1.6px;color:#94a0aa;font-weight:600;
+  }
+  .legend-head::after{content:"";flex:1;height:.5px;background:#dbe2e8;}
+  .legend-item{display:flex;gap:13px;padding:0 0 20px;}
+  .legend-item .num{
+    flex:none;width:24px;height:24px;border-radius:50%;border:1px solid #b9e9cd;background:#f4fdf8;
+    color:#0aa85a;font-size:9.5px;font-weight:700;display:flex;align-items:center;justify-content:center;
+    letter-spacing:.3px;
+  }
+  .legend-item h4{margin:2px 0 0;font-size:12.5px;font-weight:600;color:#263039;letter-spacing:.2px;}
+  .legend-item p{margin:6px 0 0;font-size:10.5px;line-height:1.8;color:#7e8892;}
+  .legend-item p b{color:#3f4a54;font-weight:600;}
+  .swatches{display:flex;gap:6px;margin-top:9px;}
+  .swatch{
+    height:26px;flex:1;border-radius:6px;display:flex;align-items:center;justify-content:center;
+    font-size:8.5px;color:#fff;letter-spacing:.4px;
+  }
+  .swatch.s1{background:linear-gradient(120deg,#067848,#3cd481);}
+  .swatch.s2{background:linear-gradient(120deg,#e8663a,#ffab5e);}
+  .swatch.s3{background:linear-gradient(120deg,#2368c9,#5aa7f5);}
+  .legend-note{
+    margin-top:4px;padding:13px 14px;border-radius:10px;background:#fff;
+    font-size:10px;line-height:1.8;color:#7e8892;box-shadow:var(--card-shadow);
+  }
+  .legend-note b{color:#0aa85a;font-weight:600;}
+  .legend-note + .legend-note{margin-top:10px;}
+  .legend-note .note-title{
+    font-size:9px;letter-spacing:1.1px;color:#a2acb5;font-weight:600;margin-bottom:7px;
+  }
+  .legend-note .code{
+    font-family:"SF Mono",Menlo,Consolas,monospace;font-size:9.5px;line-height:1.85;color:#6e7a85;
+  }
+  .legend-note .code span{color:#0aa85a;}
+  .tree{
+    font-family:"SF Mono",Menlo,Consolas,monospace;font-size:9.5px;line-height:1.95;color:#727e89;
+  }
+  .tree b{color:#33404a;font-weight:600;}
+  .tree em{font-style:normal;color:#0aa85a;font-size:8px;letter-spacing:.6px;margin-left:3px;}
+
+  /* ---------- notice board footer ---------- */
+  .phone-pair{display:flex;gap:48px;align-items:flex-start;}
+  .phone-pair .device-col{flex:none;}
+  .flow-note{
+    margin-top:26px;padding:16px 20px;border-radius:12px;background:#fff;
+    box-shadow:var(--card-shadow);display:flex;gap:26px;align-items:flex-start;
+  }
+  .flow-note .t{
+    flex:none;width:78px;font-size:9px;letter-spacing:1.2px;color:#95a0aa;font-weight:600;line-height:1.8;
+  }
+  .flow-note .rules{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:8px 28px;margin:0;padding:0;list-style:none;}
+  .flow-note li{position:relative;padding-left:11px;font-size:10.5px;line-height:1.75;color:#727c86;}
+  .flow-note li::before{
+    content:"";position:absolute;left:0;top:7px;width:4px;height:4px;border-radius:50%;background:#0bd565;
+  }
+  .flow-note li b{color:#38434d;font-weight:600;}
+</style>
+</head>
+<body>
+
+<!-- ================= 首页 ================= -->
+<div class="board board-home">
+  <header class="board-head">
+    <div class="kicker">CampusHelp · Home Redesign</div>
+    <h1>首页新增：轮播图 + 公告栏</h1>
+    <div class="sub">微信小程序 · 390 × 844 · 与现有页面 1:1 视觉稿</div>
+  </header>
+
+  <div class="stage">
+    <div class="device-col">
+      <div class="device">
+        <div class="screen" data-home></div>
+        <div class="home-indicator"></div>
+      </div>
+      <div class="device-caption"><b>首页</b> · 新增区域位于搜索框与订单列表之间</div>
+    </div>
+
+    <aside class="legend">
+      <div class="legend-head">版面说明</div>
+
+      <div class="legend-item">
+        <span class="num">01</span>
+        <div>
+          <h4>轮播图</h4>
+          <p><b>686 × 272rpx</b>，4 秒自动轮播、循环播放。公告、活动、广告都可以放；每张单独配置跳转（公告详情 / 站内页面 / H5 / 小程序）。</p>
+          <div class="swatches">
+            <div class="swatch s1">公告</div>
+            <div class="swatch s2">活动</div>
+            <div class="swatch s3">广告</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="legend-item">
+        <span class="num">02</span>
+        <div>
+          <h4>公告条</h4>
+          <p>紧贴轮播下方，展示<b>最新一条公告</b>；单行截断，点击进入公告详情。没有公告时显示“暂无公告”，入口仍然保留。</p>
+        </div>
+      </div>
+
+      <div class="legend-item">
+        <span class="num">03</span>
+        <div>
+          <h4>公告中心入口</h4>
+          <p>公告条右侧常驻<b>「公告中心」</b>按钮；有未读公告时铃铛上出现<b>小红点</b>，点击进入公告列表。</p>
+        </div>
+      </div>
+
+      <div class="legend-item">
+        <span class="num">04</span>
+        <div>
+          <h4>原有内容不动</h4>
+          <p>取件 / 取餐切换、搜索框、订单卡片和底部导航保持原位，只在垂直方向顺延，不改变现有操作习惯。</p>
+        </div>
+      </div>
+
+      <div class="legend-note">
+        新增区域合计约 <b>232px</b>，首屏仍能完整展示 <b>2 张订单卡片</b>。登录后若有新公告，会在进入首页时弹出强制阅读弹窗（见下一张稿）。
+      </div>
+
+      <div class="legend-note">
+        <div class="note-title">轮播跳转配置（每张独立）</div>
+        <div class="code">
+          <span>linkType</span>：notice / page / web / miniProgram / none<br>
+          <span>linkValue</span>：公告 ID / 页面路径 / H5 链接 / appId
+        </div>
+      </div>
+
+      <div class="legend-note">
+        <div class="note-title">页面层级</div>
+        <div class="tree">
+          <b>首页</b><br>
+          ├─ 取件 / 取餐 · 搜索<br>
+          ├─ 轮播图 <em>NEW</em><br>
+          ├─ 公告条 <em>NEW</em><br>
+          │&nbsp;&nbsp;└─ 公告中心（未读红点）<br>
+          └─ 待接订单列表
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- ================= 公告触达 ================= -->
+<div class="board board-notice">
+  <header class="board-head">
+    <div class="kicker">CampusHelp · Announcement Flow</div>
+    <h1>公告触达：强制阅读弹窗 + 公告中心</h1>
+    <div class="sub">登录后自动弹出 · 5 秒倒计时内不可关闭 · 未读状态同步小红点</div>
+  </header>
+
+  <div class="phone-pair">
+    <div class="device-col">
+      <div class="device">
+        <div class="screen" data-home></div>
+        <div class="scrim"></div>
+        <div class="dialog">
+          <div class="dialog-inner">
+            <div class="dialog-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <path d="M4 10.5v3a1.5 1.5 0 0 0 1.5 1.5H7l4.2 3.3c.6.5 1.6.1 1.6-.7V6.4c0-.8-1-1.2-1.6-.7L7 9H5.5A1.5 1.5 0 0 0 4 10.5Z" stroke="#0aa85a" stroke-width="1.6" stroke-linejoin="round"/>
+                <path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" stroke="#0aa85a" stroke-width="1.6" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="dialog-kicker"><span class="mini-pill">重要</span>系统公告 · 2026-09-28 18:00</div>
+            <div class="dialog-title">关于国庆假期取件服务<br>时间调整的通知</div>
+            <div class="dialog-date">发布人：校园易援运营团队</div>
+            <div class="dialog-body">
+              <p>为配合国庆假期校园快递站点的作息调整，10 月 1 日至 3 日的取件服务时间调整如下：</p>
+              <div class="lines">
+                · 东门菜鸟驿站：<span>09:00 – 18:00</span><br>
+                · 校内快递中心：<span>10:00 – 17:00</span><br>
+                · 晚间时段（18:00 后）暂停取件服务
+              </div>
+              <p>请同学们合理安排发布与接单时间，由此带来的不便敬请谅解。</p>
+              <div class="warn">假期期间超时未取件将按平台规则处理，请注意订单截止时间。</div>
+            </div>
+          </div>
+          <div class="dialog-foot">
+            <div class="progress"><i></i></div>
+            <div class="close-btn">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="8.2" stroke="#a4acb4" stroke-width="1.7"/>
+                <path d="M12 7.6V12l2.8 1.9" stroke="#a4acb4" stroke-width="1.7" stroke-linecap="round"/>
+              </svg>
+              <span class="num">5</span> 秒后可关闭
+            </div>
+            <div class="dialog-note">倒计时结束前，点击遮罩或返回均不会关闭</div>
+          </div>
+        </div>
+        <div class="home-indicator"></div>
+      </div>
+      <div class="device-caption"><b>① 登录后自动弹出</b> · 5 秒强制阅读</div>
+    </div>
+
+    <div class="device-col">
+      <div class="device">
+        <div class="screen notice-page">
+          <div class="statusbar">
+            <span class="time">23:38</span>
+            <div class="sys-icons">
+              <svg width="17" height="11" viewBox="0 0 17 11" fill="none"><rect x="0" y="7" width="3" height="4" rx="1" fill="#082014"/><rect x="4.6" y="5" width="3" height="6" rx="1" fill="#082014"/><rect x="9.2" y="2.8" width="3" height="8.2" rx="1" fill="#082014"/><rect x="13.8" y=".5" width="3" height="10.5" rx="1" fill="#082014"/></svg>
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M1 4.5a10 10 0 0 1 14 0" stroke="#082014" stroke-width="1.5" stroke-linecap="round"/><path d="M3.8 7.2a6 6 0 0 1 8.4 0" stroke="#082014" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="10" r="1.2" fill="#082014"/></svg>
+              <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".5" y=".5" width="21" height="11" rx="3" stroke="#082014" stroke-opacity=".4"/><rect x="2" y="2" width="16" height="8" rx="1.8" fill="#082014"/><path d="M23 4v4c.9-.3 1.4-1 1.4-2S23.9 4.3 23 4Z" fill="#082014" fill-opacity=".45"/></svg>
+            </div>
+          </div>
+          <div class="navbar">
+            <div class="back"><i></i></div>
+            <div class="title">公告中心</div>
+            <div class="capsule">
+              <div class="dots"><i></i><i></i><i></i></div>
+              <div class="sep"></div>
+              <div class="target"><i></i></div>
+            </div>
+          </div>
+
+          <div class="filter-bar">
+            <div class="chip active">全部 <span class="n">5</span></div>
+            <div class="chip">未读 <span class="n">2</span><span class="dot"></span></div>
+            <div class="chip">系统</div>
+            <div class="mark-all">全部已读</div>
+          </div>
+
+          <div class="notice-list">
+            <div class="notice-card">
+              <div class="row">
+                <span class="unread-dot"></span>
+                <h3>关于国庆假期取件服务时间调整的通知</h3>
+              </div>
+              <p>10 月 1 日至 3 日取件服务时间调整，请合理安排发布与接单时间，晚间时段暂停取件。</p>
+              <div class="foot"><span class="tag pinned">置顶</span><span class="tag system">系统公告</span><span class="date">09-28</span></div>
+            </div>
+
+            <div class="notice-card">
+              <div class="row">
+                <span class="unread-dot"></span>
+                <h3>新用户首单立减 2 元活动说明</h3>
+              </div>
+              <p>活动期间完成首次取件订单，发布时自动抵扣 2 元，每个账号仅限一次。</p>
+              <div class="foot"><span class="tag activity">活动</span><span class="date">09-26</span></div>
+            </div>
+
+            <div class="notice-card read">
+              <div class="row">
+                <span class="read-holder"></span>
+                <h3>校园快递中心搬迁通知</h3>
+              </div>
+              <p>原位于一食堂旁的快递中心已搬迁至东门综合服务楼一层，取件请前往新地址。</p>
+              <div class="foot"><span class="tag system">系统公告</span><span class="date">09-18</span></div>
+            </div>
+
+            <div class="notice-card read">
+              <div class="row">
+                <span class="read-holder"></span>
+                <h3>平台服务协议与隐私政策更新提醒</h3>
+              </div>
+              <p>我们更新了服务协议中的订单责任与隐私说明，继续使用即表示你同意更新后的条款。</p>
+              <div class="foot"><span class="tag system">系统公告</span><span class="date">09-10</span></div>
+            </div>
+
+            <div class="list-end">没有更多了</div>
+          </div>
+        </div>
+        <div class="home-indicator"></div>
+      </div>
+      <div class="device-caption"><b>② 公告中心</b> · 未读红点 / 置顶 / 分类</div>
+    </div>
+  </div>
+
+  <div class="flow-note">
+    <div class="t">触发与关闭规则</div>
+    <ul class="rules">
+      <li><b>触发：</b>登录成功或重新进入首页，且服务端存在未读公告。</li>
+      <li><b>5 秒内：</b>遮罩、返回、点空白都无效，只展示倒计时。</li>
+      <li><b>5 秒后：</b>按钮变绿为「我已阅读」，点击关闭并标记已读。</li>
+      <li><b>不重复打扰：</b>同一条公告同一账号只自动弹一次。</li>
+      <li><b>红点：</b>由未读数驱动，读完后公告中心入口同步消失。</li>
+      <li><b>切后台：</b>按截止时间续算，不会重新开始 5 秒。</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ================= 首页模板 ================= -->
+<template id="home-tpl">
+  <div class="statusbar">
+    <span class="time">23:38</span>
+    <div class="sys-icons">
+      <svg width="17" height="11" viewBox="0 0 17 11" fill="none"><rect x="0" y="7" width="3" height="4" rx="1" fill="#082014"/><rect x="4.6" y="5" width="3" height="6" rx="1" fill="#082014"/><rect x="9.2" y="2.8" width="3" height="8.2" rx="1" fill="#082014"/><rect x="13.8" y=".5" width="3" height="10.5" rx="1" fill="#082014"/></svg>
+      <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M1 4.5a10 10 0 0 1 14 0" stroke="#082014" stroke-width="1.5" stroke-linecap="round"/><path d="M3.8 7.2a6 6 0 0 1 8.4 0" stroke="#082014" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="10" r="1.2" fill="#082014"/></svg>
+      <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".5" y=".5" width="21" height="11" rx="3" stroke="#082014" stroke-opacity=".4"/><rect x="2" y="2" width="16" height="8" rx="1.8" fill="#082014"/><path d="M23 4v4c.9-.3 1.4-1 1.4-2S23.9 4.3 23 4Z" fill="#082014" fill-opacity=".45"/></svg>
+    </div>
+  </div>
+
+  <div class="navbar">
+    <div class="title">首页</div>
+    <div class="capsule">
+      <div class="dots"><i></i><i></i><i></i></div>
+      <div class="sep"></div>
+      <div class="target"><i></i></div>
+    </div>
+  </div>
+
+  <div class="top-panel">
+    <div class="tabs">
+      <div class="tab active">取件</div>
+      <div class="tab">取餐</div>
+    </div>
+    <div class="search">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="10.8" cy="10.8" r="6.6" stroke="#75d6a2" stroke-width="2"/><path d="m16 16 4 4" stroke="#75d6a2" stroke-width="2" stroke-linecap="round"/></svg>
+      <span>搜索取件...</span>
+    </div>
+  </div>
+
+  <div class="banner">
+    <span class="ring r1"></span>
+    <span class="ring r2"></span>
+    <div class="art"><i></i></div>
+    <div class="banner-content">
+      <div class="banner-tag">公告</div>
+      <div class="banner-title">国庆取件时间调整</div>
+      <div class="banner-sub">10 月 1 日 – 3 日 · 服务时间 09:00–18:00</div>
+    </div>
+    <div class="banner-dots"><i class="on"></i><i></i><i></i></div>
+    <div class="banner-cta">查看详情 <span class="chev-white"></span></div>
+  </div>
+
+  <div class="notice-bar">
+    <div class="notice-meg">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+        <path d="M4 10.5v3a1.5 1.5 0 0 0 1.5 1.5H7l4.2 3.3c.6.5 1.6.1 1.6-.7V6.4c0-.8-1-1.2-1.6-.7L7 9H5.5A1.5 1.5 0 0 0 4 10.5Z" stroke="#0aa85a" stroke-width="1.7" stroke-linejoin="round"/>
+        <path d="M16.3 8.7a4.7 4.7 0 0 1 0 6.6" stroke="#0aa85a" stroke-width="1.7" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="notice-title"><b>公告</b>国庆假期取件时间调整通知</div>
+    <div class="notice-divider"></div>
+    <div class="notice-more">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+        <path d="M18 9.5a6 6 0 1 0-12 0c0 4.2-1.6 5.4-2.2 6.3-.3.5 0 1.2.6 1.2h15.2c.6 0 .9-.7.6-1.2-.6-.9-2.2-2.1-2.2-6.3Z" stroke="#0aa85a" stroke-width="1.6" stroke-linejoin="round"/>
+        <path d="M10 20a2.3 2.3 0 0 0 4 0" stroke="#0aa85a" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      <span class="red-dot"></span>
+      公告中心 <span class="chev-green"></span>
+    </div>
+  </div>
+
+  <div class="section-head">
+    <div class="h">待接订单</div>
+    <div class="count">共 8 单</div>
+  </div>
+
+  <div class="card">
+    <div class="card-top">
+      <div class="tags">
+        <div class="type-tag"><img src="../assets/icons/parcel.png" alt="">取件</div>
+      </div>
+      <div class="price">¥3.00</div>
+    </div>
+    <div class="card-title">菜鸟驿站代取 2 个小包裹</div>
+    <div class="card-route">菜鸟驿站（东门） → 梅园 6 栋 502</div>
+    <div class="card-meta">
+      <div class="publisher"><span>李同学</span><span>信用分 98</span></div>
+      <div class="status">待接单</div>
+    </div>
+    <div class="remaining">截止剩余 2 小时 15 分</div>
+  </div>
+
+  <div class="card">
+    <div class="card-top">
+      <div class="tags">
+        <div class="type-tag"><img src="../assets/icons/parcel.png" alt="">取件</div>
+      </div>
+      <div class="price">¥2.50</div>
+    </div>
+    <div class="card-title">丰巢柜代取小件（东门）</div>
+    <div class="card-route">东门丰巢柜 → 梧桐苑 2 栋 301</div>
+    <div class="card-meta">
+      <div class="publisher"><span>王同学</span><span>信用分 95</span></div>
+      <div class="status">待接单</div>
+    </div>
+  </div>
+
+  <div class="order-end">没有更多了</div>
+
+  <div class="fab"></div>
+
+  <div class="bottom-nav">
+    <div class="nav-item active">
+      <img src="../assets/icons/nav-home-active.png" alt="">
+      <span>首页</span>
+    </div>
+    <div class="nav-item">
+      <img src="../assets/icons/nav-orders.png" alt="">
+      <span>订单</span>
+    </div>
+    <div class="nav-item">
+      <img src="../assets/icons/nav-mine.png" alt="">
+      <span>我的</span>
+    </div>
+  </div>
+</template>
+
+<script>
+  const tpl = document.getElementById('home-tpl').innerHTML;
+  document.querySelectorAll('[data-home]').forEach(el => { el.innerHTML = tpl; });
+
+  const view = new URLSearchParams(location.search).get('view') || 'home';
+  document.body.classList.add('view-' + view);
+</script>
+</body>
+</html>
