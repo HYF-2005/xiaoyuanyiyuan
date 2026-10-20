@@ -121,18 +121,24 @@ CREATE TABLE IF NOT EXISTS orders (
   INDEX idx_order_runner (runner_id, created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 反馈：关联认证用户与正文。
+-- 反馈：关联认证用户与正文；可选关联一笔订单（订单问题反馈）。
 CREATE TABLE IF NOT EXISTS feedback (
   -- BIGINT 自增主键；同表内唯一。
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   -- 关联 users.id 的操作者。
   user_id BIGINT NOT NULL,
+  -- 关联 orders.id 的订单；仅从订单详情提交的反馈填写，普通意见反馈为空。
+  order_id BIGINT NULL,
   -- 反馈正文，最多 2000 字。
   content VARCHAR(2000) NOT NULL,
   -- 数据库默认记录创建时刻，精度到毫秒。
   created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
   -- 外键确保关联记录存在，不能随意删掉仍被引用的用户。
-  CONSTRAINT fk_feedback_user FOREIGN KEY (user_id) REFERENCES users(id)
+  CONSTRAINT fk_feedback_user FOREIGN KEY (user_id) REFERENCES users(id),
+  -- 订单被删除时把关联置空，而不是连带删除反馈内容。
+  CONSTRAINT fk_feedback_order FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE SET NULL,
+  -- 按订单检索该订单收到的反馈。
+  INDEX idx_feedback_order (order_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 轮播位：首页可配置的公告、活动、广告海报；link_type/link_value 决定点击去向。

@@ -14,7 +14,18 @@
 - 小程序主要页面已通过 `utils/api.js` 请求后端，包括登录、订单、照片、信用分、账单、设置和反馈。
 - 用户协议和隐私政策 PDF 位于 `src/main/resources/static/docs`，后端启动后可通过 `/docs/user-agreement.pdf` 和 `/docs/privacy-policy.pdf` 公开预览。
 - 注销账号会校验密码和未完成订单，再停用账号并撤销登录会话；历史订单保留用于审计。
+- 反馈支持可选关联订单（`feedback.order_id`）：只允许关联本人发布或接单的订单，普通意见反馈该字段为空。
 - 未实现微信支付、提现；后台管理由独立的 `admin-web` 提供，小程序端不包含后台页面。
+
+## 数据库升级
+
+`schema.sql` 使用 `CREATE TABLE IF NOT EXISTS`，**对已存在的表不会新增字段**。如果你在 v1.3.0 或更早版本建过库，需要手动执行迁移脚本：
+
+```bash
+mysql -u root -p campus_help < migrations/V1.3.1__feedback_order_id.sql
+```
+
+全新安装直接执行 `schema.sql` 即可，无需迁移。历史反馈数据没有 `order_id`，脚本末尾附了核对语句。
 
 ## 启动
 

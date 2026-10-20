@@ -55,7 +55,10 @@
                     <div><strong>{{ item.userName || item.account || '用户' }}</strong><small>@{{ item.account }}</small></div>
                   </div>
                 </td>
-                <td><p class="fb-preview">{{ item.content }}</p></td>
+                <td>
+                  <p class="fb-preview">{{ item.content }}</p>
+                  <span v-if="item.orderId" class="fb-order">关联订单 UO{{ item.orderId }}</span>
+                </td>
                 <td><span class="adm-tag" :class="item.status === '已处理' ? 'adm-tag-green' : 'adm-tag-amber'">{{ item.status }}</span></td>
                 <td class="adm-muted">{{ formatDateTime(item.createdAt) }}</td>
                 <td class="adm-muted">{{ item.handledByName || '—' }}</td>
@@ -100,6 +103,7 @@
         <div class="fb-block">
           <span>用户反馈</span>
           <p>{{ detail.content }}</p>
+          <p v-if="detail.orderId" class="fb-order">关联订单 UO{{ detail.orderId }}</p>
         </div>
         <div v-if="detail.handledAt" class="fb-handled">
           最近处理：{{ detail.handledByName || '管理员' }} · {{ formatDateTime(detail.handledAt) }}
@@ -261,6 +265,19 @@ onMounted(load)
   line-height: 1.5;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+}
+
+/* 订单问题反馈的关联订单标记 */
+.fb-order {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 1px 7px;
+  border-radius: 5px;
+  background: #eef4ff;
+  color: #2f6bd6;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
 }
 
 .fb-drawer {

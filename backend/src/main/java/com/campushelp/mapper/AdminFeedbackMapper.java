@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Select;
 public interface AdminFeedbackMapper {
     @Select("""
         <script>
-        SELECT f.id, f.user_id, u.username AS account, u.display_name AS user_name, f.content, f.created_at,
+        SELECT f.id, f.user_id, f.order_id, u.username AS account, u.display_name AS user_name, f.content, f.created_at,
                COALESCE(h.status, '待处理') AS status, h.reply,
                h.handled_at, a.display_name AS handled_by_name
         FROM feedback f
@@ -52,7 +52,7 @@ public interface AdminFeedbackMapper {
     long count(@Param("status") String status, @Param("keyword") String keyword);
 
     @Select("""
-        SELECT f.id, f.user_id, u.username AS account, u.display_name AS user_name, f.content, f.created_at,
+        SELECT f.id, f.user_id, f.order_id, u.username AS account, u.display_name AS user_name, f.content, f.created_at,
                COALESCE(h.status, '待处理') AS status, h.reply,
                h.handled_at, a.display_name AS handled_by_name
         FROM feedback f

@@ -10,9 +10,9 @@ Page({
     content: '',
     // submitting：提交请求锁，防止多次创建/反馈/注销
     submitting: false,
-    // orderNo：从订单详情进入时展示的关联订单编号
+    // orderNo：从订单详情进入时展示的关联订单编号（仅用于界面展示）
     orderNo: '',
-    // orderId：关联订单主键，保留给后续反馈接口使用
+    // orderId：关联订单主键，随反馈一起提交给后端做结构化关联
     orderId: ''
   },
 
@@ -48,15 +48,16 @@ Page({
       })
       return
     }
-    const content = this.data.orderNo
-      ? `订单 ${this.data.orderNo}：${input}`
-      : input
+    // 订单号作为独立字段提交，不再拼进正文，便于后台按订单检索。
+    const parsedOrderId = Number(this.data.orderId)
+    const orderId = Number.isFinite(parsedOrderId) && parsedOrderId > 0 ? parsedOrderId : null
     this.setData({
       submitting: true
     })
     try {
       await request('/feedback', 'POST', {
-        content
+        content: input,
+        orderId
       })
       wx.showToast({
         title: '提交成功',

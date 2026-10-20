@@ -8,6 +8,8 @@ import lombok.Data;
 public class AdminFeedbackRow {
     private Long id;
     private Long userId;
+    /** 关联订单主键；普通意见反馈为 null，订单问题反馈非空。 */
+    private Long orderId;
     private String account;
     private String userName;
     private String content;
